@@ -110,9 +110,8 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(RegisterUserRequest $request): RedirectResponse
     {
-        dd($request->all());
         $conn = (new CTraderService)->connectionStatus();
 
         if ($conn['code'] != 0) {

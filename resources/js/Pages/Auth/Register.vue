@@ -95,18 +95,18 @@ const handleBackIdentity = (event) => {
     form.back_identity = event.target.files[0];
 };
 
-// function nextStep() {
-//     form.post(route('register.first.step'), {
-//         onSuccess: () => {
-//             formStep.value++;
-//             form.form_step++;
-//         },
-//     });
-// }
 function nextStep() {
-    formStep.value++;
-    form.form_step++;
+    form.post(route('register.first.step'), {
+        onSuccess: () => {
+            formStep.value++;
+            form.form_step++;
+        },
+    });
 }
+// function nextStep() {
+//     formStep.value++;
+//     form.form_step++;
+// }
 function prevStep() {
     formStep.value--;
     form.form_step--;
