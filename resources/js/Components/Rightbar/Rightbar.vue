@@ -2,6 +2,8 @@
 import RightbarTitle from "@/Components/Rightbar/RightbarTitle.vue";
 import RightbarContent from "@/Components/Rightbar/RightbarContent.vue";
 import DepositForm from "@/Components/Rightbar/DepositForm.vue";
+import Button from "@/Components/Button.vue";
+import WithdrawalForm from "@/Components/Rightbar/WithdrawalForm.vue";
 </script>
 
 <template>
@@ -10,7 +12,10 @@ import DepositForm from "@/Components/Rightbar/DepositForm.vue";
             <RightbarContent title="Cash Wallet" amount="99,999" />
             <RightbarContent title="Reward Point (RP)" amount="999,999" />
 
-            <DepositForm />
+            <div class="flex justify-between gap-4 mt-8">
+                <DepositForm />
+                <WithdrawalForm />
+            </div>
 
         </RightbarTitle>
 

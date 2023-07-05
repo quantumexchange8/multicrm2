@@ -16,4 +16,7 @@ class SettingCryptoWallet extends Model implements HasMedia
     protected $fillable = [
         'name', 'symbol', 'gateway', 'wallet_address', 'status', 'min_deposit'
     ];
+
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 0;
 }

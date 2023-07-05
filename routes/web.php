@@ -33,7 +33,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/crypto_wallet', [PaymentController::class, 'deposit_modal'])->name('deposit_modal');
+    /**
+     * ==============================
+     *           Payments
+     * ==============================
+     */
+    Route::get('/get_crypto_wallet', [PaymentController::class, 'get_crypto_wallet'])->name('get_crypto_wallet');
+    Route::get('/get_trading_account', [PaymentController::class, 'get_trading_account'])->name('get_trading_account');
+
     Route::post('/deposit', [PaymentController::class, 'deposit'])->middleware(HandlePrecognitiveRequests::class)->name('payment.deposit');
 
     Route::post('/upload-crypto-files', [\App\Http\Controllers\SettingCryptoWalletController::class, 'store'])->name('upload-crypto-files');

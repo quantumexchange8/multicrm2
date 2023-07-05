@@ -44,7 +44,7 @@ onMounted(() => {
         @change="$emit('update:modelValue', $event.target.value)"
         ref="input"
     >
-        <option value="" disabled selected>{{ placeholder }}</option>
+        <option class="text-sm" value="" disabled selected>{{ placeholder }}</option>
         <slot></slot>
     </select>
 </template>

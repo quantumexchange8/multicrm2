@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('trading_accounts', function (Blueprint $table) {
             $table->id();
-            $table->string('user');
+            $table->string('user')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedInteger('meta_login')->unique();
             $table->integer('currency_digits')->nullable();

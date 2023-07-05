@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+use AleeDhillon\MetaFive\Entities\Trade;
 use App\Models\User as UserModel;
 use App\Services\Auth\CreateTradingAccount;
 use App\Services\Auth\CreateTradingUser;
+use App\Services\Data\UpdateTradingAccount;
+use App\Services\Data\UpdateTradingUser;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -81,6 +84,52 @@ class CTraderService
         (new CreateTradingUser)->execute($user, $accountResponse, $accountType, $remarks);
         (new CreateTradingAccount)->execute($user, $accountResponse, $accountType);
         return $accountResponse;
+    }
+
+    public function getUser($meta_login)
+    {
+        $response = Http::acceptJson()->get($this->baseURL . "/v2/webserv/traders/{$meta_login}?token={$this->token}")->json();
+        //TraderTO
+        Log::debug($response);
+        return $response;
+    }
+
+    //changeTradeerBalance
+    public function createTrade($meta_login, $amount, $comment, $type): Trade
+    {
+        $response = Http::acceptJson()->post($this->baseURL . "/v2/webserv/traders/{$meta_login}/changebalance?token={$this->token}", [
+            'login' => $meta_login,
+            'amount' => $amount * 100, //
+            'preciseAmount' => $amount, //
+            'type' => $type,
+            'comment' => $comment, //
+            /* 'externalNote' => '', //
+            'source' => '', //
+            'externalId' => '', // */
+        ]);
+        Log::debug($response);
+        $response = $response->json();
+        Log::debug($response);
+        $trade = new Trade();
+        $trade->setAmount($amount);
+        $trade->setComment($comment);
+        $trade->setType($type);
+        $trade->setTicket($response['balanceHistoryId']);
+
+
+        $data = $this->getUser($meta_login);
+        (new UpdateTradingUser)->execute($meta_login, $data);
+        (new UpdateTradingAccount)->execute($meta_login, $data);
+        return $trade;
+    }
+
+    public function getUserInfo($trading_users)
+    {
+        foreach ($trading_users as $row) {
+            $data = $this->getUser($row->meta_login);
+            (new UpdateTradingUser)->execute($row->meta_login, $data);
+            (new UpdateTradingAccount)->execute($row->meta_login, $data);
+        }
     }
 }
 

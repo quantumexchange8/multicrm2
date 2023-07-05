@@ -3,22 +3,186 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DepositRequest;
+use App\Models\GatewayExchangeRate;
+use App\Models\Payment;
 use App\Models\SettingCryptoWallet;
+use App\Models\TradingAccount;
+use App\Models\TradingUser;
+use App\Models\User;
+use App\Services\CTraderService;
+use App\Services\RunningNumberService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class PaymentController extends Controller
 {
-    public function deposit_modal()
+    /*  private $Status = array(
+        0 => 'Waiting for payment',
+        1 => 'Payment Approved',
+        2 => 'Rejected',
+    ); */
+    private $Status = array(
+        0 => 'Submitted',
+        1 => 'Successful',
+        2 => 'Rejected',
+    );
+
+    private $currency = ['USD', 'MYR', 'IDR', 'RMB', 'PHP', 'SGD', 'VND', 'THB', 'HKD', 'INR', 'USDT'];
+    //
+    private $merchantID = "60-00000125-65107369";
+    private $apiKey = "4FF6B347-8A7C-4779-92F5-098706110CFD";
+    private $secretKey = "0883EF96B3314A8B865DA4E3A16E4829";
+    private $base_url = "http://api.doitwallet.asia";
+
+    public function get_crypto_wallet()
     {
-        $cryptoWallets = SettingCryptoWallet::with('media')->get();
+        $cryptoWallets = SettingCryptoWallet::with('media')
+            ->where('status', SettingCryptoWallet::STATUS_ACTIVE)
+            ->get();
 
         return response()->json([
             'cryptoWallets' => $cryptoWallets
         ]);
     }
 
+    public function get_trading_account()
+    {
+        $conn = (new CTraderService)->connectionStatus();
+        $user = Auth::user();
+        $trading_account = [];
+        $payment_account = [];
+
+        if ($conn['code'] == 0) {
+            (new CTraderService)->getUserInfo($user->tradingUsers);
+            $trading_account = TradingAccount::where('user_id', Auth::id())->with(['accountType'])->get();
+            $payment_account = TradingUser::where('user_id', $user->id)->whereNot('module', 'pamm')->get();
+        } else {
+            return redirect()->back()->with('toast', 'No Connection with CTrader');
+        }
+
+        return response()->json([
+            'tradingAccounts' => 'test',
+            'paymentAccounts' => $payment_account,
+        ]);
+    }
+
     public function deposit(DepositRequest $request)
     {
-        dd($request->all());
+        $conn = (new CTraderService)->connectionStatus();
+        if ($conn['code'] != 0) {
+            if ($conn['code'] == 10) {
+                return back()->withErrors(['connection' => ['No connection with cTrader Server']]);
+            }
+            return back()->withErrors(['connection' => [$conn['message']]]);
+        }
+        /*  $date = date('Y/m/d h:i:s a', time());
+        $date = (int) filter_var($date, FILTER_SANITIZE_NUMBER_INT);
+        $payment_id = "DEMOORDER_" . $date; */
+
+        $meta_login = $request->account_no;
+        $amount = number_format($request->amount, 2, '.', '');
+        dd($meta_login, $amount);
+
+
+        $payment_id = RunningNumberService::getID('transaction');
+
+        $currency = $request->currency;
+
+
+        $payment_charges = null;
+        $real_amount = $amount;
+        $exchange_rate =  GatewayExchangeRate::whereRelation('ofGateway', 'name', '=', 'ompay')
+            ->where('base_currency', $currency)
+            ->where('target_currency', 'USD')
+            ->where('status', 'Active')
+            ->first();
+        if ($exchange_rate) {
+
+            switch ($exchange_rate->deposit_charge_type) {
+                case 'percentage': {
+                    $payment_charges = $exchange_rate->deposit_charge_amount . '%';
+
+                    $real_amount = number_format(($amount * $exchange_rate->deposit_rate) * ((100 + $exchange_rate->deposit_charge_amount) / 100), 2, '.', '');
+                    break;
+                }
+                case 'amount': {
+                    $payment_charges = $currency . ' ' . $exchange_rate->deposit_charge_amount;
+                    $real_amount = number_format(($amount * $exchange_rate->deposit_rate) + $exchange_rate->deposit_charge_amount, 2, '.', '');
+                    break;
+                }
+            }
+        }
+        $apiUrl = $this->base_url . "/Merchant/Pay";
+        $user = Auth::user();
+
+
+        Payment::create([
+            'to' => $meta_login,
+            'user_id' => $user->id,
+            'category' => 'payment',
+            'payment_id' => $payment_id,
+            'type' => 'Deposit',
+            'comment' => 'Deposit',
+            'amount' => $amount,
+            'gateway' => 'ompay',
+            'currency' => $currency,
+            'real_amount' => $real_amount,
+            'payment_charges' => $payment_charges,
+        ]);
+
+        $returnUrl = url('ompay/depositResult?token=' . session()->get('jwt-token'));
+        $notifyUrl = url('ompay/updateStatus');
+        $token = md5($payment_id . $this->apiKey . $this->secretKey . $real_amount);
+        $mode = 3;
+        return redirect()->away($apiUrl . "?mode={$mode}&merchantCode={$this->merchantID}&serialNo={$payment_id}&currency={$currency}&amount={$real_amount}&returnUrl={$returnUrl}&notifyUrl={$notifyUrl}&token={$token}");
+    }
+
+    public function depositResult(Request $request)
+    {
+        $data = $request->all();
+        Log::debug($data);
+        if ($request->token) {
+            session()->put('jwt-token', $request->token);
+        }
+        return redirect('member/dashboard');
+    }
+
+    public function updateResult(Request $request)
+    {
+        $data =  $request->all();
+        Log::debug($data);
+        $result = [
+            "Info" => $data['Info'],
+            "MerchantCode" => $data['MerchantCode'],
+            "SerialNo" => $data["SerialNo"],
+            "CurrencyCode" => $data["CurrencyCode"],
+            "Amount" => $data["Amount"],
+            "Status" => $data['Status'],
+            "Token" => $data["Token"],
+        ];
+        if ($result["Token"] == md5($result['SerialNo'] . $this->apiKey . $this->secretKey)) {
+            $payment = Payment::query()->where('payment_id', Str::upper($result['SerialNo']))->first();
+            if ($payment->status == "Submitted" || $payment->status == "Processing") {
+                if ($result['Status'] == 1) {
+                    try {
+                        $trade = (new CTraderService)->createTrade($payment->to, $payment->amount, $payment->comment, ChangeTraderBalanceType::DEPOSIT);
+                        $payment->ticket = $trade->getTicket();
+
+                        $user = User::find($payment->user_id);
+                        $user->total_deposit += $payment->amount;
+                        $user->save();
+                    } catch (\Throwable $e) {
+                        if ($e->getMessage() == "Not found") {
+                            TradingUser::firstWhere('meta_login', $payment->to)->update(['acc_status' => 'Inactive']);
+                        }
+                        Log::error($e->getMessage() . " " . $payment->payment_id);
+                    }
+                }
+                $payment->status = $this->Status[$result['Status']];
+                $payment->save();
+            }
+        }
     }
 }
