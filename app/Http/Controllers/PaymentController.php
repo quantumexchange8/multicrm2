@@ -34,7 +34,7 @@ class PaymentController extends Controller
     private $merchantID = "60-00000125-65107369";
     private $apiKey = "4FF6B347-8A7C-4779-92F5-098706110CFD";
     private $secretKey = "0883EF96B3314A8B865DA4E3A16E4829";
-    private $base_url = "https://api.doitwallet.asia";
+    private $base_url = "http://api.doitwallet.asia";
 
     public function get_crypto_wallet()
     {
@@ -144,7 +144,7 @@ class PaymentController extends Controller
         if ($request->token) {
             session()->put('jwt-token', $request->token);
         }
-        return redirect('member/dashboard');
+        return redirect()->back();
     }
 
     public function updateResult(Request $request)
