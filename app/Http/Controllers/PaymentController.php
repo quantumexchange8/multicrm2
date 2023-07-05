@@ -83,8 +83,6 @@ class PaymentController extends Controller
 
         $meta_login = $request->account_no;
         $amount = number_format($request->amount, 2, '.', '');
-        dd($meta_login, $amount);
-
 
         $payment_id = RunningNumberService::getID('transaction');
 
