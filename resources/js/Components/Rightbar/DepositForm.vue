@@ -14,7 +14,7 @@ import ToastList from "@/Components/ToastList.vue";
 
 const submitDeposit = ref(false)
 const cryptoWallets = ref([]);
-const tradingAccounts = ref([]);
+const paymentAccounts = ref([]);
 const isLoading = ref(false);
 const error = ref(null);
 const selectedAccountPlatform = ref(null);
@@ -25,13 +25,13 @@ onMounted(async () => {
         const response1 = axios.get('/get_crypto_wallet');
         const response2 = axios.get('/get_trading_account');
 
-        const [cryptoResponse, tradingAccResponse] = await Promise.all([response1, response2]);
+        const [cryptoResponse, paymentAccResponse] = await Promise.all([response1, response2]);
 
         cryptoWallets.value = cryptoResponse.data.cryptoWallets;
-        tradingAccounts.value = tradingAccResponse.data.tradingAccounts;
+        paymentAccounts.paymentAccounts = paymentAccResponse.data.paymentAccounts;
 
         // console.log(cryptoWallets.value);
-        console.log(tradingAccounts.value);
+        console.log(paymentAccounts);
 
     } catch (error) {
         error.value = 'Failed to fetch cryptoWallets';
@@ -161,7 +161,7 @@ const closeModal = () => {
                     <div class="space-y-2">
                         <Label for="account_no" value="Account No." />
                         <InputSelect class="w-full" id="account_no" v-model="form.account_no" placeholder="Select Account No." >
-                            <option v-for="tradingAccount in tradingAccounts" :value="tradingAccount.meta_login" :key="tradingAccount.id">{{ tradingAccount.meta_login }}</option>
+                            <option v-for="paymentAccount in paymentAccounts" :value="paymentAccount.meta_login" :key="paymentAccount.id">{{ paymentAccount.meta_login }}</option>
                         </InputSelect>
                         <InputError :message="form.errors.account_no"/>
                     </div>

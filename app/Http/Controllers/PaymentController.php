@@ -63,7 +63,7 @@ class PaymentController extends Controller
         }
 
         return response()->json([
-            'tradingAccounts' => 'test',
+            'tradingAccounts' => $trading_account,
             'paymentAccounts' => $payment_account,
         ]);
     }
