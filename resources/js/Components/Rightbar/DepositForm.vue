@@ -30,9 +30,6 @@ onMounted(async () => {
         cryptoWallets.value = cryptoResponse.data.cryptoWallets;
         paymentAccounts.paymentAccounts = paymentAccResponse.data.paymentAccounts;
 
-        // console.log(cryptoWallets.value);
-        console.log(paymentAccounts);
-
     } catch (error) {
         error.value = 'Failed to fetch cryptoWallets';
     } finally {
@@ -174,7 +171,7 @@ const closeModal = () => {
                     </div>
                     <div class="space-y-2">
                         <Label for="amount" value="Deposit Amount" />
-                        <Input id="amount" type="text" class="block w-full px-4" placeholder="Deposit Amount" v-model="form.amount" @change="form.validate('amount')" />
+                        <Input id="amount" type="number" min="30" class="block w-full px-4" placeholder="Deposit Amount" v-model="form.amount" @change="form.validate('amount')" />
                         <InputError :message="form.errors.amount"/>
                     </div>
                 </div>
