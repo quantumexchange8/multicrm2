@@ -12,6 +12,11 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        //
+        '5pay/depositResult',
+        '5pay/updateStatus',
+        'paytrust/transactionResult',
+        'paytrust/payoutResult',
+        'ompay/depositResult',
+        'ompay/updateStatus',
     ];
 }

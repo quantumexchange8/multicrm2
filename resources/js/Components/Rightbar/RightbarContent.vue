@@ -12,6 +12,6 @@ const props = defineProps({
 <template>
     <div class="text-gray-700 dark:text-gray-500">
         <p class="text-sm font-medium text-left">{{ title }}</p>
-        <p class="text-right dark:text-white">{{ amount }}</p>
+        <p class="text-right dark:text-white">$ {{ amount }}</p>
     </div>
 </template>

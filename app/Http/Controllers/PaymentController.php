@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Payment\DepositRequest;
+use App\Http\Requests\Payment\WithdrawalRequest;
 use App\Models\GatewayExchangeRate;
 use App\Models\Payment;
 use App\Models\SettingCryptoWallet;
@@ -181,16 +182,8 @@ class PaymentController extends Controller
         }
     }
 
-    public function requestWithdrawal(Request $request)
+    public function requestWithdrawal(WithdrawalRequest $request)
     {
-
-            $request->validate([
-                'account_no' => 'required|string',
-                'account_type' => 'required|string',
-                'amount' => 'required|numeric|min:30',
-                'channel' => 'required|string',
-            ]);
-
             $user = Auth::user();
             $amount = floatval($request->amount);
             if ($user->cash_wallet < $amount) {
@@ -210,6 +203,7 @@ class PaymentController extends Controller
                 'account_no' => $request->account_no,
                 'account_type' => $request->account_type,
             ]);
-            return response()->json(['success' => true]);
+
+            return redirect()->back()->with('toast', 'Successfully Submitted Withdrawal Request');
     }
 }

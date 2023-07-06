@@ -11,7 +11,7 @@ class WithdrawalRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,28 @@ class WithdrawalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'account_no' => 'required|string',
+            'account_type' => 'required|string',
+            'amount' => 'required|numeric|min:30',
+            'channel' => 'required|string',
         ];
+    }
+
+    public function attributes(): array
+    {
+        $attributeNames = [
+            'amount' => 'Amount',
+            'channel' => 'Withdrawal Method'
+        ];
+
+        if ($this->input('channel') =='bank') {
+            $attributeNames['account_no'] = 'Bank Account';
+            $attributeNames['account_type'] = 'Bank';
+        } else {
+            $attributeNames['account_no'] = 'Cryptocurrency Address';
+            $attributeNames['account_type'] = 'Cryptocurrency';
+        }
+
+        return $attributeNames;
     }
 }

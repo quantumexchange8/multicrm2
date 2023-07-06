@@ -9,7 +9,7 @@ import WithdrawalForm from "@/Components/Rightbar/WithdrawalForm.vue";
 <template>
     <aside class="w-full md:w-auto space-y-4">
         <RightbarTitle title="Personal Finances">
-            <RightbarContent title="Cash Wallet" amount="99,999" />
+            <RightbarContent title="Cash Wallet" :amount="$page.props.auth.user.cash_wallet" />
             <RightbarContent title="Reward Point (RP)" amount="999,999" />
 
             <div class="flex justify-between gap-4 mt-8">

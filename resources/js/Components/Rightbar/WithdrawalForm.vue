@@ -9,15 +9,12 @@ import {onMounted, ref} from "vue";
 import { useForm } from 'laravel-precognition-vue-inertia';
 import QrcodeVue from 'qrcode.vue';
 import {DuplicateIcon} from "@heroicons/vue/outline";
-import toast from "@/Composables/toast.js";
-import ToastList from "@/Components/ToastList.vue";
 
-const submitDeposit = ref(false)
+const submitWithdrawal = ref(false)
 const cryptoWallets = ref([]);
 const paymentAccounts = ref([]);
 const isLoading = ref(false);
 const error = ref(null);
-const selectedAccountPlatform = ref(null);
 
 onMounted(async () => {
     isLoading.value = true;
@@ -37,63 +34,21 @@ onMounted(async () => {
 });
 
 
-const depositMethods = [
-    { id: 'deposit_method', src: '/assets/finance/bank.png', value: 1, name: 'Bank Account' },
-    { id: 'deposit_method', src: '/assets/finance/cryptocurrency.png', value: 2, name: 'Cryptocurrency' },
+const channels = [
+    { id: 'channel', src: '/assets/finance/bank.png', value: 'bank', name: 'Bank Account' },
+    { id: 'channel', src: '/assets/finance/cryptocurrency.png', value: 'crypto', name: 'Cryptocurrency' },
 ];
 
-const platforms = [
-    { id: 'account_platform_2', src: '/assets/platform/icon/metatrader5.png', value: 2 },
-    { id: 'account_platform_3', src: '/assets/platform/icon/ctrader.png', value: 3 },
-    { id: 'account_platform_4', src: '/assets/platform/icon/match_trade.png', value: 4 },
-];
-
-const getCryptoMediaByCollection = (media, collectionName) => {
-    return media.filter((cryptoMedia) => cryptoMedia.collection_name === collectionName);
-};
-
-const handlePaymentReceipt = (event) => {
-    form.front_identity = event.target.files[0];
-};
 
 const form = useForm('post', route('payment.requestWithdrawal'), {
-    bank: '',
-    // account_platform: '',
     account_no: '',
-    currency: '',
+    account_type: '',
     amount: '',
-    txid: '',
-    payment_receipt: '',
-    description: '',
-    // password: '',
+    channel: '',
 });
 
-function copyTestingCode () {
-    let walletAddressCopy = document.querySelector('#cryptoWalletAddress')
-    walletAddressCopy.setAttribute('type', 'text');
-    walletAddressCopy.select();
-
-    try {
-        var successful = document.execCommand('copy');
-        if (successful) {
-            toast.add({
-                message: "Copy Successfully!",
-            });
-        } else {
-            alert('Try again later')
-        }
-
-    } catch (err) {
-        alert('Oops, unable to copy');
-    }
-
-    /* unselect the range */
-    walletAddressCopy.setAttribute('type', 'hidden')
-    window.getSelection().removeAllRanges()
-}
-
-const openDepositModal = () => {
-    submitDeposit.value = true
+const openWithdrawalModal = () => {
+    submitWithdrawal.value = true
 }
 
 const submit = () => {
@@ -107,144 +62,101 @@ const submit = () => {
 }
 
 const closeModal = () => {
-    submitDeposit.value = false
+    submitWithdrawal.value = false
     form.reset()
 }
 </script>
 
 <template>
-    <Button class="w-full justify-center" variant="danger" @click="openDepositModal">
+    <Button class="w-full justify-center" variant="danger" @click="openWithdrawalModal">
         Withdrawal
     </Button>
 
-    <Modal :show="submitDeposit" @close="closeModal">
-        <ToastList/>
+    <Modal :show="submitWithdrawal" @close="closeModal">
 
         <form class="p-6">
-            <div v-if="!form.deposit_method">
-                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Deposit Method</h2>
+            <div v-if="!form.channel">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Withdrawal Method</h2>
                 <hr>
                 <p class="my-4 text-sm text-gray-600 dark:text-gray-400">
-                    <span class="text-red-500">*</span> Select a deposit method
+                    <span class="text-red-500">*</span> Select a withdrawal method
                 </p>
-                <ul class="my-4 grid w-full gap-6" :class="{'md:grid-cols-3': depositMethods.length >= 3, 'md:grid-cols-2': depositMethods.length === 2}">
-                    <li v-for="(depositMethod, index) in depositMethods" :key="index">
+                <ul class="my-4 grid w-full gap-6" :class="{'md:grid-cols-3': channels.length >= 3, 'md:grid-cols-2': channels.length === 2}">
+                    <li v-for="(channel, index) in channels" :key="index">
                         <input
                             type="radio"
-                            :id="`deposit_method_${index}`"
-                            name="deposit_method"
-                            :value="depositMethod.value"
+                            :id="`channel_${index}`"
+                            name="channel"
+                            :value="channel.value"
                             class="hidden peer"
-                            v-model="form.deposit_method"
+                            v-model="form.channel"
                             :required="index === 1"
                         >
                         <label
-                            :for="`deposit_method_${index}`"
+                            :for="`channel_${index}`"
                             class="inline-flex items-center justify-center w-full p-4 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-[#007BFF] dark:peer-checked:bg-[#007BFF] peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-transparent dark:shadow-lg dark:hover:shadow-blue-600"
                         >
                             <div class="flex flex-col items-center gap-2">
-                                <img class="object-cover" :src="depositMethod.src" alt="account_platform">
-                                <p class="dark:text-white">{{ depositMethod.name }}</p>
+                                <img class="object-cover" :src="channel.src" alt="account_platform">
+                                <p class="dark:text-white">{{ channel.name }}</p>
                             </div>
                         </label>
                     </li>
                 </ul>
+                <InputError :message="form.errors.channel"/>
+
             </div>
             <!-- Bank -->
-            <div v-if="form.deposit_method === 1">
+            <div v-if="form.channel === 'bank'">
                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Withdrawal - Bank Account</h2>
                 <hr>
                 <div class="grid grid-cols-1 my-8 gap-2 w-full text-center">
                     <p class="text-base dark:text-gray-400">Cash Wallet Balance</p>
-                    <p class="text-4xl font-bold dark:text-white">$ 24,738.62</p>
+                    <p class="text-4xl font-bold dark:text-white">$ {{ $page.props.auth.user.cash_wallet }}</p>
                 </div>
                 <div class="grid grid-cols-1 gap-6">
                     <div class="space-y-2">
-                        <Input id="amount" type="text" class="block w-full px-4" placeholder="Bank" v-model="form.amount" @change="form.validate('amount')" />
+                        <Input id="account_type" type="text" class="block w-full px-4" placeholder="Bank" v-model="form.account_type" @change="form.validate('account_type')" autocomplete="off" />
+                        <InputError :message="form.errors.account_type"/>
+
                     </div>
                     <div class="space-y-2">
-                        <Input id="amount" type="text" class="block w-full px-4" placeholder="Bank Account" v-model="form.amount" @change="form.validate('amount')" />
+                        <Input id="account_no" type="text" class="block w-full px-4" placeholder="Bank Account" v-model="form.account_no" @change="form.validate('account_no')" autocomplete="off" />
+                        <InputError :message="form.errors.account_no"/>
+
                     </div>
                     <div class="space-y-2">
-                        <Input id="amount" type="number" min="30" class="block w-full px-4" placeholder="Currency" v-model="form.amount" @change="form.validate('amount')" />
+                        <Input id="amount" type="number" min="30" class="block w-full px-4" placeholder="Amount" v-model="form.amount" @change="form.validate('amount')" autocomplete="off" />
+                        <InputError :message="form.errors.amount"/>
+
                     </div>
                 </div>
 
             </div>
 
             <!-- Crypto -->
-            <div v-if="form.deposit_method === 2">
-                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Cryptocurrency</h2>
+            <div v-if="form.channel === 'crypto'">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Withdrawal - Cryptocurrency</h2>
                 <hr>
-                <p class="my-4 text-sm text-gray-600 dark:text-gray-400">
-                    <span class="text-red-500">*</span> Select a coin
-                </p>
-                <ul class="my-4 grid w-full gap-6 md:grid-cols-3">
-                    <li v-for="(cryptoWallet, index) in cryptoWallets" :key="index">
-                        <input
-                            type="radio"
-                            :id="`account_platform_${cryptoWallet.id}`"
-                            name="account_platform"
-                            :value="cryptoWallet.id"
-                            class="hidden peer"
-                            v-model="form.account_platform"
-                            :required="index === 1"
-                            @change="selectedAccountPlatform = form.account_platform"
-                        >
-                        <label
-                            :for="`account_platform_${cryptoWallet.id}`"
-                            class="inline-flex items-center justify-center w-full p-4 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-[#007BFF] dark:peer-checked:bg-[#007BFF] peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-transparent dark:shadow-lg dark:hover:shadow-blue-600"
-                        >
-                            <div class="flex flex-col items-center gap-2" v-for="cryptoMedia in getCryptoMediaByCollection(cryptoWallet.media, 'setting_crypto_wallet')" :key="cryptoMedia.id">
-                                <img class="object-cover" :src="cryptoMedia.original_url" :alt="cryptoMedia.alt">
-                                <p class="text-sm dark:text-white">{{ cryptoWallet.name }} ({{ cryptoWallet.symbol }})</p>
-                            </div>
-                        </label>
-                    </li>
-                </ul>
-                <div v-if="isLoading">Loading...</div>
-                <div v-if="error">{{ error }}</div>
-                <div v-for="(cryptoWallet, index) in cryptoWallets" :key="index">
-                    <div v-if="selectedAccountPlatform === cryptoWallet.id">
-                        <div class="flex flex-col items-center gap-4 my-4">
-                            <qrcode-vue :class="['border-4 border-white']" :value="cryptoWallet.wallet_address" :size="100"></qrcode-vue>
-                            <p class="flex gap-3 text-sm dark:text-gray-400">
-                                {{ cryptoWallet.wallet_address }}
-                                <input type="hidden" id="cryptoWalletAddress" :value="cryptoWallet.wallet_address">
-                                <DuplicateIcon aria-hidden="true" :class="['w-5 dark:text-white']" @click.stop.prevent="copyTestingCode" style="cursor: pointer" />
-                            </p>
-                        </div>
-                    </div>
+                <div class="grid grid-cols-1 my-8 gap-2 w-full text-center">
+                    <p class="text-base dark:text-gray-400">Cash Wallet Balance</p>
+                    <p class="text-4xl font-bold dark:text-white">$ {{ $page.props.auth.user.cash_wallet }}</p>
                 </div>
+                <div class="grid grid-cols-1 gap-6">
+                    <div class="space-y-2">
+                        <Input id="account_type" type="text" class="block w-full px-4" placeholder="Cryptocurrency" v-model="form.account_type" @change="form.validate('account_type')" autocomplete="off" />
+                        <InputError :message="form.errors.account_type"/>
 
-                <div class="grid gap-6 mb-6 md:grid-cols-2">
-                    <div class="space-y-2">
-                        <Label for="account_platform" value="Account Platform" />
-                        <InputSelect class="w-full" id="account_platform" placeholder="Select Account Platform"/>
                     </div>
                     <div class="space-y-2">
-                        <Label for="account_no" value="Account No." />
-                        <InputSelect class="w-full" id="account_no" placeholder="Select Account No." />
+                        <Input id="account_no" type="text" class="block w-full px-4" placeholder="Cryptocurrency Address" v-model="form.account_no" @change="form.validate('account_no')" autocomplete="off" />
+                        <InputError :message="form.errors.account_no"/>
+
                     </div>
                     <div class="space-y-2">
-                        <Label for="amount" value="Deposit Amount" />
-                        <Input id="amount" type="text" class="block w-full px-4" placeholder="Deposit Amount" v-model="form.amount" @change="form.validate('amount')" />
+                        <Input id="amount" type="number" min="30" class="block w-full px-4" placeholder="Amount" v-model="form.amount" @change="form.validate('amount')" autocomplete="off" />
                         <InputError :message="form.errors.amount"/>
-                    </div>
-                    <div class="space-y-2">
-                        <Label for="txid" value="TxID" />
-                        <Input id="txid" type="text" class="block w-full px-4" placeholder="Paste TxID from Payment Receipt" v-model="form.txid" />
-                        <InputError :message="form.errors.txid"/>
-                    </div>
-                    <div class="space-y-2">
-                        <Label for="payment_receipt" value="Payment Receipt" />
-                        <input type="file" id="payment_receipt" @change="handlePaymentReceipt" class="block border border-gray-400 w-full rounded-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1"/>
-                        <InputError :message="form.errors.payment_receipt"/>
-                    </div>
-                    <div class="space-y-2">
-                        <Label for="description" value="Description" />
-                        <Input id="description" type="text" class="block w-full px-4" placeholder="Description" v-model="form.description" />
-                        <InputError :message="form.errors.description"/>
+
                     </div>
                 </div>
             </div>
@@ -260,7 +172,7 @@ const closeModal = () => {
                     :disabled="form.processing"
                     @click="submit"
                 >
-                    Process
+                    Submit
                 </Button>
             </div>
         </form>
