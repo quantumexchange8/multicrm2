@@ -133,7 +133,13 @@ class PaymentController extends Controller
         $notifyUrl = url('ompay/updateStatus');
         $token = md5($payment_id . $this->apiKey . $this->secretKey . $real_amount);
         $mode = 3;
-        return redirect()->away($apiUrl . "?mode={$mode}&merchantCode={$this->merchantID}&serialNo={$payment_id}&currency={$currency}&amount={$real_amount}&returnUrl={$returnUrl}&notifyUrl={$notifyUrl}&token={$token}");
+        // Generate the redirect URL
+        $redirectUrl = $apiUrl . "?mode={$mode}&merchantCode={$this->merchantID}&serialNo={$payment_id}&currency={$currency}&amount={$real_amount}&returnUrl={$returnUrl}&notifyUrl={$notifyUrl}&token={$token}";
+
+// Create the redirect response with target="_blank" attribute
+        return redirect()->away($redirectUrl)->withHeaders([
+            'target' => '_blank',
+        ]);
     }
 
     public function depositResult(Request $request)
