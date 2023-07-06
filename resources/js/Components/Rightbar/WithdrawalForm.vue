@@ -158,7 +158,9 @@ const closeModal = () => {
                     <p class="text-base dark:text-gray-400">Cash Wallet Balance</p>
                     <p class="text-4xl font-bold dark:text-white">$ 24,738.62</p>
                 </div>
-                div
+                <div>
+
+                </div>
             </div>
 
             <!-- Crypto -->
