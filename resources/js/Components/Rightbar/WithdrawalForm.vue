@@ -56,8 +56,8 @@ const handlePaymentReceipt = (event) => {
     form.front_identity = event.target.files[0];
 };
 
-const form = useForm('post', route('payment.deposit'), {
-    deposit_method: '',
+const form = useForm('post', route('payment.requestWithdrawal'), {
+    bank: '',
     // account_platform: '',
     account_no: '',
     currency: '',
@@ -158,9 +158,18 @@ const closeModal = () => {
                     <p class="text-base dark:text-gray-400">Cash Wallet Balance</p>
                     <p class="text-4xl font-bold dark:text-white">$ 24,738.62</p>
                 </div>
-                <div>
-
+                <div class="grid grid-cols-1 gap-6">
+                    <div class="space-y-2">
+                        <Input id="amount" type="text" class="block w-full px-4" placeholder="Bank" v-model="form.amount" @change="form.validate('amount')" />
+                    </div>
+                    <div class="space-y-2">
+                        <Input id="amount" type="text" class="block w-full px-4" placeholder="Bank Account" v-model="form.amount" @change="form.validate('amount')" />
+                    </div>
+                    <div class="space-y-2">
+                        <Input id="amount" type="number" min="30" class="block w-full px-4" placeholder="Currency" v-model="form.amount" @change="form.validate('amount')" />
+                    </div>
                 </div>
+
             </div>
 
             <!-- Crypto -->

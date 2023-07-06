@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\DepositRequest;
+use App\Http\Requests\Payment\DepositRequest;
 use App\Models\GatewayExchangeRate;
 use App\Models\Payment;
 use App\Models\SettingCryptoWallet;
@@ -179,5 +179,37 @@ class PaymentController extends Controller
                 $payment->save();
             }
         }
+    }
+
+    public function requestWithdrawal(Request $request)
+    {
+
+            $request->validate([
+                'account_no' => 'required|string',
+                'account_type' => 'required|string',
+                'amount' => 'required|numeric|min:30',
+                'channel' => 'required|string',
+            ]);
+
+            $user = Auth::user();
+            $amount = floatval($request->amount);
+            if ($user->cash_wallet < $amount) {
+                return response()->json(['success' => false, 'message' => 'Insufficient balance']);
+            }
+            $user->cash_wallet -= $amount;
+            $user->save();
+            $payment_id = RunningNumberService::getID('transaction');
+
+            Payment::create([
+                'user_id' => $user->id,
+                'payment_id' => $payment_id,
+                'category' => 'payment',
+                'type' => 'Withdrawal',
+                'channel' => $request->channel,
+                'amount' => $amount,
+                'account_no' => $request->account_no,
+                'account_type' => $request->account_type,
+            ]);
+            return response()->json(['success' => true]);
     }
 }

@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\DepositRequest;
+use App\Http\Requests\Payment\DepositRequest;
 use App\Models\Deposit;
-use Illuminate\Http\Request;
 
 class DepositController extends Controller
 {
