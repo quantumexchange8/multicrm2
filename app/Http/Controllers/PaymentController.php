@@ -22,6 +22,7 @@ class PaymentController extends Controller
     {
         $this->middleware('jwt.set');
     }
+
     /*  private $Status = array(
         0 => 'Waiting for payment',
         1 => 'Payment Approved',
