@@ -10,6 +10,7 @@ use App\Models\SettingCryptoWallet;
 use App\Models\TradingAccount;
 use App\Models\TradingUser;
 use App\Models\User;
+use App\Services\ChangeTraderBalanceType;
 use App\Services\CTraderService;
 use App\Services\RunningNumberService;
 use Illuminate\Http\Request;

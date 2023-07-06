@@ -146,3 +146,11 @@ class CTraderAccountType
     const HEDGED = "HEDGED";
     const NETTED = "NETTED";
 }
+
+class ChangeTraderBalanceType
+{
+    const DEPOSIT = "DEPOSIT";
+    const DEPOSIT_NONWITHDRAWABLE_BONUS = "DEPOSIT_NONWITHDRAWABLE_BONUS";
+    const WITHDRAW = "WITHDRAW";
+    const WITHDRAW_NONWITHDRAWABLE_BONUS = "WITHDRAW_NONWITHDRAWABLE_BONUS";
+}
