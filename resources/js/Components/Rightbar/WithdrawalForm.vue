@@ -14,6 +14,7 @@ import ToastList from "@/Components/ToastList.vue";
 
 const submitDeposit = ref(false)
 const cryptoWallets = ref([]);
+const paymentAccounts = ref([]);
 const isLoading = ref(false);
 const error = ref(null);
 const selectedAccountPlatform = ref(null);
@@ -21,17 +22,24 @@ const selectedAccountPlatform = ref(null);
 onMounted(async () => {
     isLoading.value = true;
     try {
-        const response = await axios.get('/crypto_wallet');
-        cryptoWallets.value = response.data.cryptoWallets;
+        const response = await axios.get('/get_trading_account');
+
+        const withdrawalData = response.data;
+
+        paymentAccounts.value = withdrawalData.paymentAccounts;
+        cryptoWallets.value = withdrawalData.cryptoWallets;
+
     } catch (error) {
-        error.value = 'Failed to fetch cryptoWallets';
+        error.value = 'Failed to fetch data';
     } finally {
         isLoading.value = false;
     }
 });
 
+
 const depositMethods = [
-    { id: 'deposit_method', src: '/assets/finance/cryptocurrency.png', value: 1 },
+    { id: 'deposit_method', src: '/assets/finance/bank.png', value: 1, name: 'Bank Account' },
+    { id: 'deposit_method', src: '/assets/finance/cryptocurrency.png', value: 2, name: 'Cryptocurrency' },
 ];
 
 const platforms = [
@@ -50,9 +58,10 @@ const handlePaymentReceipt = (event) => {
 
 const form = useForm('post', route('payment.deposit'), {
     deposit_method: '',
-    account_platform: '',
-    // account_no: '',
-    deposit_amount: '',
+    // account_platform: '',
+    account_no: '',
+    currency: '',
+    amount: '',
     txid: '',
     payment_receipt: '',
     description: '',
@@ -118,13 +127,13 @@ const closeModal = () => {
                 <p class="my-4 text-sm text-gray-600 dark:text-gray-400">
                     <span class="text-red-500">*</span> Select a deposit method
                 </p>
-                <ul class="my-4 grid w-full gap-6 md:grid-cols-3">
-                    <li v-for="index in 6" :key="index">
+                <ul class="my-4 grid w-full gap-6" :class="{'md:grid-cols-3': depositMethods.length >= 3, 'md:grid-cols-2': depositMethods.length === 2}">
+                    <li v-for="(depositMethod, index) in depositMethods" :key="index">
                         <input
                             type="radio"
                             :id="`deposit_method_${index}`"
                             name="deposit_method"
-                            :value="index"
+                            :value="depositMethod.value"
                             class="hidden peer"
                             v-model="form.deposit_method"
                             :required="index === 1"
@@ -134,13 +143,25 @@ const closeModal = () => {
                             class="inline-flex items-center justify-center w-full p-4 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-[#007BFF] dark:peer-checked:bg-[#007BFF] peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-transparent dark:shadow-lg dark:hover:shadow-blue-600"
                         >
                             <div class="flex flex-col items-center gap-2">
-                                <img class="object-cover" :src="depositMethods[0].src" alt="account_platform">
-                                <p class="dark:text-white">Cryptocurrency</p>
+                                <img class="object-cover" :src="depositMethod.src" alt="account_platform">
+                                <p class="dark:text-white">{{ depositMethod.name }}</p>
                             </div>
                         </label>
                     </li>
                 </ul>
             </div>
+            <!-- Bank -->
+            <div v-if="form.deposit_method === 1">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Withdrawal - Bank Account</h2>
+                <hr>
+                <div class="grid grid-cols-1 my-8 gap-2 w-full text-center">
+                    <p class="text-base dark:text-gray-400">Cash Wallet Balance</p>
+                    <p class="text-4xl font-bold dark:text-white">$ 24,738.62</p>
+                </div>
+                div
+            </div>
+
+            <!-- Crypto -->
             <div v-if="form.deposit_method === 2">
                 <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Cryptocurrency</h2>
                 <hr>
@@ -195,9 +216,9 @@ const closeModal = () => {
                         <InputSelect class="w-full" id="account_no" placeholder="Select Account No." />
                     </div>
                     <div class="space-y-2">
-                        <Label for="deposit_amount" value="Deposit Amount" />
-                        <Input id="deposit_amount" type="text" class="block w-full px-4" placeholder="Deposit Amount" v-model="form.deposit_amount" @change="form.validate('deposit_amount')" />
-                        <InputError :message="form.errors.deposit_amount"/>
+                        <Label for="amount" value="Deposit Amount" />
+                        <Input id="amount" type="text" class="block w-full px-4" placeholder="Deposit Amount" v-model="form.amount" @change="form.validate('amount')" />
+                        <InputError :message="form.errors.amount"/>
                     </div>
                     <div class="space-y-2">
                         <Label for="txid" value="TxID" />

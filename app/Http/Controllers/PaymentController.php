@@ -36,23 +36,14 @@ class PaymentController extends Controller
     private $secretKey = "0883EF96B3314A8B865DA4E3A16E4829";
     private $base_url = "http://api.doitwallet.asia";
 
-    public function get_crypto_wallet()
-    {
-        $cryptoWallets = SettingCryptoWallet::with('media')
-            ->where('status', SettingCryptoWallet::STATUS_ACTIVE)
-            ->get();
-
-        return response()->json([
-            'cryptoWallets' => $cryptoWallets
-        ]);
-    }
 
     public function get_trading_account()
     {
         $conn = (new CTraderService)->connectionStatus();
         $user = Auth::user();
-        $trading_account = [];
-        $payment_account = [];
+        $cryptoWallets = SettingCryptoWallet::with('media')
+            ->where('status', SettingCryptoWallet::STATUS_ACTIVE)
+            ->get();
 
         if ($conn['code'] == 0) {
             (new CTraderService)->getUserInfo($user->tradingUsers);
@@ -65,6 +56,7 @@ class PaymentController extends Controller
         return response()->json([
             'tradingAccounts' => $trading_account,
             'paymentAccounts' => $payment_account,
+            'cryptoWallets' => $cryptoWallets,
         ]);
     }
 

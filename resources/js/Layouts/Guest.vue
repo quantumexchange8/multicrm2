@@ -24,7 +24,7 @@ defineProps({
             >
                 <div class="flex justify-center">
                     <Link href="/">
-                        <img src="/assets/logo.png" alt="Logo" class="flex-shrink-0" />
+                        <img src="/assets/logo.png" alt="Logo" class="flex-shrink-0" style="width: 300px" />
                     </Link>
                 </div>
                 <Dropdown align="right" width="48">

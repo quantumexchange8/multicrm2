@@ -22,20 +22,28 @@ const selectedAccountPlatform = ref(null);
 onMounted(async () => {
     isLoading.value = true;
     try {
-        const response1 = axios.get('/get_crypto_wallet');
-        const response2 = axios.get('/get_trading_account');
+        // const response1 = await axios.get('/get_trading_account');
+        // const response2 = await axios.get('/get_crypto_wallet');
+        //
+        // const paymentAccResponse = response1.data;
+        // const cryptoResponse  = response2.data;
+        //
+        // paymentAccounts.value = paymentAccResponse.paymentAccounts;
+        // cryptoWallets.value = cryptoResponse.cryptoWallets;
 
-        const [cryptoResponse, paymentAccResponse] = await Promise.all([response1, response2]);
+        const response = await axios.get('/get_trading_account');
 
-        cryptoWallets.value = cryptoResponse.data.cryptoWallets;
-        paymentAccounts.paymentAccounts = paymentAccResponse.data.paymentAccounts;
+        const depositData = response.data;
 
+        paymentAccounts.value = depositData.paymentAccounts;
+        cryptoWallets.value = depositData.cryptoWallets;
     } catch (error) {
-        error.value = 'Failed to fetch cryptoWallets';
+        error.value = 'Failed to fetch data';
     } finally {
         isLoading.value = false;
     }
 });
+
 
 const depositMethods = [
     { id: 'deposit_method', src: '/assets/finance/bank.png', value: 1, name: 'Bank' },
