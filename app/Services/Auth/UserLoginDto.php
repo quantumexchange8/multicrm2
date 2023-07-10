@@ -11,7 +11,7 @@ class UserLoginDto extends DataTransferObject
     public static function fromValidatedRequest(Array $validatedData): UserLoginDto
     {
         return new static([
-            'email' => $validatedData['username'],
+            'email' => $validatedData['email'],
             'password' => $validatedData['password'],
         ]);
     }

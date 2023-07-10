@@ -20,10 +20,6 @@ use Illuminate\Support\Str;
 
 class PaymentController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['jwt.set', 'jwt.verify']);
-    }
 
     /*  private $Status = array(
         0 => 'Waiting for payment',
