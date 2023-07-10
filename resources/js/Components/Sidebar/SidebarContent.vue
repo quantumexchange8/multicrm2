@@ -29,8 +29,8 @@ import { ClipboardListIcon } from '@heroicons/vue/outline'
 
         <SidebarLink
             title="Account Info"
-            :href="route('dashboard')"
-            :active="route().current('dashboard')"
+            :href="route('account_info')"
+            :active="route().current('account_info')"
         >
             <template #icon>
                 <ClipboardListIcon

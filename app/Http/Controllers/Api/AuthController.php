@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
-//use PHPOpenSourceSaver\JWTAuth\JWTAuth;
+use PHPOpenSourceSaver\JWTAuth\JWTAuth;
 use App\Services\Auth\UserLoginDto;
 use App\Http\Controllers\Controller;
 use App\Services\Auth\CreateAccount;
@@ -14,8 +14,12 @@ use App\Http\Requests\Auth\UserLogin;
 use App\Http\Requests\Auth\UserRegister;
 use App\Http\Resources\User\UserResource;
 use App\Exceptions\Auth\InvalidCredentialException;
+use App\Http\Requests\Request;
 use App\Services\MetaTrader5\User\CreateUser as CreateMetaTraderUser;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
+use PHPOpenSourceSaver\JWTAuth\Exceptions\TokenExpiredException;
+use PHPOpenSourceSaver\JWTAuth\Exceptions\TokenInvalidException;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth as FacadesJWTAuth;
 
 class AuthController extends Controller
 {

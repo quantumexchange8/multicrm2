@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountInfoController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DepositController;
 use App\Http\Controllers\PaymentController;
@@ -46,6 +47,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/requestWithdrawal', [PaymentController::class, 'requestWithdrawal'])->middleware(HandlePrecognitiveRequests::class)->name('payment.requestWithdrawal');
 
     Route::post('/upload-crypto-files', [\App\Http\Controllers\SettingCryptoWalletController::class, 'store'])->name('upload-crypto-files');
+
+    /**
+     * ==============================
+     *         Account Info
+     * ==============================
+     */
+    Route::get('/account_info', [AccountInfoController::class, 'account_info'])->name('account_info');
+
 
 });
 
