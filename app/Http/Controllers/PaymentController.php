@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class PaymentController extends Controller
 {
@@ -55,7 +56,8 @@ class PaymentController extends Controller
         } else {
             return redirect()->back()->with('toast', 'No Connection with CTrader');
         }
-
+//        $trading_account = TradingAccount::where('user_id', Auth::id())->with(['accountType'])->get();
+//        $payment_account = TradingUser::where('user_id', $user->id)->whereNot('module', 'pamm')->get();
         return response()->json([
             'tradingAccounts' => $trading_account,
             'paymentAccounts' => $payment_account,
@@ -129,7 +131,11 @@ class PaymentController extends Controller
         $notifyUrl = url('ompay/updateStatus');
         $token = md5($payment_id . $this->apiKey . $this->secretKey . $real_amount);
         $mode = 3;
-        return redirect()->away($apiUrl . "?mode={$mode}&merchantCode={$this->merchantID}&serialNo={$payment_id}&currency={$currency}&amount={$real_amount}&returnUrl={$returnUrl}&notifyUrl={$notifyUrl}&token={$token}");
+
+        $redirectUrl = $apiUrl . "?mode={$mode}&merchantCode={$this->merchantID}&serialNo={$payment_id}&currency={$currency}&amount={$real_amount}&returnUrl={$returnUrl}&notifyUrl={$notifyUrl}&token={$token}";
+
+        return Inertia::location($redirectUrl);
+
     }
 
     public function depositResult(Request $request)
