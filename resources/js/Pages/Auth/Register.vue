@@ -76,9 +76,9 @@ defineProps({
 });
 
 const platforms = [
-    { id: 'account_platform_2', src: '/assets/platform/icon/metatrader5.png', value: 2 },
+    // { id: 'account_platform_2', src: '/assets/platform/icon/metatrader5.png', value: 2 },
     { id: 'account_platform_3', src: '/assets/platform/icon/ctrader.png', value: 3 },
-    { id: 'account_platform_4', src: '/assets/platform/icon/match_trade.png', value: 4 },
+    // { id: 'account_platform_4', src: '/assets/platform/icon/match_trade.png', value: 4 },
 ];
 
 const acc_types = [
@@ -95,18 +95,18 @@ const handleBackIdentity = (event) => {
     form.back_identity = event.target.files[0];
 };
 
-function nextStep() {
-    form.post(route('register.first.step'), {
-        onSuccess: () => {
-            formStep.value++;
-            form.form_step++;
-        },
-    });
-}
 // function nextStep() {
-//     formStep.value++;
-//     form.form_step++;
+//     form.post(route('register.first.step'), {
+//         onSuccess: () => {
+//             formStep.value++;
+//             form.form_step++;
+//         },
+//     });
 // }
+function nextStep() {
+    formStep.value++;
+    form.form_step++;
+}
 function prevStep() {
     formStep.value--;
     form.form_step--;

@@ -151,6 +151,9 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $user->addMedia($request->front_identity)->toMediaCollection('front_identity');
+        $user->addMedia($request->back_identity)->toMediaCollection('back_identity');
+
         $mainPassword = Str::random(8);
         $investorPassword = Str::random(8);
 

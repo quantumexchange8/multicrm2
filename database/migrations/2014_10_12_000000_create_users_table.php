@@ -34,7 +34,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('lang', 10)->nullable();
             $table->decimal('cash_wallet', 11, 2)->default(0.00);
-            $table->integer('kyc_approval')->default(1);
+            $table->string('kyc_approval')->default('pending');
             $table->text('kyc_approval_description')->nullable();
             $table->string('gender')->nullable();
             $table->string('id_no')->nullable();
