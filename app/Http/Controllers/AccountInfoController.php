@@ -68,7 +68,6 @@ class AccountInfoController extends Controller
 
     public function change_leverage(UpdateLeverageRequest $request)
     {
-        dd($request->all());
         $conn = (new CTraderService)->connectionStatus();
         if ($conn['code'] != 0) {
             if ($conn['code'] == 10) {
