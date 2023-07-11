@@ -31,10 +31,11 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $user = Auth::user();
+        $user = $request->user();
+
         return array_merge(parent::share($request), [
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user,
             ],
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [
@@ -42,7 +43,8 @@ class HandleInertiaRequests extends Middleware
                 ]);
             },
             'toast' => session('toast'),
-            'monthlyDeposit' => $user->getMonthlyDeposit(),
+            'monthlyDeposit' => $user ? $user->getMonthlyDeposit() : null,
         ]);
     }
+
 }
