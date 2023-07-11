@@ -171,6 +171,7 @@ const closeModal = () => {
                     <div class="space-y-2">
                         <Label for="currency" value="Currency" />
                         <InputSelect v-model="form.currency" class="w-full" id="currency" placeholder="Select Currency">
+                            <option value="MYR">MYR</option>
                             <option value="VND">VND</option>
                         </InputSelect>
                         <InputError :message="form.errors.currency"/>
