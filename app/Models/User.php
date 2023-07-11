@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
@@ -62,6 +63,20 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function getMonthlyDeposit()
+    {
+        return Payment::query()
+            ->where('user_id', Auth::id())
+            ->where('category', '=', 'payment')
+            ->where('type', '=', 'Deposit')
+            ->where('status', '=', 'Successful')
+            ->whereBetween('created_at', [
+                now()->startOfMonth(), // Start of the current month
+                now()->endOfMonth(),   // End of the current month
+            ])
+            ->sum('amount');
     }
 
     public function tradingUsers()

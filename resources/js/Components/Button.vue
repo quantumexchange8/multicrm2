@@ -7,7 +7,7 @@ const props = defineProps({
         type: String,
         default: 'primary',
         validator(value) {
-            return ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'black'].includes(value)
+            return ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'black', 'primary-opacity', 'success-opacity', 'danger-opacity'].includes(value)
         },
     },
     type: {
@@ -61,15 +61,26 @@ const baseClasses = [
 ]
 
 const variantClasses = (variant) => ({
-    'bg-[#007BFF] text-white hover:bg-blue-600 focus:ring-blue-500': variant == 'primary',
-    'bg-white text-gray-500 hover:bg-gray-100 focus:ring-gray-500 dark:text-gray-400 dark:bg-dark-eval-1 dark:hover:bg-dark-eval-2 dark:hover:text-gray-200':
+    'bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500': variant == 'primary',
+    'bg-white text-gray-500 hover:bg-gray-100 focus:ring-purple-500 dark:text-white dark:bg-dark-eval-1 dark:hover:bg-dark-eval-2 dark:hover:text-gray-200':
         variant == 'secondary',
-    'bg-[#05c46b33] text-[#05C46B] hover:bg-green-800 focus:ring-green-500': variant == 'success',
-    'bg-[#ff3f3433] text-[#FF3F34] hover:bg-red-800 focus:ring-red-500': variant == 'danger',
+    'bg-green-500 text-white hover:bg-green-600 focus:ring-green-500': variant == 'success',
+    'bg-red-500 text-white hover:bg-red-600 focus:ring-red-500': variant == 'danger',
     'bg-yellow-500 text-white hover:bg-yellow-600 focus:ring-yellow-500': variant == 'warning',
     'bg-cyan-500 text-white hover:bg-cyan-600 focus:ring-cyan-500': variant == 'info',
     'bg-black text-gray-300 hover:text-white hover:bg-gray-800 focus:ring-black dark:hover:bg-dark-eval-3':
         variant == 'black',
+
+    /* Opacity Variant */
+    'bg-[#007bff33] text-[#007BFF] hover:bg-blue-800 focus:ring-blue-500': variant == 'primary-opacity',
+    // 'bg-white text-gray-500 hover:bg-gray-100 focus:ring-gray-500 dark:text-gray-400 dark:bg-dark-eval-1 dark:hover:bg-dark-eval-2 dark:hover:text-gray-200':
+    //     variant == 'secondary',
+    'bg-[#05c46b33] text-[#05C46B] hover:bg-green-800 focus:ring-green-500': variant == 'success-opacity',
+    'bg-[#ff3f3433] text-[#FF3F34] hover:bg-red-800 focus:ring-red-500': variant == 'danger-opacity',
+    // 'bg-yellow-500 text-white hover:bg-yellow-600 focus:ring-yellow-500': variant == 'warning-opacity',
+    // 'bg-cyan-500 text-white hover:bg-cyan-600 focus:ring-cyan-500': variant == 'info-opacity',
+    // 'bg-black text-gray-300 hover:text-white hover:bg-gray-800 focus:ring-black dark:hover:bg-dark-eval-3':
+    //     variant == 'black-opacity',
 })
 
 const classes = computed(() => [

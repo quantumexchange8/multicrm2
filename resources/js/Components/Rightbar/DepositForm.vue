@@ -120,7 +120,7 @@ const closeModal = () => {
 </script>
 
 <template>
-    <Button class="w-full justify-center" variant="success" @click="openDepositModal">
+    <Button class="w-full justify-center" variant="success-opacity" @click="openDepositModal">
         Deposit
     </Button>
 

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountInfoController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DepositController;
+use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Inertia\Inertia;
@@ -32,6 +33,8 @@ Route::get('/dashboard', function () {
 Route::post('ompay/depositResult', [PaymentController::class, 'depositResult']);
 Route::post('ompay/updateStatus', [PaymentController::class, 'updateResult']);
 Route::middleware('auth')->group(function () {
+    Route::get('/monthly-deposit', [GeneralController::class, 'monthly_deposit'])->name('monthly_deposit');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -54,7 +57,7 @@ Route::middleware('auth')->group(function () {
      * ==============================
      */
     Route::get('/account_info', [AccountInfoController::class, 'account_info'])->name('account_info');
-
+    Route::post('/add-trading-account', [AccountInfoController::class, 'add_trading_account'])->name('add_trading_account');
 
 });
 

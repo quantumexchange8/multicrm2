@@ -68,7 +68,7 @@ const closeModal = () => {
 </script>
 
 <template>
-    <Button class="w-full justify-center" variant="danger" @click="openWithdrawalModal">
+    <Button class="w-full justify-center" variant="danger-opacity" @click="openWithdrawalModal">
         Withdrawal
     </Button>
 
