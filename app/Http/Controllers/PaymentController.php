@@ -141,8 +141,7 @@ class PaymentController extends Controller
     public function depositResult(Request $request)
     {
         $data = $request->all();
-
-        Log::info('Deposit Result' . ": " . json_encode($data));
+        Log::debug($data);
         if ($request->token) {
             session()->put('jwt-token', $request->token);
         }
@@ -152,7 +151,7 @@ class PaymentController extends Controller
     public function updateResult(Request $request)
     {
         $data =  $request->all();
-        Log::info('Update Status' . ": " . json_encode($data));
+        Log::debug($data);
         $result = [
             "Info" => $data['Info'],
             "MerchantCode" => $data['MerchantCode'],
@@ -162,8 +161,8 @@ class PaymentController extends Controller
             "Status" => $data['Status'],
             "Token" => $data["Token"],
         ];
+        Log::debug($result);
 
-        Log::info('Update Status Result' . ": " . json_encode($result));
         if ($result["Token"] == md5($result['SerialNo'] . $this->apiKey . $this->secretKey)) {
             $payment = Payment::query()->where('payment_id', Str::upper($result['SerialNo']))->first();
             if ($payment->status == "Submitted" || $payment->status == "Processing") {
