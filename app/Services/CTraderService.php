@@ -140,9 +140,8 @@ class CTraderService
             'login' => $meta_login,
             'groupName' => $tradingUser->meta_group,
             'leverageInCents' => $leverage * 100,
-
         ]);
-        Log::debug($response);
+        Log::debug($response->status());
         if ($response->status() == 204) {
             $data = $this->getUser($meta_login);
             (new UpdateTradingUser)->execute($meta_login, $data);
