@@ -74,7 +74,7 @@ class CTraderService
             'balance' => 0,
             'leverageInCents' => $leverage * 100,
             'contactDetails' => [
-                'phone' => $user->phone,
+                'phone' => $user->mobile,
             ],
             'accountType' => CTraderAccountType::HEDGED,
         ]);

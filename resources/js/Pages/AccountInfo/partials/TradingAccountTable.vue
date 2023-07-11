@@ -72,9 +72,9 @@ const closeModal = () => {
                 <th scope="col" class="px-6 py-3">
                     Leverage
                 </th>
-                <th scope="col" class="px-6 py-3">
-                    Actions
-                </th>
+<!--                <th scope="col" class="px-6 py-3">-->
+<!--                    Actions-->
+<!--                </th>-->
             </tr>
             </thead>
             <tbody>
@@ -97,7 +97,7 @@ const closeModal = () => {
                 <td class="px-6 py-4">
                     1:{{ tradingAccount.margin_leverage }}
                 </td>
-                <td class="px-6 py-4 flex justify-center gap-2">
+<!--                <td class="px-6 py-4 flex justify-center gap-2">-->
 <!--                    <Button class="justify-center pl-4 pr-3 pt-1 rounded-full w-8 h-8 focus:outline-none" variant="primary-opacity" @click="openDepositModal">-->
 <!--                        <DepositIcon aria-hidden="true" class="w-6 h-6 absolute" />-->
 <!--                        <span class="sr-only">Deposit</span>-->
@@ -106,11 +106,11 @@ const closeModal = () => {
 <!--                        <ResetIcon aria-hidden="true" class="w-6 h-6 absolute" />-->
 <!--                        <span class="sr-only">Reset</span>-->
 <!--                    </Button>-->
-                    <Button class="justify-center px-4 pt-2 rounded-full w-8 h-8 focus:outline-none" variant="primary-opacity" @click="openSettingModal(tradingAccount.meta_login, tradingAccount.margin_leverage, tradingAccount.id)">
-                        <SettingIcon aria-hidden="true" class="w-6 h-6 absolute" />
-                        <span class="sr-only">Setting</span>
-                    </Button>
-                </td>
+<!--                    <Button class="justify-center px-4 pt-2 rounded-full w-8 h-8 focus:outline-none" variant="primary-opacity" @click="openSettingModal(tradingAccount.meta_login, tradingAccount.margin_leverage, tradingAccount.id)">-->
+<!--                        <SettingIcon aria-hidden="true" class="w-6 h-6 absolute" />-->
+<!--                        <span class="sr-only">Setting</span>-->
+<!--                    </Button>-->
+<!--                </td>-->
             </tr>
             </tbody>
         </table>
