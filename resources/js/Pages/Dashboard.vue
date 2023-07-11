@@ -17,7 +17,7 @@ import { GithubIcon } from '@/Components/Icons/brands'
         </template>
 
         <div class="p-6 overflow-hidden bg-white rounded-md shadow-md dark:bg-dark-eval-1">
-            You're logged in!
+            Under maintenance, please be patient!
         </div>
 
     </AuthenticatedLayout>
