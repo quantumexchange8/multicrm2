@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AccountInfo\AddTradingAccountRequest;
+use App\Http\Requests\AccountInfo\UpdateLeverageRequest;
 use App\Models\AccountType;
 use App\Models\SettingLeverage;
 use App\Models\TradingAccount;
+use App\Models\TradingUser;
 use App\Services\CTraderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class AccountInfoController extends Controller
 {
-    public function account_info()
+    public function account_info($setting = null)
     {
         $trading_accounts = TradingAccount::query()
             ->with('accountType')
@@ -26,10 +30,11 @@ class AccountInfoController extends Controller
             'tradingAccounts' => $trading_accounts,
             'accountTypes' => $accountTypes,
             'leverages' => SettingLeverage::all(),
+            'setting' => $setting,
         ]);
     }
 
-    public function add_trading_account(Request $request)
+    public function add_trading_account(AddTradingAccountRequest $request)
     {
         $conn = (new CTraderService)->connectionStatus();
         if ($conn['code'] != 0) {
@@ -38,13 +43,6 @@ class AccountInfoController extends Controller
             }
             return response()->json(['success' => false, 'message' => $conn['message']]);
         }
-
-        $request->validate([
-            'leverage' => 'required|numeric',
-            'currency' => 'required',
-            'group' => 'required',
-            'additionalNotes' => 'nullable',
-        ]);
 
         $user = Auth::user();
 
@@ -66,5 +64,34 @@ class AccountInfoController extends Controller
         //Mail::to($user->email)->send(new NewMetaAccount($ctAccount['login'], $mainPassword, $investorPassword));
         return back()->with('toast', 'Successfully Created Trading Account');
         // return true;
+    }
+
+    public function change_leverage(UpdateLeverageRequest $request)
+    {
+        dd($request->all());
+        $conn = (new CTraderService)->connectionStatus();
+        if ($conn['code'] != 0) {
+            if ($conn['code'] == 10) {
+                return response()->json(['success' => false, 'message' => 'No connection with cTrader Server']);
+            }
+            return response()->json(['success' => false, 'message' => $conn['message']]);
+        }
+
+        $trading_account = TradingAccount::where('meta_login', $request->account_no)->first();
+        if ($trading_account) {
+            try {
+                (new CTraderService)->updateLeverage($request->account_no, $request->leverage);
+            } catch (\Throwable $e) {
+                if ($e->getMessage() == "Not found") {
+                    TradingUser::firstWhere('meta_login', $request->account_no)->update(['acc_status' => 'Inactive']);
+                } else {
+                    Log::error($e->getMessage());
+                }
+                return response()->json(['success' => false, 'message' => $e->getMessage()]);
+            }
+            $trading_account = TradingAccount::where('user_id', Auth::id())->get();
+            return back()->with('toast', 'Successfully Updated Leverage');
+        }
+        return redirect()->back();
     }
 }

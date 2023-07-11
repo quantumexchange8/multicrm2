@@ -58,6 +58,7 @@ Route::middleware('auth')->group(function () {
      */
     Route::get('/account_info', [AccountInfoController::class, 'account_info'])->name('account_info');
     Route::post('/add-trading-account', [AccountInfoController::class, 'add_trading_account'])->name('add_trading_account');
+    Route::post('change-leverage', [AccountInfoController::class, 'change_leverage'])->name('change_leverage');
 
 });
 

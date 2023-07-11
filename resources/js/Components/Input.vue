@@ -2,7 +2,9 @@
 import { onMounted, ref } from 'vue'
 
 defineProps({
-    modelValue: String,
+    modelValue: {
+        type: [String, Number],
+    },
     withIcon: {
         type: Boolean,
         default: false,

@@ -33,9 +33,9 @@ const Tag = external ? 'a' : Link
             :href="href"
             v-bind="$attrs"
             :class="[
-                'transition-colors hover:text-gray-900 dark:hover:text-gray-100',
+                'transition-colors hover:text-[#FF9E23]/80 dark:hover:text-[#FF9E23]/80',
                 {
-                    'text-gray-900 dark:text-gray-200': active,
+                    'text-[#FF9E23]': active,
                     'text-gray-500 dark:text-gray-400': !active,
                 },
             ]"

@@ -11,6 +11,7 @@ import Label from "@/Components/Label.vue";
 import Modal from "@/Components/Modal.vue";
 import {useForm} from "@inertiajs/vue3";
 import ToastList from "@/Components/ToastList.vue";
+import Checkbox from "@/Components/Checkbox.vue";
 
 defineProps({
     tradingAccounts: Object,
@@ -38,6 +39,7 @@ const form = useForm({
     // account_platform: '',
     leverage: '',
     currency: '',
+    terms: '',
 })
 
 const addTradingAccount = () => {
@@ -102,7 +104,7 @@ const closeModal = () => {
                                     </label>
                                 </li>
                             </ul>
-                            <InputError :message="form.errors.account_type"/>
+                            <InputError :message="form.errors.group"/>
                         </div>
 
 <!--                        <div class="mt-6 space-y-2">-->
@@ -136,6 +138,31 @@ const closeModal = () => {
                             <InputError :message="form.errors.leverage"/>
                         </div>
 
+                        <div class="mt-6 space-y-4">
+                            <h3 class="text-[#989898] font-bold">Terms & Conditions</h3>
+                            <ol class="text-[#989898] text-sm list-decimal text-justify pl-6 mt-2">
+                                <li>I acknowledge I have read and understood the Risk Warning Notice which is provided online as part of this application. I understand that Key Information Documents are available to me on the Quantum Capital Global (“Quantum Capital Global”) website.</li>
+                                <li>I acknowledge that I have read, understood and accept the Client Agreement provided online as part of this application.</li>
+                                <li>I understand that Quantum Capital Global will not provide me with any investment advice on transactions entered into on its platform(s).</li>
+                                <li>I also confirm that I have read, understood and agree to be bound by Quantum Capital Global Privacy Policy.</li>
+                                <li>I understand that personal information submitted as part of this application will be used to verify my identity with a third-party authentication service.</li>
+                                <li>I confirm that the information provided by me and inserted in this form is correct and that I acknowledge that I shall be obliged to inform Quantum Capital Global immediately in case of any changes to this information.</li>
+                                <li>I confirm that I have acted in my own name as specified in this application and not on behalf of a third party in respect of all matters related to this client relationship. Accordingly, all funds to be deposited and traded in on the account with Quantum Capital Global are my own funds.</li>
+                                <li>I have read, understood and agreed to be bound by Quantum Capital Global's Deposit And Withdrawals Policy.</li>
+                            </ol>
+
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <Checkbox v-model="form.terms"/>
+                                </div>
+                                <div class="ml-3">
+                                    <label for="terms" class="text-gray-500 dark:text-[#989898]">I acknowledge that I have read, and do hereby accept the terms and conditions stated as above.</label>
+                                </div>
+                            </div>
+                            <InputError :message="form.errors.terms"/>
+
+                        </div>
+
                         <div class="mt-6 flex justify-end">
                             <Button variant="secondary" @click="closeModal">
                                 Cancel
@@ -158,7 +185,7 @@ const closeModal = () => {
 
         <div class="p-6 overflow-hidden bg-white rounded-md shadow-md dark:bg-dark-eval-1">
             Ctrader Table
-            <TradingAccountTable :tradingAccounts="tradingAccounts" />
+            <TradingAccountTable :tradingAccounts="tradingAccounts" :leverages="leverages" />
         </div>
 
     </AuthenticatedLayout>

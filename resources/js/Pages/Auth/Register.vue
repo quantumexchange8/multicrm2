@@ -221,7 +221,7 @@ function startCountdown() {
                     </div>
                     <Input id="form_step" type="hidden" :modelValue="form.form_step.toString()"/>
 
-                    <Label for="email" value="email" />
+                    <Label for="email" value="Email" />
                     <Input id="email" type="email" class="block w-full px-4" placeholder="Email" v-model="form.email" autocomplete="email" autofocus />
                     <InputError :message="form.errors.email"/>
 
