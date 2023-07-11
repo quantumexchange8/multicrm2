@@ -177,7 +177,7 @@ const closeModal = () => {
                         <InputError :message="form.errors.currency"/>
                     </div>
                     <div class="space-y-2">
-                        <Label for="amount" value="Deposit Amount" />
+                        <Label for="amount" value="Deposit Amount (USD)" />
                         <Input id="amount" type="number" min="30" class="block w-full px-4" placeholder="Deposit Amount" v-model="form.amount" @change="form.validate('amount')" />
                         <InputError :message="form.errors.amount"/>
                     </div>
