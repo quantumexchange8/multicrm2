@@ -134,7 +134,7 @@ class PaymentController extends Controller
             $token = md5($payment_id . '78F6F83E-1DE9-4BC2-8253-8319C1A4F104' . '645B45FF789C431889BFFBF1E462DCE6' . $real_amount);
             $mode = 3;
 
-            $redirectUrl = $apiUrl . "?mode={$mode}&merchantCode={60-00000197-89382959}&serialNo={$payment_id}&currency={$currency}&amount={$real_amount}&returnUrl={$returnUrl}&notifyUrl={$notifyUrl}&token={$token}";
+            $redirectUrl = $apiUrl . "?mode={$mode}&merchantCode=60-00000197-89382959&serialNo={$payment_id}&currency={$currency}&amount={$real_amount}&returnUrl={$returnUrl}&notifyUrl={$notifyUrl}&token={$token}";
         } else {
             $token = md5($payment_id . $this->apiKey . $this->secretKey . $real_amount);
             $mode = 3;
@@ -155,7 +155,7 @@ class PaymentController extends Controller
         if ($request->token) {
             session()->put('jwt-token', $request->token);
         }
-        return redirect()->back();
+        return Inertia::location(url()->previous());
     }
 
     public function updateResult(Request $request)
