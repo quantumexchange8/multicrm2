@@ -31,7 +31,6 @@ class AccountInfoController extends Controller
 
     public function add_trading_account(Request $request)
     {
-        dd($request->all());
         $conn = (new CTraderService)->connectionStatus();
         if ($conn['code'] != 0) {
             if ($conn['code'] == 10) {
