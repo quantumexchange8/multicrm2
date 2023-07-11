@@ -75,7 +75,7 @@ class RegisterUserRequest extends FormRequest
             'back_identity' => 'Proof of Identity (BACK)',
             'verification_via' => 'Verification Via',
             'verification_code' => 'Verification Code',
-            'terms' => 'Acknowledge',
+            'terms' => 'Term and Conditions',
         ];
     }
 }

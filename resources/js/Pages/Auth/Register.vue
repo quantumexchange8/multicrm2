@@ -36,7 +36,7 @@ const form = useForm({
     back_identity: null,
     verification_via: 'email',
     verification_code: '',
-    terms: false,
+    terms: '',
 });
 
 const submit = () => {
@@ -95,18 +95,18 @@ const handleBackIdentity = (event) => {
     form.back_identity = event.target.files[0];
 };
 
-// function nextStep() {
-//     form.post(route('register.first.step'), {
-//         onSuccess: () => {
-//             formStep.value++;
-//             form.form_step++;
-//         },
-//     });
-// }
 function nextStep() {
-    formStep.value++;
-    form.form_step++;
+    form.post(route('register.first.step'), {
+        onSuccess: () => {
+            formStep.value++;
+            form.form_step++;
+        },
+    });
 }
+// function nextStep() {
+//     formStep.value++;
+//     form.form_step++;
+// }
 function prevStep() {
     formStep.value--;
     form.form_step--;
@@ -353,10 +353,10 @@ function startCountdown() {
                                     <label for="hs-radio-group-1" class="text-sm text-gray-500 ml-2 dark:text-gray-400">Email</label>
                                 </div>
 
-                                <div class="flex">
-                                    <input type="radio" name="verification_via" v-model="form.verification_via" class="shrink-0 mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-radio-group-2" value="mobile">
-                                    <label for="hs-radio-group-2" class="text-sm text-gray-500 ml-2 dark:text-gray-400">Phone</label>
-                                </div>
+<!--                                <div class="flex">-->
+<!--                                    <input type="radio" name="verification_via" v-model="form.verification_via" class="shrink-0 mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-radio-group-2" value="mobile">-->
+<!--                                    <label for="hs-radio-group-2" class="text-sm text-gray-500 ml-2 dark:text-gray-400">Phone</label>-->
+<!--                                </div>-->
                             </div>
                             <InputError :message="form.errors.verification_via"/>
                         </div>
@@ -376,9 +376,11 @@ function startCountdown() {
 
                     <h3 class="list-decimal list-inside text-xl text-gray-900 dark:text-gray-200">Terms & Conditions</h3>
                     <ol class="list-decimal list-inside text-sm text-gray-900 dark:text-gray-200">
-                        <li>Now this is a story all about how, my life got flipped turned upside down</li>
-                        <li>And I like to take a minute and sit right here</li>
-                        <li>I'll tell you how I became the prince of a town called Bel-Air </li>
+                        <li>I confirm that I've read the <a class="text-blue-500" target="_blank" href="/assets/register-tnc/Client Agreement 2023.pdf">Terms and Conditions</a></li>
+                        <li>I confirm that I've read the <a class="text-blue-500" target="_blank" href="/assets/register-tnc/Privacy Policy 2023.pdf">Privacy Policy</a></li>
+                        <li>I confirm that I've read the <a class="text-blue-500" target="_blank" href="/assets/register-tnc/Risk Disclosure Notice 2023.pdf">Risk Disclosure Document</a></li>
+                        <li>I hereby acknowledge and consent that company shall provide me with the information only through a durable medium, (i.e., any instrument which enables a client to store information for future reference and adequate period, and allows the unchanged reproduction of the information stored.</li>
+                        <li>You agree that company may collect, use and disclose your personal data which you have provided in this form,for providing marketing material that you have agreed to receive, in accordance with Privacy Policy.</li>
                     </ol>
 
                     <div class="flex items-start">
@@ -389,6 +391,8 @@ function startCountdown() {
                             <label for="terms" class="font-light text-gray-500 dark:text-gray-300">I acknowledge that I have read, and do hereby accept the terms and conditions stated as above.</label>
                         </div>
                     </div>
+                    <InputError :message="form.errors.terms"/>
+
                 </div>
 
                 <div class="flex items-center justify-center gap-8 mt-4">
