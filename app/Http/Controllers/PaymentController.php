@@ -155,7 +155,7 @@ class PaymentController extends Controller
         if ($request->token) {
             session()->put('jwt-token', $request->token);
         }
-        return to_route('dashboard');
+        return redirect()->back();
     }
 
     public function updateResult(Request $request)
