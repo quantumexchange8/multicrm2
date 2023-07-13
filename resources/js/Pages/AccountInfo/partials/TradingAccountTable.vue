@@ -112,40 +112,6 @@ const closeModal = () => {
 <!--                    </Button>-->
 <!--                </td>-->
             </tr>
-            <tr v-for="(tradingAccount, index) in tradingAccounts" class="bg-white odd:dark:bg-transparent even:dark:bg-dark-eval-0 text-xs font-thin text-gray-900 dark:text-white text-center">
-                <th scope="row" class="px-6 py-4 font-thin rounded-l-full">
-                    {{ tradingAccount.meta_login }}
-                </th>
-                <td class="px-6 py-4">
-                    {{ tradingAccount.account_type.name }}
-                </td>
-                <td class="px-6 py-4">
-                    {{ tradingAccount.balance }}
-                </td>
-                <td class="px-6 py-4">
-                    {{ tradingAccount.equity }}
-                </td>
-                <td class="px-6 py-4">
-                    {{ tradingAccount.credit }}
-                </td>
-                <td class="px-6 py-4 rounded-r-full">
-                    1:{{ tradingAccount.margin_leverage }}
-                </td>
-                <!--                <td class="px-6 py-4 flex justify-center gap-2">-->
-                <!--                    <Button class="justify-center pl-4 pr-3 pt-1 rounded-full w-8 h-8 focus:outline-none" variant="primary-opacity" @click="openDepositModal">-->
-                <!--                        <DepositIcon aria-hidden="true" class="w-6 h-6 absolute" />-->
-                <!--                        <span class="sr-only">Deposit</span>-->
-                <!--                    </Button>-->
-                <!--                    <Button class="justify-center px-4 pt-2 rounded-full w-8 h-8 focus:outline-none" variant="primary-opacity" @click="openResetModal">-->
-                <!--                        <ResetIcon aria-hidden="true" class="w-6 h-6 absolute" />-->
-                <!--                        <span class="sr-only">Reset</span>-->
-                <!--                    </Button>-->
-                <!--                    <Button class="justify-center px-4 pt-2 rounded-full w-8 h-8 focus:outline-none" variant="primary-opacity" @click="openSettingModal(tradingAccount.meta_login, tradingAccount.margin_leverage, tradingAccount.id)">-->
-                <!--                        <SettingIcon aria-hidden="true" class="w-6 h-6 absolute" />-->
-                <!--                        <span class="sr-only">Setting</span>-->
-                <!--                    </Button>-->
-                <!--                </td>-->
-            </tr>
             </tbody>
         </table>
     </div>

@@ -25,6 +25,7 @@ class InternalTransferController extends Controller
             ->where('category', 'payment')
             ->where('type', 'Deposit')
             ->latest()
+            ->limit(4)
             ->get();
 
         return Inertia::render('Transaction/InternalTransfer', [
@@ -57,7 +58,7 @@ class InternalTransferController extends Controller
 
         $payment_id = RunningNumberService::getID('transaction');
         try {
-            $trade = (new CTraderService)->createTrade($request->account_no, $request->amount, "Wallet To Meta", ChangeTraderBalanceType::DEPOSIT);
+            $trade = (new CTraderService)->createTrade($request->account_no, $request->amount, "Wallet To Account", ChangeTraderBalanceType::DEPOSIT);
         } catch (\Throwable $e) {
             if ($e->getMessage() == "Not found") {
                 TradingUser::firstWhere('meta_login', $request->account_no)->update(['acc_status' => 'Inactive']);
@@ -110,7 +111,7 @@ class InternalTransferController extends Controller
 
         $payment_id = RunningNumberService::getID('transaction');
         try {
-            $trade = (new CTraderService)->createTrade($request->account_no, $request->amount, "Meta To Wallet", ChangeTraderBalanceType::WITHDRAW);
+            $trade = (new CTraderService)->createTrade($request->account_no, $request->amount, "Account To Wallet", ChangeTraderBalanceType::WITHDRAW);
         } catch (\Throwable $e) {
             if ($e->getMessage() == "Not found") {
                 TradingUser::firstWhere('meta_login', $request->account_no)->update(['acc_status' => 'Inactive']);
@@ -166,7 +167,7 @@ class InternalTransferController extends Controller
 
         $payment_id = RunningNumberService::getID('transaction');
         try {
-            $trade_1 = (new CTraderService)->createTrade($request->account_no_1, $request->amount, "Meta To Meta", ChangeTraderBalanceType::WITHDRAW);
+            $trade_1 = (new CTraderService)->createTrade($request->account_no_1, $request->amount, "Account To Account", ChangeTraderBalanceType::WITHDRAW);
         } catch (\Throwable $e) {
             if ($e->getMessage() == "Not found") {
                 TradingUser::firstWhere('meta_login', $request->account_no_1)->update(['acc_status' => 'Inactive']);
@@ -176,7 +177,7 @@ class InternalTransferController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
         try {
-            $trade_2 = (new CTraderService)->createTrade($request->account_no_2, $request->amount, "Meta To Meta", ChangeTraderBalanceType::DEPOSIT);
+            $trade_2 = (new CTraderService)->createTrade($request->account_no_2, $request->amount, "Account To Account", ChangeTraderBalanceType::DEPOSIT);
         } catch (\Throwable $e) {
             if ($e->getMessage() == "Not found") {
                 TradingUser::firstWhere('meta_login', $request->account_no_2)->update(['acc_status' => 'Inactive']);
