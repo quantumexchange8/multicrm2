@@ -156,7 +156,7 @@ const closeModal = () => {
                                     <Checkbox v-model="form.terms"/>
                                 </div>
                                 <div class="ml-3">
-                                    <label for="terms" class="text-gray-500 dark:text-[#989898]">I acknowledge that I have read, and do hereby accept the terms and conditions stated as above.</label>
+                                    <label for="terms" class="text-gray-500 dark:text-dark-eval-4">I acknowledge that I have read, and do hereby accept the terms and conditions stated as above.</label>
                                 </div>
                             </div>
                             <InputError :message="form.errors.terms"/>

@@ -6,9 +6,10 @@ import { createInertiaApp } from '@inertiajs/vue3'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m'
 import { i18nVue } from 'laravel-vue-i18n'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 const appName =
-    window.document.getElementsByTagName('title')[0]?.innerText || 'Metabase'
+    window.document.getElementsByTagName('title')[0]?.innerText || 'QCG'
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -27,6 +28,7 @@ createInertiaApp({
                     return await langs[`../../lang/${lang}.json`]();
                 }
             })
+            .component('font-awesome-icon', FontAwesomeIcon)
             .mount(el)
     },
     progress: {

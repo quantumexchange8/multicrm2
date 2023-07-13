@@ -6,6 +6,11 @@ import SidebarCollapsible from '@/Components/Sidebar/SidebarCollapsible.vue'
 import SidebarCollapsibleItem from '@/Components/Sidebar/SidebarCollapsibleItem.vue'
 import { TemplateIcon } from '@heroicons/vue/outline'
 import { ClipboardListIcon } from '@heroicons/vue/outline'
+import { library } from '@fortawesome/fontawesome-svg-core'
+/* import specific icons */
+import { faGaugeHigh, faClipboardUser, faMoneyBillTransfer } from '@fortawesome/free-solid-svg-icons'
+library.add(faGaugeHigh, faClipboardUser, faMoneyBillTransfer)
+
 </script>
 
 <template>
@@ -20,8 +25,9 @@ import { ClipboardListIcon } from '@heroicons/vue/outline'
             :active="route().current('dashboard')"
         >
             <template #icon>
-                <DashboardIcon
-                    class="flex-shrink-0 w-6 h-6"
+                <font-awesome-icon
+                    icon="fa-solid fa-gauge-high"
+                    class="flex-shrink-0 w-5 h-5"
                     aria-hidden="true"
                 />
             </template>
@@ -33,8 +39,23 @@ import { ClipboardListIcon } from '@heroicons/vue/outline'
             :active="route().current('account_info')"
         >
             <template #icon>
-                <ClipboardListIcon
-                    class="flex-shrink-0 w-6 h-6"
+                <font-awesome-icon
+                    icon="fa-solid fa-clipboard-user"
+                    class="flex-shrink-0 w-5 h-5"
+                    aria-hidden="true"
+                />
+            </template>
+        </SidebarLink>
+
+        <SidebarLink
+            title="Transaction"
+            :href="route('transaction')"
+            :active="route().current('transaction')"
+        >
+            <template #icon>
+                <font-awesome-icon
+                    icon="fa-solid fa-money-bill-transfer"
+                    class="flex-shrink-0 w-5 h-5"
                     aria-hidden="true"
                 />
             </template>

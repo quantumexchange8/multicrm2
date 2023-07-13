@@ -25,6 +25,7 @@ module.exports = {
                     'eval-1': '#0F0F0F',
                     'eval-2': '#2A2F42',
                     'eval-3': '#2C3142',
+                    'eval-4': '#989898',
                 },
                 "vtd-secondary": colors.gray,
             },

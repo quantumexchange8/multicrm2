@@ -54,6 +54,7 @@ defineProps({
                 </div>
             </div>
 
+            <PageFooter />
         </div>
     </div>
 </template>

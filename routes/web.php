@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountInfoController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DepositController;
 use App\Http\Controllers\GeneralController;
+use App\Http\Controllers\InternalTransferController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Inertia\Inertia;
@@ -59,6 +60,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/account_info', [AccountInfoController::class, 'account_info'])->name('account_info');
     Route::post('/add-trading-account', [AccountInfoController::class, 'add_trading_account'])->name('add_trading_account');
     Route::post('change-leverage', [AccountInfoController::class, 'change_leverage'])->name('change_leverage');
+
+    /**
+     * ==============================
+     *         Transaction
+     * ==============================
+     */
+    Route::get('/transaction', [InternalTransferController::class, 'transaction'])->name('transaction');
+
+    Route::post('/wallet_to_account', [InternalTransferController::class, 'wallet_to_account'])->name('wallet_to_account');
+    Route::post('/account_to_wallet', [InternalTransferController::class, 'account_to_wallet'])->name('account_to_wallet');
+    Route::post('/account_to_account', [InternalTransferController::class, 'account_to_account'])->name('account_to_account');
 
 });
 
