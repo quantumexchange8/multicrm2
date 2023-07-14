@@ -3,19 +3,32 @@ import InputError from '@/Components/InputError.vue'
 import Label from '@/Components/Label.vue'
 import Button from '@/Components/Button.vue'
 import Input from '@/Components/Input.vue'
+import InputSelect from '@/Components/InputSelect.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3'
+import VueTailwindDatepicker from "vue-tailwind-datepicker";
+import {ref} from "vue";
+
 
 const props = defineProps({
     mustVerifyEmail: Boolean,
     status: String,
+    countries: Object,
 })
-
+const formatter = ref({
+    date: 'YYYY-MM-DD',
+    month: 'MM'
+});
 const user = usePage().props.auth.user
 
 const form = useForm({
     name: user.name,
+    chinese_name: user.chinese_name,
     email: user.email,
+    country: user.country,
+    dob: user.dob,
+    mobile: user.mobile,
 })
+
 </script>
 
 <template>
@@ -32,9 +45,10 @@ const form = useForm({
 
         <form
             @submit.prevent="form.patch(route('profile.update'))"
-            class="mt-6 space-y-6"
+            class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4"
         >
-            <div>
+        
+            <div class="space-y-2">
                 <Label for="name" value="Name" />
 
                 <Input
@@ -48,8 +62,69 @@ const form = useForm({
 
                 <InputError class="mt-2" :message="form.errors.name" />
             </div>
+            <div class="space-y-2">
+                <Label for="chinese_name" value="Chinses Name" />
 
-            <div>
+                <Input
+                    id="chinese_name"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.chinese_name"
+                    autofocus
+                    autocomplete="chinese_name"
+                />
+
+                <InputError class="mt-2" :message="form.errors.chinese_name" />
+            </div>
+        
+            
+            <div class="space-y-2">
+                <Label for="dob" value="Date Of Birth" />
+
+               <!-- <Input
+                    id="dob"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.dob"
+                    autofocus
+                    autocomplete="dob"
+                /> -->
+                <vue-tailwind-datepicker :formatter="formatter" as-single v-model="form.dob" input-classes="py-2 border-gray-400 w-full rounded-full text-sm placeholder:text-sm focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:border-gray-600 bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1" />
+
+                <InputError class="mt-2" :message="form.errors.dob" />
+            </div>
+
+        
+            <div class="space-y-2">
+                <Label for="country" value="Country" />
+
+                <InputSelect v-model="form.country" class="block w-full text-sm" placeholder="Choose Country">
+                        <option v-for="country in props.countries" :value="country.name_en" :key="country.id">{{ country.name_en }}</option>
+                    </InputSelect>
+
+                <InputError class="mt-2" :message="form.errors.country" />
+            </div>
+        
+
+        
+            <div class="space-y-2">
+                <Label for="phone" value="Mobile Phone" />
+
+                <Input
+                    id="phone"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.mobile"
+                    autofocus
+                    autocomplete="phone"
+                />
+
+                <InputError class="mt-2" :message="form.errors.phone" />
+            </div>
+
+        
+
+            <div class="space-y-2">
                 <Label for="email" value="Email" />
 
                 <Input

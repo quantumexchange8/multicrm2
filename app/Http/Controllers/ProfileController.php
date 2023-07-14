@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\SettingCountry;
 
 class ProfileController extends Controller
 {
@@ -18,9 +19,11 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $countries = SettingCountry::all();
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
+            'countries' => $countries,
         ]);
     }
 
@@ -34,7 +37,7 @@ class ProfileController extends Controller
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
-
+        
         $request->user()->save();
 
         return Redirect::route('profile.edit');
