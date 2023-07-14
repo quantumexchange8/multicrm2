@@ -79,7 +79,7 @@ const closeModal = () => {
             </thead>
             <tbody>
             <tr v-for="(tradingAccount, index) in tradingAccounts" class="bg-white odd:dark:bg-transparent even:dark:bg-dark-eval-0 text-xs font-thin text-gray-900 dark:text-white text-center">
-                <th scope="row" class="px-6 py-4 font-thin">
+                <th scope="row" class="px-6 py-4 font-thin rounded-l-full">
                     {{ tradingAccount.meta_login }}
                 </th>
                 <td class="px-6 py-4">
@@ -94,7 +94,7 @@ const closeModal = () => {
                 <td class="px-6 py-4">
                     {{ tradingAccount.credit }}
                 </td>
-                <td class="px-6 py-4">
+                <td class="px-6 py-4 rounded-r-full">
                     1:{{ tradingAccount.margin_leverage }}
                 </td>
 <!--                <td class="px-6 py-4 flex justify-center gap-2">-->

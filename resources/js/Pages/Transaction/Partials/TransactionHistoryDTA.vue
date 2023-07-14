@@ -43,7 +43,11 @@ defineProps({
                         {{ payment.amount }}
                     </td>
                     <td class="p-4 rounded-r-full">
-                        <span :class="{'bg-green-100 text-white test-xs font-medium mr-2 px-4 py-1 rounded dark:bg-[#013B20]': payment.status === 'Successful', 'bg-yellow-100 text-white test-xs font-medium mr-2 px-4 py-1 rounded dark:bg-[#573A15]': payment.status === 'Submitted'}">
+                        <span :class="{
+                            'bg-green-500 text-white test-xs font-medium mr-2 px-4 py-1 rounded dark:bg-[#013B20]': payment.status === 'Successful',
+                            'bg-yellow-500 text-white test-xs font-medium mr-2 px-4 py-1 rounded dark:bg-[#573A15]': payment.status === 'Submitted',
+                            'bg-red-500 text-white test-xs font-medium mr-2 px-5 py-1 rounded dark:bg-[#4C1310]': payment.status === 'Rejected'
+                            }">
                             {{ payment.status }}
                         </span>
                     </td>
