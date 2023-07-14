@@ -17,7 +17,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Permission;
 
 class PaymentController extends Controller
 {
@@ -199,10 +201,12 @@ class PaymentController extends Controller
 
     public function requestWithdrawal(WithdrawalRequest $request)
     {
+        $permission = Permission::create(['name' => 'apply rebate']);
+
             $user = Auth::user();
             $amount = floatval($request->amount);
             if ($user->cash_wallet < $amount) {
-                return response()->json(['success' => false, 'message' => 'Insufficient balance']);
+                throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
             }
             $user->cash_wallet -= $amount;
             $user->save();
@@ -219,6 +223,6 @@ class PaymentController extends Controller
                 'account_type' => $request->account_type,
             ]);
 
-            return redirect()->back()->with('toast', 'Successfully Submitted Withdrawal Request');
+            return back()->with('toast', 'Successfully Submitted Withdrawal Request');
     }
 }
