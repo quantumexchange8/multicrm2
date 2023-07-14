@@ -17,19 +17,34 @@ use Inertia\Inertia;
 
 class InternalTransferController extends Controller
 {
+    protected function getFilteredPayments($category, $type)
+    {
+        return Payment::query()
+            ->where('user_id', Auth::id())
+            ->where('category', $category)
+            ->where('type', $type)
+            ->latest()
+            ->paginate(10);
+    }
+
     public function transaction()
     {
         $user = Auth::user();
-        $payments = Payment::query()
-            ->where('user_id', Auth::id())
-            ->where('category', 'payment')
-            ->where('type', 'Deposit')
-            ->latest()
-            ->paginate(10);
+        
+        $payments = $this->getFilteredPayments('payment', 'Deposit');
+        // dd($payments);
+        $withdrawals = $this->getFilteredPayments('payment', 'Withdrawal');
+        $walletToAccounts = $this->getFilteredPayments('internal transfer', 'WalletToMeta');
+        $accountToWallets = $this->getFilteredPayments('internal transfer', 'MetaToWallet');
+        $accountToAccounts = $this->getFilteredPayments('internal transfer', 'MetatoMeta');
 
         return Inertia::render('Transaction/InternalTransfer', [
             'tradingUsers' => $user->tradingUsers,
             'payments' => $payments,
+            'withdrawals' => $withdrawals,
+            'walletToAccounts' => $walletToAccounts,
+            'accountToWallets' => $accountToWallets,
+            'accountToAccounts' => $accountToAccounts
         ]);
     }
 

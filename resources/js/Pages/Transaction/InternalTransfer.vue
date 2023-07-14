@@ -12,10 +12,18 @@ import Input from "@/Components/Input.vue";
 import Button from "@/Components/Button.vue";
 import Paginator from "@/Components/Paginator.vue";
 import TransactionHistoryDTA from "@/Pages/Transaction/Partials/TransactionHistoryDTA.vue";
+import TransactionHistoryWFW from "@/Pages/Transaction/Partials/TransactionHistoryWFW.vue";
+import TransactionHistoryWTA from "@/Pages/Transaction/Partials/TransactionHistoryWTA.vue";
+import TransactionHistoryATW from "@/Pages/Transaction/Partials/TransactionHistoryATW.vue";
+import TransactionHistoryATA from "@/Pages/Transaction/Partials/TransactionHistoryATA.vue";
 
 defineProps({
     tradingUsers: Object,
     payments: Object,
+    withdrawals: Object,
+    walletToAccounts: Object,
+    accountToWallets: Object,
+    accountToAccounts: Object,
 })
 
 const page = usePage()
@@ -40,6 +48,7 @@ const transactionHistories = [
 ];
 const transferType = ref(0);
 const transactionHistory = ref(0);
+const currentPage = ref(1);
 
 function selectedTransferType(index) {
     transferType.value = index
@@ -47,6 +56,7 @@ function selectedTransferType(index) {
 
 function selectedTransactionHistoryType(index) {
     transactionHistory.value = index
+    currentPage.value = index;
 }
 
 </script>
@@ -117,15 +127,15 @@ function selectedTransactionHistoryType(index) {
                 </li>
             </ul>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div class="space-y-2">
-                    <Label for="dob">From Date</Label>
-                    <vue-tailwind-datepicker :formatter="formatter" as-single input-classes="py-2 border-gray-400 w-full rounded-full text-sm placeholder:text-sm focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1" />
+                    <Label for="dob">Date Range</Label>
+                    <vue-tailwind-datepicker :formatter="formatter" input-classes="py-2 border-gray-400 w-full rounded-full text-sm placeholder:text-sm focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1" />
                 </div>
-                <div class="space-y-2">
+                <!--<div class="space-y-2">
                     <Label for="dob">To Date</Label>
                     <vue-tailwind-datepicker :formatter="formatter" as-single input-classes="py-2 border-gray-400 w-full rounded-full text-sm placeholder:text-sm focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1" />
-                </div>
+                </div> -->
                 <div class="space-y-2">
                     <Label for="account_number">Account Number</Label>
                     <Input id="account_number" type="text" class="block w-full px-4" autocomplete="account_number" />
@@ -137,7 +147,11 @@ function selectedTransactionHistoryType(index) {
                 </div>
             </div>
 
-            <TransactionHistoryDTA :payments="payments" />
+            <TransactionHistoryDTA :payments="payments" v-if="transactionHistory === 0"/>
+            <TransactionHistoryWFW :withdrawals="withdrawals" v-if="transactionHistory === 1"/>
+            <TransactionHistoryWTA :walletToAccounts="walletToAccounts" v-if="transactionHistory === 2"/>
+            <TransactionHistoryATW :accountToWallets="accountToWallets" v-if="transactionHistory === 3"/>
+            <TransactionHistoryATA :accountToAccounts="accountToAccounts" v-if="transactionHistory === 4"/>
 
         </div>
 
