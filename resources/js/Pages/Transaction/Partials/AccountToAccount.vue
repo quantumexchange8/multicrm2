@@ -45,7 +45,7 @@ const submit = () => {
             </div>
             <div class="space-y-2">
                 <Label for="amount" value="Amount ($)" />
-                <Input id="amount" type="text" class="block w-full px-4" placeholder="0.00" v-model="form.amount" />
+                <Input id="amount" type="number" step=".01" class="block w-full px-4" placeholder="0.00" v-model="form.amount" />
                 <InputError :message="form.errors.amount"/>
             </div>
         </div>

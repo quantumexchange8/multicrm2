@@ -21,12 +21,11 @@ class InternalTransferController extends Controller
     {
         $user = Auth::user();
         $payments = Payment::query()
-            ->where('user_id', $user->id)
+            ->where('user_id', Auth::id())
             ->where('category', 'payment')
             ->where('type', 'Deposit')
             ->latest()
-            ->limit(4)
-            ->get();
+            ->paginate(10);
 
         return Inertia::render('Transaction/InternalTransfer', [
             'tradingUsers' => $user->tradingUsers,

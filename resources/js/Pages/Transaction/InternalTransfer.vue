@@ -10,13 +10,8 @@ import VueTailwindDatepicker from "vue-tailwind-datepicker";
 import Label from "@/Components/Label.vue";
 import Input from "@/Components/Input.vue";
 import Button from "@/Components/Button.vue";
-import jszip from 'jszip';
-import pdfmake from 'pdfmake';
-import DataTable from 'datatables.net-vue3';
-import 'datatables.net-buttons-dt';
-import 'datatables.net-buttons/js/buttons.colVis.mjs';
-import 'datatables.net-buttons/js/buttons.html5.mjs';
-import 'datatables.net-buttons/js/buttons.print.mjs';
+import Paginator from "@/Components/Paginator.vue";
+import TransactionHistoryDTA from "@/Pages/Transaction/Partials/TransactionHistoryDTA.vue";
 
 defineProps({
     tradingUsers: Object,
@@ -45,7 +40,6 @@ const transactionHistories = [
 ];
 const transferType = ref(0);
 const transactionHistory = ref(0);
-const buttons = ref([]);
 
 function selectedTransferType(index) {
     transferType.value = index
@@ -142,52 +136,9 @@ function selectedTransactionHistoryType(index) {
                     </Button>
                 </div>
             </div>
-            <div class="p-4 mt-6 overflow-hidden bg-white rounded-md shadow-md dark:bg-dark-eval-1">
-                <div class="relative overflow-x-auto sm:rounded-lg mt-4">
-                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs font-bold text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-white text-center">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">
-                                Date
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Deposit Method
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Account No.
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Amount
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Status
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="(payment, index) in payments" class="bg-white odd:dark:bg-transparent even:dark:bg-dark-eval-0 text-xs font-thin text-gray-900 dark:text-white text-center">
-                            <th scope="row" class="px-6 py-4 font-thin rounded-l-full">
-                                {{ new Date(payment.created_at).toLocaleDateString('en-GB') }}
-                            </th>
-                            <td class="px-6 py-4">
-                                {{ payment.gateway ?? payment.channel }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ payment.to }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ payment.amount }}
-                            </td>
-                            <td class="p-4 rounded-r-full">
-                                <span :class="{'bg-green-100 text-white test-xs font-medium mr-2 px-4 py-1 rounded dark:bg-[#013B20]': payment.status === 'Successful', 'bg-yellow-100 text-white test-xs font-medium mr-2 px-4 py-1 rounded dark:bg-[#573A15]': payment.status === 'Submitted'}">
-                                    {{ payment.status }}
-                                </span>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+
+            <TransactionHistoryDTA :payments="payments" />
+
         </div>
 
     </AuthenticatedLayout>
