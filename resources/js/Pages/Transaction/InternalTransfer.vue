@@ -127,26 +127,6 @@ function selectedTransactionHistoryType(index) {
                 </li>
             </ul>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                <div class="space-y-2">
-                    <Label for="dob">Date Range</Label>
-                    <vue-tailwind-datepicker :formatter="formatter" input-classes="py-2 border-gray-400 w-full rounded-full text-sm placeholder:text-sm focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1" />
-                </div>
-                <!--<div class="space-y-2">
-                    <Label for="dob">To Date</Label>
-                    <vue-tailwind-datepicker :formatter="formatter" as-single input-classes="py-2 border-gray-400 w-full rounded-full text-sm placeholder:text-sm focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1" />
-                </div> -->
-                <div class="space-y-2">
-                    <Label for="account_number">Account Number</Label>
-                    <Input id="account_number" type="text" class="block w-full px-4" autocomplete="account_number" />
-                </div>
-                <div class="flex justify-end mt-7">
-                    <Button type="button" class="px-12">
-                        <span>Search</span>
-                    </Button>
-                </div>
-            </div>
-
             <TransactionHistoryDTA :payments="payments" v-if="transactionHistory === 0"/>
             <TransactionHistoryWFW :withdrawals="withdrawals" v-if="transactionHistory === 1"/>
             <TransactionHistoryWTA :walletToAccounts="walletToAccounts" v-if="transactionHistory === 2"/>

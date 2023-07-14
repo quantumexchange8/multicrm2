@@ -24,15 +24,14 @@ class InternalTransferController extends Controller
             ->where('category', $category)
             ->where('type', $type)
             ->latest()
-            ->paginate(10);
+            ->get();
     }
 
     public function transaction()
     {
         $user = Auth::user();
-        
+
         $payments = $this->getFilteredPayments('payment', 'Deposit');
-        // dd($payments);
         $withdrawals = $this->getFilteredPayments('payment', 'Withdrawal');
         $walletToAccounts = $this->getFilteredPayments('internal transfer', 'WalletToMeta');
         $accountToWallets = $this->getFilteredPayments('internal transfer', 'MetaToWallet');
