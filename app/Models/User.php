@@ -102,7 +102,7 @@ class User extends Authenticatable implements JWTSubject, HasMedia
             $alphabetId .= $characters[$digit];
         }
 
-        $this->referral_id = $temp_code . $alphabetId;
+        $this->referral_code = $temp_code . $alphabetId;
         $this->save();
     }
 
