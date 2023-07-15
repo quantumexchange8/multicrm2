@@ -3,7 +3,6 @@ import AuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import {usePage} from "@inertiajs/vue3";
 import {computed, ref} from "vue";
 import WalletToAccountForm from "@/Pages/Transaction/Partials/WalletToAccountForm.vue";
-import ToastList from "@/Components/ToastList.vue";
 import AccountToWallet from "@/Pages/Transaction/Partials/AccountToWallet.vue";
 import AccountToAccount from "@/Pages/Transaction/Partials/AccountToAccount.vue";
 import VueTailwindDatepicker from "vue-tailwind-datepicker";
@@ -63,7 +62,6 @@ function selectedTransactionHistoryType(index) {
 
 <template>
     <AuthenticatedLayout title="Internal Transfer">
-        <ToastList />
         <template #header>
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <h2 class="text-xl font-semibold leading-tight">
@@ -127,11 +125,11 @@ function selectedTransactionHistoryType(index) {
                 </li>
             </ul>
 
-            <TransactionHistoryDTA :payments="payments" v-if="transactionHistory === 0"/>
-            <TransactionHistoryWFW :withdrawals="withdrawals" v-if="transactionHistory === 1"/>
-            <TransactionHistoryWTA :walletToAccounts="walletToAccounts" v-if="transactionHistory === 2"/>
-            <TransactionHistoryATW :accountToWallets="accountToWallets" v-if="transactionHistory === 3"/>
-            <TransactionHistoryATA :accountToAccounts="accountToAccounts" v-if="transactionHistory === 4"/>
+            <TransactionHistoryDTA :payments="payments" v-show="transactionHistory === 0"/>
+            <TransactionHistoryWFW :withdrawals="withdrawals" v-show="transactionHistory === 1"/>
+            <TransactionHistoryWTA :walletToAccounts="walletToAccounts" v-show="transactionHistory === 2"/>
+            <TransactionHistoryATW :accountToWallets="accountToWallets" v-show="transactionHistory === 3"/>
+            <TransactionHistoryATA :accountToAccounts="accountToAccounts" v-show="transactionHistory === 4"/>
 
         </div>
 

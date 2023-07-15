@@ -1,6 +1,6 @@
 <script setup>
-import { onMounted, onUnmounted } from 'vue'
-import { Link } from '@inertiajs/vue3'
+import {computed, onMounted, onUnmounted} from 'vue'
+import {Link, usePage} from '@inertiajs/vue3'
 import { useFullscreen } from '@vueuse/core'
 import {
     SunIcon,
@@ -22,6 +22,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue'
 import Dropdown from '@/Components/Dropdown.vue'
 import DropdownLink from '@/Components/DropdownLink.vue'
 import { ArrowsInnerIcon } from '@/Components/Icons/outline'
+import toast from "@/Composables/toast.js";
 
 const { isFullscreen, toggle: toggleFullScreen } = useFullscreen()
 
@@ -32,6 +33,26 @@ onMounted(() => {
 onUnmounted(() => {
     document.removeEventListener('scroll', handleScroll)
 })
+
+const page = usePage()
+const user = computed(() => page.props.auth.user)
+
+function copyReferralCode() {
+    const referralCode = document.querySelector('#userReferralCode').textContent;
+    const url = window.location.origin + '/register/' + referralCode;
+
+    const tempInput = document.createElement('input');
+    tempInput.value = url;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
+
+    toast.add({
+        message: "Copy Successful!",
+    });
+}
+
 </script>
 
 <template>
@@ -118,7 +139,7 @@ onUnmounted(() => {
                             type="button"
                             class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-gray-700 focus:outline-none focus:ring focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-white dark:focus:ring-offset-dark-eval-1 dark:bg-dark-eval-1 dark:text-gray-400 dark:hover:text-gray-200"
                         >
-                            {{ $page.props.auth.user.name }}
+                            {{ $page.props.auth.user.first_name }}
 
                             <svg
                                 class="ml-2 -mr-0.5 h-4 w-4"
@@ -149,6 +170,18 @@ onUnmounted(() => {
                         as="button"
                     >
                         Log Out
+                    </DropdownLink>
+
+                    <hr class="h-px my-1 bg-gray-200 border-0 dark:bg-gray-700">
+
+                    <DropdownLink
+                        :href="''"
+                        as="button"
+                        class="grid grid-cols-1 text-center"
+                    >
+                        <p class="text-xs my-2 text-gray-500 dark:text-dark-eval-4">Promotion Register Code</p>
+                        <span id="userReferralCode">{{ user.referral_code }}</span>
+                        <Button class="w-full justify-center my-2" @click.stop.prevent="copyReferralCode">Copy</Button>
                     </DropdownLink>
                 </template>
             </Dropdown>

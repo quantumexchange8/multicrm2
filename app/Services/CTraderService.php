@@ -68,13 +68,13 @@ class CTraderService
             'hashedPassword' => md5($mainPassword),
             'groupName' => $group,
             'depositCurrency' => 'USD',
-            'name' => $user->name,
+            'name' => $user->first_name,
             'description' => $remarks,
             'accessRights' => CTraderAccessRights::FULL_ACCESS,
             'balance' => 0,
             'leverageInCents' => $leverage * 100,
             'contactDetails' => [
-                'phone' => $user->mobile,
+                'phone' => $user->phone,
             ],
             'accountType' => CTraderAccountType::HEDGED,
         ]);

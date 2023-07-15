@@ -21,12 +21,12 @@ const formatter = ref({
 const user = usePage().props.auth.user
 
 const form = useForm({
-    name: user.name,
+    first_name: user.first_name,
     chinese_name: user.chinese_name,
     email: user.email,
     country: user.country,
     dob: user.dob,
-    mobile: user.mobile,
+    phone: user.phone,
 })
 
 </script>
@@ -47,20 +47,20 @@ const form = useForm({
             @submit.prevent="form.patch(route('profile.update'))"
             class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4"
         >
-        
+
             <div class="space-y-2">
-                <Label for="name" value="Name" />
+                <Label for="first_name" value="Name" />
 
                 <Input
-                    id="name"
+                    id="first_name"
                     type="text"
                     class="mt-1 block w-full"
-                    v-model="form.name"
+                    v-model="form.first_name"
                     autofocus
                     autocomplete="name"
                 />
 
-                <InputError class="mt-2" :message="form.errors.name" />
+                <InputError class="mt-2" :message="form.errors.first_name" />
             </div>
             <div class="space-y-2">
                 <Label for="chinese_name" value="Chinses Name" />
@@ -76,8 +76,8 @@ const form = useForm({
 
                 <InputError class="mt-2" :message="form.errors.chinese_name" />
             </div>
-        
-            
+
+
             <div class="space-y-2">
                 <Label for="dob" value="Date Of Birth" />
 
@@ -94,7 +94,7 @@ const form = useForm({
                 <InputError class="mt-2" :message="form.errors.dob" />
             </div>
 
-        
+
             <div class="space-y-2">
                 <Label for="country" value="Country" />
 
@@ -104,9 +104,9 @@ const form = useForm({
 
                 <InputError class="mt-2" :message="form.errors.country" />
             </div>
-        
 
-        
+
+
             <div class="space-y-2">
                 <Label for="phone" value="Mobile Phone" />
 
@@ -114,7 +114,7 @@ const form = useForm({
                     id="phone"
                     type="text"
                     class="mt-1 block w-full"
-                    v-model="form.mobile"
+                    v-model="form.phone"
                     autofocus
                     autocomplete="phone"
                 />
@@ -122,7 +122,7 @@ const form = useForm({
                 <InputError class="mt-2" :message="form.errors.phone" />
             </div>
 
-        
+
 
             <div class="space-y-2">
                 <Label for="email" value="Email" />

@@ -1,5 +1,4 @@
 <script setup>
-import Paginator from "@/Components/Paginator.vue";
 import DataTable from "datatables.net-vue3";
 import 'datatables.net-dt/css/jquery.dataTables.css';
 import ButtonsHtml5 from 'datatables.net-buttons/js/buttons.html5';
@@ -46,17 +45,17 @@ columns.value = [
 
 buttons.value = [
     {
-        title: 'Deposit To Amount',
+        title: 'Withdrawal From Wallet',
         extend: 'excelHtml5',
         className: 'text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700'
     },
     {
-        title: 'Deposit To Amount',
+        title: 'Withdrawal From Wallet',
         extend: 'pdfHtml5',
         className: 'text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700'
     },
     {
-        title: 'Deposit To Amount',
+        title: 'Withdrawal From Wallet',
         extend: 'print',
         className: 'text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700'
     },

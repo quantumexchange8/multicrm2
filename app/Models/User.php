@@ -69,6 +69,13 @@ class User extends Authenticatable implements JWTSubject, HasMedia
         return [];
     }
 
+    public function createPassword(string $field, string $password): self
+    {
+        $this->{$field} = app('hash')->make($password);
+
+        return $this;
+    }
+
     public function getMonthlyDeposit()
     {
         return Payment::query()
@@ -81,6 +88,22 @@ class User extends Authenticatable implements JWTSubject, HasMedia
                 now()->endOfMonth(),   // End of the current month
             ])
             ->sum('amount');
+    }
+
+    public function setReferralId()
+    {
+        $characters = 'ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz';
+        $idLength = strlen((string)$this->id);
+
+        $temp_code = substr(str_shuffle($characters), 0, 10 - $idLength);
+        $alphabetId = '';
+
+        foreach (str_split((string)$this->id) as $digit) {
+            $alphabetId .= $characters[$digit];
+        }
+
+        $this->referral_id = $temp_code . $alphabetId;
+        $this->save();
     }
 
     public function tradingUsers()
