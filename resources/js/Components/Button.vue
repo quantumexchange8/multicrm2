@@ -7,7 +7,7 @@ const props = defineProps({
         type: String,
         default: 'primary',
         validator(value) {
-            return ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'black', 'primary-opacity', 'success-opacity', 'danger-opacity'].includes(value)
+            return ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'black', 'primary-opacity', 'secondary-opacity', 'success-opacity', 'danger-opacity'].includes(value)
         },
     },
     type: {
@@ -73,8 +73,8 @@ const variantClasses = (variant) => ({
 
     /* Opacity Variant */
     'bg-[#007bff33] text-[#007BFF] hover:bg-blue-800 focus:ring-blue-500': variant == 'primary-opacity',
-    // 'bg-white text-gray-500 hover:bg-gray-100 focus:ring-gray-500 dark:text-gray-400 dark:bg-dark-eval-1 dark:hover:bg-dark-eval-2 dark:hover:text-gray-200':
-    //     variant == 'secondary',
+    'bg-[#af60ff33] text-[#AF60FF] hover:bg-purple-900 focus:ring-purple-500':
+        variant == 'secondary-opacity',
     'bg-[#05c46b33] text-[#05C46B] hover:bg-green-800 focus:ring-green-500': variant == 'success-opacity',
     'bg-[#ff3f3433] text-[#FF3F34] hover:bg-red-800 focus:ring-red-500': variant == 'danger-opacity',
     // 'bg-yellow-500 text-white hover:bg-yellow-600 focus:ring-yellow-500': variant == 'warning-opacity',

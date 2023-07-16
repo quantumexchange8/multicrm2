@@ -8,6 +8,9 @@ defineProps({
     mustVerifyEmail: Boolean,
     status: String,
     countries: Object,
+    avatar: String,
+    frontIdentity: String,
+    backIdentity: String
 })
 
 </script>
@@ -30,6 +33,9 @@ defineProps({
                     :must-verify-email="mustVerifyEmail"
                     :status="status"
                     :countries="countries"
+                    :avatar="avatar"
+                    :frontIdentity="frontIdentity"
+                    :backIdentity="backIdentity"
                     class="w-full"
                 />
             </div>

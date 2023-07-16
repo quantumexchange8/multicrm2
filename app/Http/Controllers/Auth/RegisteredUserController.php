@@ -156,11 +156,11 @@ class RegisteredUserController extends Controller
         $user = (new CreateAccount)->execute($userDto);
         $user->setReferralId();
 
-        if ($request->front_identity){
+        if ($request->hasFile('front_identity')){
             $user->addMedia($request->front_identity)->toMediaCollection('front_identity');
         }
 
-        if ($request->back_identity){
+        if ($request->hasFile('back_identity')){
             $user->addMedia($request->back_identity)->toMediaCollection('back_identity');
         }
 

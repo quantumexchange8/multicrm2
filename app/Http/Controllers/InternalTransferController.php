@@ -36,6 +36,7 @@ class InternalTransferController extends Controller
         $walletToAccounts = $this->getFilteredPayments('internal transfer', 'WalletToMeta');
         $accountToWallets = $this->getFilteredPayments('internal transfer', 'MetaToWallet');
         $accountToAccounts = $this->getFilteredPayments('internal transfer', 'MetatoMeta');
+        $rebateToAccounts = $this->getFilteredPayments('apply rebate', '');
 
         return Inertia::render('Transaction/InternalTransfer', [
             'tradingUsers' => $user->tradingUsers,
@@ -43,7 +44,8 @@ class InternalTransferController extends Controller
             'withdrawals' => $withdrawals,
             'walletToAccounts' => $walletToAccounts,
             'accountToWallets' => $accountToWallets,
-            'accountToAccounts' => $accountToAccounts
+            'accountToAccounts' => $accountToAccounts,
+            'rebateToAccounts' => $rebateToAccounts,
         ]);
     }
 

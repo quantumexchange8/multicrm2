@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\IbAccountType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
@@ -32,11 +33,15 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $user = $request->user();
+        if ($user) {
+            $IBAccountTypes = IbAccountType::where('user_id', $user->id)->with('accountType')->get();
+        }
 
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $user,
             ],
+            'auth.user.media' => fn() => $request->user() ? $request->user()->hasMedia('front_identity') : null,
             'auth.user.roles' => fn() => $request->user() ? $request->user()->getRoleNames() : null,
             'auth.user.permissions' => fn() => $request->user() ? $request->user()->getPermissionNames() : null,
             'ziggy' => function () use ($request) {
@@ -46,6 +51,8 @@ class HandleInertiaRequests extends Middleware
             },
             'toast' => session('toast'),
             'monthlyDeposit' => $user ? $user->getMonthlyDeposit() : null,
+            'monthlyWithdrawal' => $user ? $user->getMonthlyWithdrawal() : null,
+            'IBAccountTypes' => $IBAccountTypes ?? null,
         ]);
     }
 

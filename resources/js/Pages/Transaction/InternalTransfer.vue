@@ -15,6 +15,8 @@ import TransactionHistoryWFW from "@/Pages/Transaction/Partials/TransactionHisto
 import TransactionHistoryWTA from "@/Pages/Transaction/Partials/TransactionHistoryWTA.vue";
 import TransactionHistoryATW from "@/Pages/Transaction/Partials/TransactionHistoryATW.vue";
 import TransactionHistoryATA from "@/Pages/Transaction/Partials/TransactionHistoryATA.vue";
+import { usePermission } from '@/Composables/permissions.js'
+import TransactionHistoryRTW from "@/Pages/Transaction/Partials/TransactionHistoryRTW.vue";
 
 defineProps({
     tradingUsers: Object,
@@ -23,6 +25,7 @@ defineProps({
     walletToAccounts: Object,
     accountToWallets: Object,
     accountToAccounts: Object,
+    rebateToAccounts: Object,
 })
 
 const page = usePage()
@@ -32,6 +35,7 @@ const formatter = ref({
     date: 'DD/MM/YYYY',
     month: 'MM'
 });
+const { hasRole } = usePermission();
 const transfer_types = [
     { id: 'account_type_2', src: '/assets/finance/wallet-to-account.png', value: 2, title: 'Wallet To Account' },
     { id: 'account_type_3', src: '/assets/finance/account-to-wallet.png', value: 3, title: 'Account To Wallet' },
@@ -39,11 +43,11 @@ const transfer_types = [
 ];
 
 const transactionHistories = [
-    { id: 'transaction_history_1', src: '/assets/finance/cash-in.png', value: 2, title: 'Deposit To Account' },
-    { id: 'transaction_history_2', src: '/assets/finance/cash-out.png', value: 2, title: 'Withdrawal From Wallet' },
-    { id: 'transaction_history_3', src: '/assets/finance/wallet-to-account.png', value: 2, title: 'Wallet To Account' },
-    { id: 'transaction_history_4', src: '/assets/finance/account-to-wallet.png', value: 3, title: 'Account To Wallet' },
-    { id: 'transaction_history_5', src: '/assets/finance/account-to-account.png', value: 4, title: 'Account To Account' },
+    { id: 'transaction_history_1', src: '/assets/finance/cash-in.png', title: 'Deposit To Account' },
+    { id: 'transaction_history_2', src: '/assets/finance/cash-out.png', title: 'Withdrawal From Wallet' },
+    { id: 'transaction_history_3', src: '/assets/finance/wallet-to-account.png', title: 'Wallet To Account' },
+    { id: 'transaction_history_4', src: '/assets/finance/account-to-wallet.png', title: 'Account To Wallet' },
+    { id: 'transaction_history_5', src: '/assets/finance/account-to-account.png', title: 'Account To Account' },
 ];
 const transferType = ref(0);
 const transactionHistory = ref(0);
@@ -105,13 +109,12 @@ function selectedTransactionHistoryType(index) {
             <h2 class="text-xl font-semibold leading-tight">
                 Transaction History
             </h2>
-            <ul class="grid w-full gap-4 grid-cols-1 md:grid-cols-5 mt-4">
+            <ul class="grid w-full gap-4 grid-cols-1 mt-4" :class="hasRole('ib') ? 'md:grid-cols-6' : 'md:grid-cols-5'">
                 <li v-for="(transactionHistory, index) in transactionHistories" :key="index">
                     <input
                         type="radio"
                         :id="transactionHistory.id"
                         name="transactionHistory"
-                        :value="transactionHistory.value"
                         class="hidden peer"
                         :checked="index === 0"
                         @click="selectedTransactionHistoryType(index)"
@@ -123,6 +126,21 @@ function selectedTransactionHistoryType(index) {
                         </div>
                     </label>
                 </li>
+                <li v-if="hasRole('ib')">
+                    <input
+                        type="radio"
+                        id="transaction_history_6"
+                        name="transactionHistory"
+                        class="hidden peer"
+                        @click="selectedTransactionHistoryType(5)"
+                    >
+                    <label for="transaction_history_6" class="inline-flex items-center justify-center w-full p-4 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-[#007BFF] dark:peer-checked:bg-[#007BFF] peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-transparent dark:shadow-lg dark:hover:shadow-blue-600">
+                        <div class="flex flex-col items-center gap-2">
+                            <img class="object-cover w-10 h-10" src="/assets/finance/rebate-to-wallet.png" alt="account_type">
+                            <p class="text-sm text-gray-500 text-center dark:text-white">Rebate To Wallet</p>
+                        </div>
+                    </label>
+                </li>
             </ul>
 
             <TransactionHistoryDTA :payments="payments" v-show="transactionHistory === 0"/>
@@ -130,6 +148,7 @@ function selectedTransactionHistoryType(index) {
             <TransactionHistoryWTA :walletToAccounts="walletToAccounts" v-show="transactionHistory === 2"/>
             <TransactionHistoryATW :accountToWallets="accountToWallets" v-show="transactionHistory === 3"/>
             <TransactionHistoryATA :accountToAccounts="accountToAccounts" v-show="transactionHistory === 4"/>
+            <TransactionHistoryRTW :rebateToAccounts="rebateToAccounts" v-if="transactionHistory === 5"/>
 
         </div>
 

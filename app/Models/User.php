@@ -78,7 +78,7 @@ class User extends Authenticatable implements JWTSubject, HasMedia
 
     public function getMonthlyDeposit()
     {
-        return Payment::query()
+        $amount = Payment::query()
             ->where('user_id', Auth::id())
             ->where('category', '=', 'payment')
             ->where('type', '=', 'Deposit')
@@ -88,6 +88,24 @@ class User extends Authenticatable implements JWTSubject, HasMedia
                 now()->endOfMonth(),   // End of the current month
             ])
             ->sum('amount');
+
+        return number_format($amount, 2, '.', '');
+    }
+
+    public function getMonthlyWithdrawal()
+    {
+        $amount = Payment::query()
+            ->where('user_id', Auth::id())
+            ->where('category', '=', 'payment')
+            ->where('type', '=', 'Withdrawal')
+            ->where('status', '=', 'Successful')
+            ->whereBetween('created_at', [
+                now()->startOfMonth(), // Start of the current month
+                now()->endOfMonth(),   // End of the current month
+            ])
+            ->sum('amount');
+
+        return number_format($amount, 2, '.', '');
     }
 
     public function setReferralId()
