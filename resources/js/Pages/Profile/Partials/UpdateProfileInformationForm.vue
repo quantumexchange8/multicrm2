@@ -133,7 +133,7 @@ const submit = () => {
 
                 <div class="space-y-2">
                     <Label for="dob" value="Date Of Birth" />
-                    <vue-tailwind-datepicker :formatter="formatter" as-single v-model="form.dob" input-classes="py-2 border-gray-400 w-full rounded-full text-sm placeholder:text-sm focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:border-gray-600 bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1" />
+                    <vue-tailwind-datepicker :formatter="formatter" as-single v-model="form.dob" input-classes="py-2 border-gray-400 w-full rounded-full text-sm placeholder:text-sm focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1" />
 
                     <InputError class="mt-2" :message="form.errors.dob" />
                 </div>
@@ -161,7 +161,7 @@ const submit = () => {
                         :class="[
                           'py-2 border-gray-400 rounded-full placeholder:text-sm',
                           'focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white',
-                          'dark:border-gray-600 bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1',
+                          'dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1',
                           'w-[342px] sm:w-[624px]'
                         ]"
                         v-model="form.phone"
