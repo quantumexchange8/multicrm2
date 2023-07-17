@@ -46,6 +46,13 @@ const form = useForm({
 });
 
 const submit = () => {
+    // Get the selected country code
+    const countryCode = phoneInputInstance.value.getSelectedCountryData().dialCode;
+    console.log(countryCode)
+    // Concatenate the country code with the phone number
+    form.phone = `+${countryCode}${form.phone}`;
+
+    // Submit the form
     form.post(route('register'), {
         onSuccess: () => {
             form.reset('password', 'password_confirmation');
