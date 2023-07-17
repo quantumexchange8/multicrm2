@@ -49,8 +49,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/deposit', [PaymentController::class, 'deposit'])->middleware(HandlePrecognitiveRequests::class)->name('payment.deposit');
     Route::post('/requestWithdrawal', [PaymentController::class, 'requestWithdrawal'])->middleware(HandlePrecognitiveRequests::class)->name('payment.requestWithdrawal');
+    Route::post('/applyRebate', [PaymentController::class, 'applyRebate'])->middleware('role:ib')->name('payment.applyRebate');
 
-    Route::post('/upload-crypto-files', [\App\Http\Controllers\SettingCryptoWalletController::class, 'store'])->name('upload-crypto-files');
+//    Route::post('/upload-crypto-files', [\App\Http\Controllers\SettingCryptoWalletController::class, 'store'])->name('upload-crypto-files');
 
     /**
      * ==============================

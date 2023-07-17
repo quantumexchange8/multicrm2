@@ -41,7 +41,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $user,
             ],
-            'auth.user.media' => fn() => $request->user() ? $request->user()->hasMedia('front_identity') : null,
+            'auth.user.picture' => fn() => $request->user() ? $request->user()->getFirstMediaUrl('profile_photo') : null,
             'auth.user.roles' => fn() => $request->user() ? $request->user()->getRoleNames() : null,
             'auth.user.permissions' => fn() => $request->user() ? $request->user()->getPermissionNames() : null,
             'ziggy' => function () use ($request) {

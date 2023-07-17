@@ -6,9 +6,11 @@ import Input from '@/Components/Input.vue'
 import InputSelect from '@/Components/InputSelect.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3'
 import VueTailwindDatepicker from "vue-tailwind-datepicker";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import Modal from "@/Components/Modal.vue";
 import AvatarInput from "@/Pages/Profile/Partials/AvatarInput.vue";
+import intlTelInput from 'intl-tel-input';
+import 'intl-tel-input/build/css/intlTelInput.css';
 
 const props = defineProps({
     mustVerifyEmail: Boolean,
@@ -39,7 +41,23 @@ const formatter = ref({
     month: 'MM'
 });
 const user = usePage().props.auth.user
-
+const phoneInput = ref(null);
+const phoneInputInstance = ref(null);
+onMounted(() => {
+    phoneInputInstance.value = intlTelInput(phoneInput.value, {
+        initialCountry: 'my',
+        separateDialCode: true,
+        preferredCountries: ['my', 'vn'],
+        utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/js/utils.js',
+        dropdownContainer: document.body,
+        customPlaceholder: function (selectedCountryPlaceholder, selectedCountryData) {
+            return selectedCountryPlaceholder.replace('+' + selectedCountryData.dialCode + ' ', '');
+        },
+        customDropdownItem: function (country, sanitizedCountry, selectedCountryData) {
+            return '<div class="iti__country iti__standard"><div class="iti__flag-box"><div class="iti__flag iti__' + sanitizedCountry + '"></div></div><span class="iti__country-name">' + country + '</span><span class="iti__dial-code">+' + selectedCountryData.dialCode + '</span></div>';
+        },
+    });
+});
 const form = useForm({
     avatar: null,
     first_name: user.first_name,
@@ -51,6 +69,19 @@ const form = useForm({
     front_identity: null,
     back_identity: null,
 });
+
+const submit = () => {
+    // Get the selected country code
+    const countryCode = phoneInputInstance.value.getSelectedCountryData().dialCode;
+    // Concatenate the country code with the phone number
+    if (!form.phone.startsWith(`+${countryCode}`)) {
+        // Concatenate the country code with the phone number
+        form.phone = `+${countryCode}${form.phone}`;
+    }
+
+    // Submit the form
+    form.post(route('profile.update'));
+};
 
 </script>
 
@@ -66,9 +97,7 @@ const form = useForm({
             </p>
         </header>
 
-        <form
-            @submit.prevent="form.post(route('profile.update'))"
-        >
+        <form>
             <div class="flex justify-center items-center my-4">
                 <AvatarInput class="h-24 w-24 rounded-full" v-model="form.avatar" :default-src="avatar ? avatar : 'https://img.freepik.com/free-icon/user_318-159711.jpg'" />
             </div>
@@ -121,16 +150,23 @@ const form = useForm({
                 </div>
 
 
-
                 <div class="space-y-2">
                     <Label for="phone" value="Mobile Phone" />
 
-                    <Input
+                    <input
+                        ref="phoneInput"
+                        type="tel"
                         id="phone"
-                        type="text"
-                        class="mt-1 block w-full"
+                        name="phone"
+                        :class="[
+                          'py-2 border-gray-400 rounded-full placeholder:text-sm',
+                          'focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white',
+                          'dark:border-gray-600 bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1',
+                          'w-[342px] sm:w-[624px]'
+                        ]"
                         v-model="form.phone"
-                        autocomplete="phone"
+                        autocomplete="tel"
+                        class="block"
                     />
 
                     <InputError class="mt-2" :message="form.errors.phone" />
@@ -147,6 +183,7 @@ const form = useForm({
                         class="mt-1 block w-full"
                         v-model="form.email"
                         autocomplete="email"
+                        readonly
                     />
 
                     <InputError class="mt-2" :message="form.errors.email" />
@@ -227,7 +264,7 @@ const form = useForm({
             </div>
 
             <div class="flex items-center gap-4 mt-6">
-                <Button :disabled="form.processing">Save</Button>
+                <Button @click="submit" :disabled="form.processing">Save</Button>
 
                 <Transition
                     enter-from-class="opacity-0"

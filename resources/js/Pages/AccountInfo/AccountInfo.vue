@@ -184,7 +184,7 @@ const closeModal = () => {
         </template>
 
         <div class="p-6 overflow-hidden bg-white rounded-md shadow-md dark:bg-dark-eval-1">
-            Ctrader Table
+            <img src="/assets/platform/icon/ctrader.png" style="width: 160px" alt="Ctrader">
             <TradingAccountTable :tradingAccounts="tradingAccounts" :leverages="leverages" />
         </div>
 

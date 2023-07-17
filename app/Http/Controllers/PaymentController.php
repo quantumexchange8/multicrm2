@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Payment\DepositRequest;
 use App\Http\Requests\Payment\WithdrawalRequest;
 use App\Models\GatewayExchangeRate;
+use App\Models\IbAccountType;
 use App\Models\Payment;
 use App\Models\SettingCryptoWallet;
 use App\Models\TradingAccount;
@@ -201,28 +202,59 @@ class PaymentController extends Controller
 
     public function requestWithdrawal(WithdrawalRequest $request)
     {
-        $permission = Permission::create(['name' => 'apply rebate']);
+        $user = Auth::user();
+        $amount = floatval($request->amount);
+        if ($user->cash_wallet < $amount) {
+            throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
+        }
+        $user->cash_wallet -= $amount;
+        $user->save();
+        $payment_id = RunningNumberService::getID('transaction');
 
-            $user = Auth::user();
-            $amount = floatval($request->amount);
-            if ($user->cash_wallet < $amount) {
-                throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
-            }
-            $user->cash_wallet -= $amount;
-            $user->save();
-            $payment_id = RunningNumberService::getID('transaction');
+        Payment::create([
+            'user_id' => $user->id,
+            'payment_id' => $payment_id,
+            'category' => 'payment',
+            'type' => 'Withdrawal',
+            'channel' => $request->channel,
+            'amount' => $amount,
+            'account_no' => $request->account_no,
+            'account_type' => $request->account_type,
+        ]);
 
-            Payment::create([
-                'user_id' => $user->id,
-                'payment_id' => $payment_id,
-                'category' => 'payment',
-                'type' => 'Withdrawal',
-                'channel' => $request->channel,
-                'amount' => $amount,
-                'account_no' => $request->account_no,
-                'account_type' => $request->account_type,
-            ]);
+        return back()->with('toast', 'Successfully Submitted Withdrawal Request');
+    }
 
-            return back()->with('toast', 'Successfully Submitted Withdrawal Request');
+    public function applyRebate(Request $request)
+    {
+        $accountType = IbAccountType::where('user_id', Auth::id())->where('account_type', $request->account_type)->with('accountType')->first();
+        $user = User::find(Auth::id());
+        if ($accountType->rebate_wallet <= 0) {
+            return response()->json([
+                'success' => false,
+                'message' => trans('Insufficient balance to apply the rebate. You have not earned any rebate yet.')
+            ], 422);
+        }
+
+        $payment_id = RunningNumberService::getID('transaction');
+
+        Payment::create([
+            'user_id' => $user->id,
+            'payment_id' => $payment_id,
+            'category' => 'apply_rebate',
+            'type' => '',
+            'amount' => $accountType->rebate_wallet,
+            'status' => 'Successful',
+        ]);
+        $user->cash_wallet = number_format($user->cash_wallet + $accountType->rebate_wallet, 2, '.', '');
+        $user->save();
+        $accountType->update(['rebate_wallet' => 0, 'trade_lot' => 0]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Congratulation, we have received your rebate request. The rebate will be transferred to your cash wallet shortly. Once processed, you will be able to withdraw or transfer your funds.',
+            'cash_wallet' => $user->cash_wallet,
+            'rebate_wallet' => $accountType->rebate_wallet
+        ]);
     }
 }
