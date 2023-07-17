@@ -186,7 +186,7 @@ function copyReferralCode() {
                         as="button"
                         class="grid grid-cols-1 text-center"
                     >
-                        <p class="text-xs my-2 text-gray-500 dark:text-dark-eval-4">Promotion Register Code</p>
+                        <p class="text-xs my-2 text-gray-500 dark:text-dark-eval-4">Promote Register Code</p>
                         <span id="userReferralCode">{{ user.referral_code }}</span>
                         <Button class="w-full justify-center my-2" @click.stop.prevent="copyReferralCode">Copy</Button>
                     </DropdownLink>
