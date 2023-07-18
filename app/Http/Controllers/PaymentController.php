@@ -147,7 +147,7 @@ class PaymentController extends Controller
 
         Log::info($redirectUrl);
 
-        return redirect()->away($redirectUrl);
+        return Inertia::location($redirectUrl);
 
     }
 
