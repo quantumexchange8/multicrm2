@@ -130,7 +130,7 @@ class PaymentController extends Controller
             'payment_charges' => $payment_charges,
         ]);
 
-        $returnUrl = url('ompay/depositResult?token=' . session()->get('jwt-token'));
+        $returnUrl = url('/dashboard');
         $notifyUrl = url('ompay/updateStatus');
         if ($currency == 'MYR')
         {
@@ -155,11 +155,8 @@ class PaymentController extends Controller
     {
         $data = $request->all();
         Log::debug($data);
-        if ($request->token) {
-            session()->put('jwt-token', $request->token);
-        }
 
-        return Inertia::location('https://multicrm2.currenttech.pro/');
+        return Inertia::render('Dashboard');
     }
 
     public function updateResult(Request $request)
