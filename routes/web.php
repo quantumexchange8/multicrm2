@@ -31,7 +31,7 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::post('ompay/depositResult', [PaymentController::class, 'depositResult']);
+Route::match(['get', 'post'], 'ompay/depositResult', [PaymentController::class, 'depositResult']);
 Route::post('ompay/updateStatus', [PaymentController::class, 'updateResult']);
 Route::middleware('auth')->group(function () {
     Route::get('/monthly-deposit', [GeneralController::class, 'monthly_deposit'])->name('monthly_deposit');
