@@ -7,6 +7,7 @@ use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\InternalTransferController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
+use Illuminate\Support\Facades\Session as FacadesSession;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -28,8 +29,17 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    $firstTimeLogin = FacadesSession::get('first_time_logged_in');
+
+    return Inertia::render('Dashboard', [
+        'firstTimeLogin' => $firstTimeLogin
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::post('/update-session', function () {
+    Session::put('first_time_logged_in', 0);
+    return back();
+})->middleware(['auth', 'verified']);
 
 Route::post('ompay/depositResult', [PaymentController::class, 'depositResult']);
 Route::post('ompay/updateStatus', [PaymentController::class, 'updateResult']);

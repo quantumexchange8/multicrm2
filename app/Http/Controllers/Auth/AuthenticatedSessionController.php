@@ -42,6 +42,7 @@ class AuthenticatedSessionController extends Controller
         (new UsersRepo)->updateLastLoginIp($user, $request->ip());
         $token = $user->createToken('auth-token')->plainTextToken;
 
+        Session::put('first_time_logged_in', 1);
         Session::put('jwt-token', $token);
 
         return redirect()->intended(RouteServiceProvider::HOME);
