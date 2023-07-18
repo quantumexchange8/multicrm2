@@ -21,18 +21,20 @@ class DepositRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
+        return [
+            'account_no' => ['required', 'numeric'],
             'amount' => ['required', 'numeric', 'min:30'],
+            'currency' => ['required'],
         ];
 
-        if ($this->input('deposit_method') == 1) {
-            $rules['account_no'] = 'required|numeric';
-            $rules['currency'] = 'required|string';
-        } else {
-            $rules['txid'] = 'required';
-        }
-
-        return $rules;
+//        if ($this->input('deposit_method') == 1) {
+//            $rules['account_no'] = 'required|numeric';
+//            $rules['currency'] = 'required|string';
+//        } else {
+//            $rules['txid'] = 'required';
+//        }
+//
+//        return $rules;
     }
 
     public function attributes(): array

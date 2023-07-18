@@ -46,7 +46,7 @@ onMounted(async () => {
 
 const depositMethods = [
     { id: 'deposit_method', src: '/assets/finance/bank.png', value: 1, name: 'Bank' },
-    // { id: 'deposit_method', src: '/assets/finance/cryptocurrency.png', value: 2, name: 'Cryptocurrency' },
+    { id: 'deposit_method', src: '/assets/finance/cryptocurrency.png', value: 2, name: 'Cryptocurrency' },
 ];
 
 const platforms = [
@@ -185,6 +185,32 @@ const closeModal = () => {
             </div>
 
             <!-- Crypto -->
+            <div v-if="form.deposit_method === 2">
+                <h2 class="text-lg mb-2 font-medium text-gray-900 dark:text-gray-100">Cryptocurrency</h2>
+                <hr>
+                <div class="grid gap-6 my-6 md:grid-cols-2">
+                    <div class="space-y-2">
+                        <Label for="account_no" value="Account No." />
+                        <InputSelect class="w-full" id="account_no" v-model="form.account_no" placeholder="Select Account No." >
+                            <option v-for="paymentAccount in paymentAccounts" :value="paymentAccount.meta_login" :key="paymentAccount.id">{{ paymentAccount.meta_login }}</option>
+                        </InputSelect>
+                        <InputError :message="form.errors.account_no"/>
+                    </div>
+                    <div class="space-y-2">
+                        <Label for="currency" value="Currency" />
+                        <InputSelect v-model="form.currency" class="w-full" id="currency" placeholder="Select Currency">
+                            <option value="USDT">USDT</option>
+                        </InputSelect>
+                        <InputError :message="form.errors.currency"/>
+                    </div>
+                    <div class="space-y-2">
+                        <Label for="amount" value="Deposit Amount (USD)" />
+                        <Input id="amount" type="number" min="30" class="block w-full px-4" placeholder="Deposit Amount" v-model="form.amount" @change="form.validate('amount')" />
+                        <InputError :message="form.errors.amount"/>
+                    </div>
+                </div>
+            </div>
+
 <!--            <div v-if="form.deposit_method === 2">-->
 <!--                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Cryptocurrency</h2>-->
 <!--                <hr>-->
