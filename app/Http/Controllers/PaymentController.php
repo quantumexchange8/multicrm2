@@ -112,9 +112,7 @@ class PaymentController extends Controller
                 }
             }
         }
-        $apiUrl = $this->base_url . "/Merchant/Pay";
         $user = Auth::user();
-
 
         Payment::create([
             'to' => $meta_login,
@@ -134,6 +132,7 @@ class PaymentController extends Controller
         $notifyUrl = url('ompay/updateStatus');
         // Get the currency configuration based on the provided currency code
         $currencyConfig = config('currency_setting');
+        $apiUrl = $currencyConfig[$currency]['base_url'] . "/Merchant/Pay";
 
         $mode = 3;
         $token = md5($payment_id . $currencyConfig[$currency]['apiKey'] . $currencyConfig[$currency]['secretKey'] . $real_amount);
