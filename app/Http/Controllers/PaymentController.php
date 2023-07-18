@@ -130,7 +130,7 @@ class PaymentController extends Controller
             'payment_charges' => $payment_charges,
         ]);
 
-        $returnUrl = url('/dashboard');
+        $returnUrl = url('ompay/depositResult');
         $notifyUrl = url('ompay/updateStatus');
         if ($currency == 'MYR')
         {
@@ -155,10 +155,7 @@ class PaymentController extends Controller
     {
         $data = $request->all();
         Log::debug($data);
-        if ($request->token) {
-            session()->put('jwt-token', $request->token);
-        }
-
+        
         return to_route('dashboard');
     }
 
