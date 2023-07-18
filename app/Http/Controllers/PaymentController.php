@@ -132,20 +132,13 @@ class PaymentController extends Controller
 
         $returnUrl = url('/dashboard');
         $notifyUrl = url('ompay/updateStatus');
-        if ($currency == 'MYR')
-        {
-            $token = md5($payment_id . '78F6F83E-1DE9-4BC2-8253-8319C1A4F104' . '645B45FF789C431889BFFBF1E462DCE6' . $real_amount);
-            $mode = 3;
+        // Get the currency configuration based on the provided currency code
+        $currencyConfig = config('currency_setting');
 
-            $redirectUrl = $apiUrl . "?mode={$mode}&merchantCode=60-00000197-89382959&serialNo={$payment_id}&currency={$currency}&amount={$real_amount}&returnUrl={$returnUrl}&notifyUrl={$notifyUrl}&token={$token}";
-        } else {
-            $token = md5($payment_id . $this->apiKey . $this->secretKey . $real_amount);
-            $mode = 3;
+        $mode = 3;
+        $token = md5($payment_id . $currencyConfig[$currency]['apiKey'] . $currencyConfig[$currency]['secretKey'] . $real_amount);
 
-            $redirectUrl = $apiUrl . "?mode={$mode}&merchantCode={$this->merchantID}&serialNo={$payment_id}&currency={$currency}&amount={$real_amount}&returnUrl={$returnUrl}&notifyUrl={$notifyUrl}&token={$token}";
-        }
-
-        Log::info($redirectUrl);
+        $redirectUrl = $apiUrl . "?mode={$mode}&merchantCode={$currencyConfig[$currency]['merchantID']}&serialNo={$payment_id}&currency={$currency}&amount={$real_amount}&returnUrl={$returnUrl}&notifyUrl={$notifyUrl}&token={$token}";
 
         return Inertia::location($redirectUrl);
 
@@ -161,7 +154,7 @@ class PaymentController extends Controller
 
     public function updateResult(Request $request)
     {
-        $data =  $request->all();
+        $data = $request->all();
         Log::debug($data);
         $result = [
             "Info" => $data['Info'],
@@ -174,7 +167,13 @@ class PaymentController extends Controller
         ];
         Log::debug($result);
 
-        if ($result["Token"] == md5($result['SerialNo'] . $this->apiKey . $this->secretKey)) {
+        // Get the currency from the data
+        $currency = $data['CurrencyCode'];
+
+        // Get the currency configuration based on the provided currency code
+        $currencyConfig = config('currency_setting');
+
+        if ($result["Token"] == md5($result['SerialNo'] . $currencyConfig[$currency]['apiKey'] . $currencyConfig[$currency]['secretKey'])) {
             $payment = Payment::query()->where('payment_id', Str::upper($result['SerialNo']))->first();
             if ($payment->status == "Submitted" || $payment->status == "Processing") {
                 if ($result['Status'] == 1) {
