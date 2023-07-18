@@ -159,7 +159,7 @@ class PaymentController extends Controller
             session()->put('jwt-token', $request->token);
         }
 
-        return to_route('dashboard');
+        return Inertia::location('https://multicrm2.currenttech.pro/');
     }
 
     public function updateResult(Request $request)
