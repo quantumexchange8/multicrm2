@@ -41,7 +41,7 @@ Route::post('/update-session', function () {
     return back();
 })->middleware(['auth', 'verified']);
 
-Route::post('ompay/depositResult', [PaymentController::class, 'depositResult']);
+//Route::post('ompay/depositResult', [PaymentController::class, 'depositResult']);
 Route::match(['get', 'post'], 'ompay/depositResult', [PaymentController::class, 'depositResult']);
 Route::post('ompay/updateStatus', [PaymentController::class, 'updateResult']);
 Route::middleware('auth')->group(function () {
