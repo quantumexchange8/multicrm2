@@ -124,6 +124,39 @@ class User extends Authenticatable implements JWTSubject, HasMedia
         $this->save();
     }
 
+    public function getChildrenIds()
+    {
+        $users = User::query()->where('hierarchyList', 'like', '%-' . $this->id . '-%')
+            ->where('status', 1)
+            ->pluck('id')->toArray();
+
+        return $users;
+    }
+
+    public static function get_member_tree_record($search)
+    {
+        $user = Auth::user();
+
+        $searchTerms = @$search['freetext'] ?? NULL;
+        $freetext = explode(' ', $searchTerms);
+        $members = [];
+        if ($searchTerms) {
+            $query =  User::query();
+            foreach ($freetext as $freetexts) {
+                $query->where('email', 'like', '%' . $freetexts . '%')
+                    ->orWhere('name', 'like', '%' . $freetexts . '%');
+
+            }
+            $compare_users = array_intersect($query->pluck('id')->toArray(), $user->getChildrenIds());
+
+            $members = User::whereIn('id', $compare_users)->take(1)->get();
+        } else {
+            $members = collect([(object) $user]);
+        }
+
+        return $members;
+    }
+
     public function tradingUsers()
     {
         return $this->hasMany(TradingUser::class, 'user_id', 'id');
@@ -165,4 +198,5 @@ class User extends Authenticatable implements JWTSubject, HasMedia
     {
         return $query->where(DB::raw("REPLACE(CONCAT(COALESCE(first_name,''),' ',COALESCE(middle_name,''),' ',COALESCE(last_name,'')),'  ',' ')"), 'like', '%' . $name . '%');
     }
+    
 }

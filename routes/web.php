@@ -6,6 +6,7 @@ use App\Http\Controllers\DepositController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\InternalTransferController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\NetworkController;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use Inertia\Inertia;
@@ -83,6 +84,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/wallet_to_account', [InternalTransferController::class, 'wallet_to_account'])->name('wallet_to_account');
     Route::post('/account_to_wallet', [InternalTransferController::class, 'account_to_wallet'])->name('account_to_wallet');
     Route::post('/account_to_account', [InternalTransferController::class, 'account_to_account'])->name('account_to_account');
+
+     /**
+     * ==============================
+     *           Network Tree
+     * ==============================
+     */
+    Route::get('/network-tree', [NetworkController::class, 'network'])->name('network-tree');
 
 });
 
