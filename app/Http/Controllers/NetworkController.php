@@ -44,5 +44,20 @@ class NetworkController extends Controller
         ]);
     }
 
+    public function getRebateAllocation(Request $request)
+    {
+
+        $user = Auth::user();
+
+        $accountTypes = IbAccountType::where('user_id', $user->id)->with(['accountType'])->get();
+
+        $account = IbAccountType::where('user_id', $user->id)->with(['ofUser', 'symbolGroups.symbolGroup', 'accountType'])->first();
+        $children = $account->downline()->with(['ofUser'])->get();
+
+        return Inertia::render('GroupNetwork/RebateAllocation', [
+            'account' => $account,
+            'children' => $children,
+        ]);
+    }
 
 }
