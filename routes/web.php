@@ -87,11 +87,12 @@ Route::middleware('auth')->group(function () {
 
      /**
      * ==============================
-     *           Network Tree
+     *          Network Tree
      * ==============================
      */
-    Route::get('/network-tree', [NetworkController::class, 'network'])->name('network-tree');
-
+     Route::prefix('group_network')->group(function () {
+         Route::get('/network_tree', [NetworkController::class, 'network'])->name('group_network.network_tree');
+     });
 });
 
 Route::get('/components/buttons', function () {

@@ -198,5 +198,5 @@ class User extends Authenticatable implements JWTSubject, HasMedia
     {
         return $query->where(DB::raw("REPLACE(CONCAT(COALESCE(first_name,''),' ',COALESCE(middle_name,''),' ',COALESCE(last_name,'')),'  ',' ')"), 'like', '%' . $name . '%');
     }
-    
+
 }
