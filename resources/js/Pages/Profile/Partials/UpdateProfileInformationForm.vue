@@ -162,11 +162,10 @@ const submit = () => {
                           'py-2 border-gray-400 rounded-full placeholder:text-sm',
                           'focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white',
                           'dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1',
-                          'w-[342px] sm:w-[624px]'
                         ]"
                         v-model="form.phone"
                         autocomplete="tel"
-                        class="block"
+                        class="block w-full"
                     />
 
                     <InputError class="mt-2" :message="form.errors.phone" />

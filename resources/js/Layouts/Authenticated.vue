@@ -43,7 +43,7 @@ defineProps({
 
             <!-- Page Content -->
             <div class="flex-1 px-4 sm:px-6">
-                <div class="flex flex-col-reverse md:flex-row gap-4">
+                <div class="flex flex-col md:flex-row gap-4">
                     <main class="flex-1">
                         <ToastList />
                         <slot />
