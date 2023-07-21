@@ -72,6 +72,19 @@ Route::middleware('auth')->group(function () {
     Route::post('/account_to_wallet', [InternalTransferController::class, 'account_to_wallet'])->name('account_to_wallet');
     Route::post('/account_to_account', [InternalTransferController::class, 'account_to_account'])->name('account_to_account');
 
+<<<<<<< Updated upstream
+=======
+     /**
+     * ==============================
+     *          Network Tree
+     * ==============================
+     */
+     Route::prefix('group_network')->group(function () {
+         Route::get('/network_tree', [NetworkController::class, 'network'])->name('group_network.network_tree');
+         Route::get('/rebate_allocation', [NetworkController::class, 'getRebateAllocation'])->name('group_network.rebate_allocation');
+         Route::patch('/rebate_allocation', [NetworkController::class, 'updateRebateAllocation'])->name('updateRebate.update');
+     });
+>>>>>>> Stashed changes
 });
 
 Route::get('/components/buttons', function () {
