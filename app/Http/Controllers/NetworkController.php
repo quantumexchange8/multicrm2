@@ -76,13 +76,51 @@ class NetworkController extends Controller
 
         $accountTypes = IbAccountType::where('user_id', $user->id)->with(['accountType'])->get();
 
-        $account = IbAccountType::where('user_id', $user->id)->with(['ofUser', 'symbolGroups.symbolGroup', 'accountType'])->first();
-        $children = $account->downline()->with(['ofUser'])->get();
+        $accounts = IbAccountType::where('user_id', $user->id)->with(['ofUser', 'symbolGroups.symbolGroup', 'accountType'])->first();
+        
+        $childrens = $this->getDownlinesRecursive($accounts);
+
+
+        // dd($userGroupSymbol);
 
         return Inertia::render('GroupNetwork/RebateAllocation', [
-            'account' => $account,
-            'children' => $children,
+            'accounts' => $accounts,
+            'childrens' => $childrens,
         ]);
     }
 
+    private function getDownlinesRecursive($account)
+    {
+        
+        $childrens = [];
+
+        if ($account->downline) {
+            foreach ($account->downline as $downline) {
+                $children = [
+                    'account' => $downline->load(['ofUser', 'accountType', 'symbolGroups.symbolGroup']),
+                    'children' => $this->getDownlinesRecursive($downline),
+                ];
+    
+                // If the child has downlines, include them in the $children array
+                if (count($children['children']) > 0) {
+                    $children['children'] = $this->getDownlinesRecursive($downline);
+                }
+    
+                $childrens[] = $children;
+            }
+        }
+
+        return $childrens;
+    }
+
+    public function updateRebateAllocation(Request $request)
+    {
+        dd($request->all());
+
+        if ($request->ajax()) {
+            
+        }
+
+        return Redirect::route('group_network.rebate_allocation')->with('toast', 'Successfully Updated Rebate Allocation');
+    }
 }

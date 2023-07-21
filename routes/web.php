@@ -100,4 +100,4 @@ Route::get('/components/buttons', function () {
     return Inertia::render('Components/Buttons');
 })->middleware(['auth', 'verified'])->name('components.buttons');
 
-require _DIR_ . '/auth.php';
+require __DIR__ . '/auth.php';
