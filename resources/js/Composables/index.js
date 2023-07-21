@@ -14,11 +14,7 @@ export const sidebarState = reactive({
         sidebarState.isHovered = value
     },
     handleWindowResize() {
-        if (window.innerWidth <= 1024) {
-            sidebarState.isOpen = false
-        } else {
-            sidebarState.isOpen = true
-        }
+        sidebarState.isOpen = window.innerWidth > 1200;
     },
 })
 

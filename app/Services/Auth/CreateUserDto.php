@@ -25,7 +25,7 @@ class CreateUserDto extends DataTransferObject
     public $doc_identity_front;
     public $doc_identity_back;
     public $doc_address;
-    public $referral;
+    public $referral_code;
     public $register_ip;
 
     public static function fromValidatedRequest(array $validatedData): CreateUserDto
@@ -48,7 +48,7 @@ class CreateUserDto extends DataTransferObject
             'doc_identity_front' => $validatedData['doc_identity_front'] ?? null,
             'doc_identity_back' => $validatedData['doc_identity_back'] ?? null,
             'doc_address' => $validatedData['doc_address'] ?? null,
-            'referral' => $validatedData['referral'] ?? null,
+            'referral_code' => $validatedData['referral_code'] ?? null,
             'register_ip' => $validatedData['register_ip'],
         ]);
     }

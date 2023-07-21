@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
@@ -12,10 +13,11 @@ use Laravel\Sanctum\HasApiTokens;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements JWTSubject, HasMedia
 {
-    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia;
+    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia, HasRoles, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -67,9 +69,16 @@ class User extends Authenticatable implements JWTSubject, HasMedia
         return [];
     }
 
+    public function createPassword(string $field, string $password): self
+    {
+        $this->{$field} = app('hash')->make($password);
+
+        return $this;
+    }
+
     public function getMonthlyDeposit()
     {
-        return Payment::query()
+        $amount = Payment::query()
             ->where('user_id', Auth::id())
             ->where('category', '=', 'payment')
             ->where('type', '=', 'Deposit')
@@ -79,6 +88,73 @@ class User extends Authenticatable implements JWTSubject, HasMedia
                 now()->endOfMonth(),   // End of the current month
             ])
             ->sum('amount');
+
+        return number_format($amount, 2, '.', '');
+    }
+
+    public function getMonthlyWithdrawal()
+    {
+        $amount = Payment::query()
+            ->where('user_id', Auth::id())
+            ->where('category', '=', 'payment')
+            ->where('type', '=', 'Withdrawal')
+            ->where('status', '=', 'Successful')
+            ->whereBetween('created_at', [
+                now()->startOfMonth(), // Start of the current month
+                now()->endOfMonth(),   // End of the current month
+            ])
+            ->sum('amount');
+
+        return number_format($amount, 2, '.', '');
+    }
+
+    public function setReferralId()
+    {
+        $characters = 'ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz';
+        $idLength = strlen((string)$this->id);
+
+        $temp_code = substr(str_shuffle($characters), 0, 10 - $idLength);
+        $alphabetId = '';
+
+        foreach (str_split((string)$this->id) as $digit) {
+            $alphabetId .= $characters[$digit];
+        }
+
+        $this->referral_code = $temp_code . $alphabetId;
+        $this->save();
+    }
+
+    public function getChildrenIds()
+    {
+        $users = User::query()->where('hierarchyList', 'like', '%-' . $this->id . '-%')
+            ->where('status', 1)
+            ->pluck('id')->toArray();
+
+        return $users;
+    }
+
+    public static function get_member_tree_record($search)
+    {
+        $user = Auth::user();
+
+        $searchTerms = @$search['freetext'] ?? NULL;
+        $freetext = explode(' ', $searchTerms);
+        $members = [];
+        if ($searchTerms) {
+            $query =  User::query();
+            foreach ($freetext as $freetexts) {
+                $query->where('email', 'like', '%' . $freetexts . '%')
+                    ->orWhere('name', 'like', '%' . $freetexts . '%');
+
+            }
+            $compare_users = array_intersect($query->pluck('id')->toArray(), $user->getChildrenIds());
+
+            $members = User::whereIn('id', $compare_users)->take(1)->get();
+        } else {
+            $members = collect([(object) $user]);
+        }
+
+        return $members;
     }
 
     public function tradingUsers()
@@ -122,4 +198,5 @@ class User extends Authenticatable implements JWTSubject, HasMedia
     {
         return $query->where(DB::raw("REPLACE(CONCAT(COALESCE(first_name,''),' ',COALESCE(middle_name,''),' ',COALESCE(last_name,'')),'  ',' ')"), 'like', '%' . $name . '%');
     }
+
 }

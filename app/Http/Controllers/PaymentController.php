@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Payment\DepositRequest;
 use App\Http\Requests\Payment\WithdrawalRequest;
 use App\Models\GatewayExchangeRate;
+use App\Models\IbAccountType;
 use App\Models\Payment;
 use App\Models\SettingCryptoWallet;
 use App\Models\TradingAccount;
@@ -17,7 +18,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Permission;
 
 class PaymentController extends Controller
 {
@@ -109,9 +112,7 @@ class PaymentController extends Controller
                 }
             }
         }
-        $apiUrl = $this->base_url . "/Merchant/Pay";
         $user = Auth::user();
-
 
         Payment::create([
             'to' => $meta_login,
@@ -127,22 +128,16 @@ class PaymentController extends Controller
             'payment_charges' => $payment_charges,
         ]);
 
-        $returnUrl = url('ompay/depositResult?token=' . session()->get('jwt-token'));
+        $returnUrl = url('/dashboard');
         $notifyUrl = url('ompay/updateStatus');
-        if ($currency == 'MYR')
-        {
-            $token = md5($payment_id . '78F6F83E-1DE9-4BC2-8253-8319C1A4F104' . '645B45FF789C431889BFFBF1E462DCE6' . $real_amount);
-            $mode = 3;
+        // Get the currency configuration based on the provided currency code
+        $currencyConfig = config('currency_setting');
+        $apiUrl = $currencyConfig[$currency]['base_url'] . "/Merchant/Pay";
 
-            $redirectUrl = $apiUrl . "?mode={$mode}&merchantCode=60-00000197-89382959&serialNo={$payment_id}&currency={$currency}&amount={$real_amount}&returnUrl={$returnUrl}&notifyUrl={$notifyUrl}&token={$token}";
-        } else {
-            $token = md5($payment_id . $this->apiKey . $this->secretKey . $real_amount);
-            $mode = 3;
+        $mode = 3;
+        $token = md5($payment_id . $currencyConfig[$currency]['apiKey'] . $currencyConfig[$currency]['secretKey'] . $real_amount);
 
-            $redirectUrl = $apiUrl . "?mode={$mode}&merchantCode={$this->merchantID}&serialNo={$payment_id}&currency={$currency}&amount={$real_amount}&returnUrl={$returnUrl}&notifyUrl={$notifyUrl}&token={$token}";
-        }
-
-        Log::info($redirectUrl);
+        $redirectUrl = $apiUrl . "?mode={$mode}&merchantCode={$currencyConfig[$currency]['merchantID']}&serialNo={$payment_id}&currency={$currency}&amount={$real_amount}&returnUrl={$returnUrl}&notifyUrl={$notifyUrl}&token={$token}";
 
         return Inertia::location($redirectUrl);
 
@@ -152,15 +147,13 @@ class PaymentController extends Controller
     {
         $data = $request->all();
         Log::debug($data);
-        if ($request->token) {
-            session()->put('jwt-token', $request->token);
-        }
-        return redirect()->back();
+
+        return Inertia::render('Dashboard');
     }
 
     public function updateResult(Request $request)
     {
-        $data =  $request->all();
+        $data = $request->all();
         Log::debug($data);
         $result = [
             "Info" => $data['Info'],
@@ -173,7 +166,13 @@ class PaymentController extends Controller
         ];
         Log::debug($result);
 
-        if ($result["Token"] == md5($result['SerialNo'] . $this->apiKey . $this->secretKey)) {
+        // Get the currency from the data
+        $currency = $data['CurrencyCode'];
+
+        // Get the currency configuration based on the provided currency code
+        $currencyConfig = config('currency_setting');
+
+        if ($result["Token"] == md5($result['SerialNo'] . $currencyConfig[$currency]['apiKey'] . $currencyConfig[$currency]['secretKey'])) {
             $payment = Payment::query()->where('payment_id', Str::upper($result['SerialNo']))->first();
             if ($payment->status == "Submitted" || $payment->status == "Processing") {
                 if ($result['Status'] == 1) {
@@ -199,26 +198,59 @@ class PaymentController extends Controller
 
     public function requestWithdrawal(WithdrawalRequest $request)
     {
-            $user = Auth::user();
-            $amount = floatval($request->amount);
-            if ($user->cash_wallet < $amount) {
-                return response()->json(['success' => false, 'message' => 'Insufficient balance']);
-            }
-            $user->cash_wallet -= $amount;
-            $user->save();
-            $payment_id = RunningNumberService::getID('transaction');
+        $user = Auth::user();
+        $amount = floatval($request->amount);
+        if ($user->cash_wallet < $amount) {
+            throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
+        }
+        $user->cash_wallet -= $amount;
+        $user->save();
+        $payment_id = RunningNumberService::getID('transaction');
 
-            Payment::create([
-                'user_id' => $user->id,
-                'payment_id' => $payment_id,
-                'category' => 'payment',
-                'type' => 'Withdrawal',
-                'channel' => $request->channel,
-                'amount' => $amount,
-                'account_no' => $request->account_no,
-                'account_type' => $request->account_type,
-            ]);
+        Payment::create([
+            'user_id' => $user->id,
+            'payment_id' => $payment_id,
+            'category' => 'payment',
+            'type' => 'Withdrawal',
+            'channel' => $request->channel,
+            'amount' => $amount,
+            'account_no' => $request->account_no,
+            'account_type' => $request->account_type,
+        ]);
 
-            return redirect()->back()->with('toast', 'Successfully Submitted Withdrawal Request');
+        return back()->with('toast', 'Successfully Submitted Withdrawal Request');
+    }
+
+    public function applyRebate(Request $request)
+    {
+        $accountType = IbAccountType::where('user_id', Auth::id())->where('account_type', $request->account_type)->with('accountType')->first();
+        $user = User::find(Auth::id());
+        if ($accountType->rebate_wallet <= 0) {
+            return response()->json([
+                'success' => false,
+                'message' => trans('Insufficient balance to apply the rebate. You have not earned any rebate yet.')
+            ], 422);
+        }
+
+        $payment_id = RunningNumberService::getID('transaction');
+
+        Payment::create([
+            'user_id' => $user->id,
+            'payment_id' => $payment_id,
+            'category' => 'apply_rebate',
+            'type' => '',
+            'amount' => $accountType->rebate_wallet,
+            'status' => 'Successful',
+        ]);
+        $user->cash_wallet = number_format($user->cash_wallet + $accountType->rebate_wallet, 2, '.', '');
+        $user->save();
+        $accountType->update(['rebate_wallet' => 0, 'trade_lot' => 0]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Congratulation, we have received your rebate request. The rebate will be transferred to your cash wallet shortly. Once processed, you will be able to withdraw or transfer your funds.',
+            'cash_wallet' => $user->cash_wallet,
+            'rebate_wallet' => $accountType->rebate_wallet
+        ]);
     }
 }

@@ -11,6 +11,8 @@ use App\Models\SettingLeverage;
 use App\Models\User;
 use App\Models\VerifyOtp;
 use App\Providers\RouteServiceProvider;
+use App\Services\Auth\CreateAccount;
+use App\Services\Auth\CreateUserDto;
 use App\Services\CTraderService;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
@@ -32,14 +34,15 @@ class RegisteredUserController extends Controller
     /**
      * Display the registration view.
      */
-    public function create(): Response
+    public function create($referral = null): Response
     {
         $countries = SettingCountry::all();
         $leverages = SettingLeverage::all();
 
         return Inertia::render('Auth/Register', [
             'countries' => $countries,
-            'leverages' => $leverages
+            'leverages' => $leverages,
+            'referral' => $referral,
         ]);
     }
 
@@ -47,13 +50,13 @@ class RegisteredUserController extends Controller
     {
         $rules = [
             'email' => 'required|string|email|max:255|unique:' . User::class,
-            'mobile' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8',
+            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:8',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ];
 
         $attributes = [
             'email' => 'Email',
-            'mobile' => 'Mobile',
+            'phone' => 'Mobile',
             'password' => 'Password',
         ];
 
@@ -64,17 +67,17 @@ class RegisteredUserController extends Controller
             $validator->validate();
         } elseif ($request->form_step == 2) {
             $additionalRules = [
-                'name' => 'required|regex:/^[a-zA-Z0-9\p{Han}. ]+$/u|max:255',
+                'first_name' => 'required|regex:/^[a-zA-Z0-9\p{Han}. ]+$/u|max:255',
                 'chinese_name' => 'nullable|regex:/^[a-zA-Z0-9\p{Han}. ]+$/u',
-                'dateOfBirth' => 'required',
+                'dob' => 'required',
                 'country' => 'required'
             ];
             $rules = array_merge($rules, $additionalRules);
 
             $additionalAttributes = [
-                'name' => 'Full Name',
+                'first_name' => 'Full Name',
                 'chinese_name' => 'Chinese Name',
-                'dateOfBirth' => 'Date of Birth',
+                'dob' => 'Date of Birth',
                 'country' => 'Country',
             ];
             $attributes = array_merge($attributes, $additionalAttributes);
@@ -121,13 +124,20 @@ class RegisteredUserController extends Controller
             return back()->with('error_message', $conn['message']);
         }
 
-        if($request->verification_via == 'email'){
-            $verificationType = $request->email;
+        $inputArray = $request->validated();
+        $inputArray += [
+            'register_ip' => $request->ip(),
+            'group' => $inputArray['account_type'],
+            'leverage' => $inputArray['leverage']
+        ];
+
+        if($inputArray['verification_via'] == 'email'){
+            $verificationType =  $inputArray['email'];
         }else{
-            $verificationType = $request->mobile;
+            $verificationType = $inputArray['phone'];
         }
 
-        $otp = VerifyOtp::where($request->verification_via, $verificationType)->first();
+        $otp = VerifyOtp::where($inputArray['verification_via'], $verificationType)->first();
 
         $expirationTime = Carbon::parse($otp->updated_at)->addMinutes(5);
 
@@ -137,38 +147,35 @@ class RegisteredUserController extends Controller
             ]);
         }
 
-        if($otp->otp != $request->verification_code){
+        if($otp->otp != $inputArray['verification_code']){
             throw ValidationException::withMessages(['verification_code' => trans('validation.in', ['attribute' => 'otp'])]);
         }
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'mobile' => $request->mobile,
-            'country' => $request->country,
-            'dob' => $request->dateOfBirth,
-            'register_ip' => $request->ip(),
-            'password' => Hash::make($request->password),
-        ]);
+        $userDto = CreateUserDto::fromValidatedRequest($inputArray);
 
-        $user->addMedia($request->front_identity)->toMediaCollection('front_identity');
-        $user->addMedia($request->back_identity)->toMediaCollection('back_identity');
+        $user = (new CreateAccount)->execute($userDto);
+        $user->setReferralId();
+
+        if ($request->hasFile('front_identity')){
+            $user->addMedia($request->front_identity)->toMediaCollection('front_identity');
+        }
+
+        if ($request->hasFile('back_identity')){
+            $user->addMedia($request->back_identity)->toMediaCollection('back_identity');
+        }
 
         $mainPassword = Str::random(8);
         $investorPassword = Str::random(8);
 
-        $group = AccountType::with('metaGroup')->where('id', $request->account_type)->get()->value('metaGroup.meta_group_name');
+        $group = AccountType::with('metaGroup')->where('id', $inputArray['group'])->get()->value('metaGroup.meta_group_name');
         $leadCampaign = null;
         $leadSource = null;
         $remarks = 'vietnam plan';
         $ctUser = (new CTraderService)->CreateCTID($user->email);
         $user->update(['ct_user_id' => $ctUser['userId']]);
         $user = User::find($user->id);
-        $ctAccount = (new CTraderService)->createUser($user, $mainPassword, $investorPassword, $group, $request->leverage, $request->account_type, $leadCampaign, $leadSource, $remarks);
+        $ctAccount = (new CTraderService)->createUser($user, $mainPassword, $investorPassword, $group, $inputArray['leverage'], $inputArray['group'], $leadCampaign, $leadSource, $remarks);
         $user->update(['remark' => $remarks]);
-//        event(new Registered($user));
-//
-//        Auth::login($user);
 
         return redirect('/login')->with('toast', 'Successfully Created Account');
     }

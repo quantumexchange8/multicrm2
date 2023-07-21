@@ -2,12 +2,13 @@
 import AuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import Button from '@/Components/Button.vue'
 import { GithubIcon } from '@/Components/Icons/brands'
-import {computed, defineComponent} from 'vue'
+import {computed, defineComponent, onMounted, ref} from 'vue'
 import { Carousel, Pagination, Slide } from 'vue3-carousel'
 import { TickerTape } from "vue-tradingview-widgets";
 
 import 'vue3-carousel/dist/carousel.css'
 import {usePage} from "@inertiajs/vue3";
+import Modal from "@/Components/Modal.vue";
 
 const page = usePage()
 const user = computed(() => page.props.auth.user)
@@ -28,6 +29,39 @@ const highlightCarousels = [
     { src: '/assets/dashboard/highlight-3.png' },
     { src: '/assets/dashboard/highlight-4.png' },
 ];
+
+const announcementModal = ref(false);
+const props = defineProps({
+    firstTimeLogin: Number
+});
+const firstTimeLogin = ref(props.firstTimeLogin);
+
+const closeModal = () => {
+    announcementModal.value = false;
+    firstTimeLogin.value = 0; // Set the value of firstTimeLogin to 0 when closing the modal
+    setValueInSession(0); // Update the session value to 0
+};
+
+const setValueInSession = (value) => {
+    axios.post('/update-session', { firstTimeLogin: value })
+        .then(response => {
+            // Session value has been updated successfully
+            console.log('Session value updated:', value);
+        })
+        .catch(error => {
+            // Handle the error, if any
+            console.error('Error updating session value:', error);
+        });
+};
+
+// Execute this code when the component is mounted
+onMounted(() => {
+    // Check if the modal has been shown already
+    if (firstTimeLogin.value === 1) {
+        announcementModal.value = true;
+    }
+});
+
 </script>
 
 <template>
@@ -39,6 +73,31 @@ const highlightCarousels = [
                 </h2>
             </div>
         </template>
+
+        <Modal :show="announcementModal" @close="closeModal">
+            <div class="relative bg-white rounded-lg shadow dark:bg-dark-eval-1">
+                <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" @click="closeModal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+                <div class="px-6 py-6 lg:px-8 space-y-4 text-gray-500 dark:text-dark-eval-4">
+                    <h3 class="mb-2 text-xl font-medium text-gray-900 dark:text-white">Announcement</h3>
+                    <hr>
+                    <p class="text-lg font-semibold mt-2">Dear valued QCG user,</p>
+                    <p>We are excited to announce that we have an upcoming update for our QCG main portal, including IB ranking system, rebate scheme, promotion & more.</p>
+                    <p>We wanted to keep you informed and ensure that you stay connected with all the latest developments.</p>
+                    <p>We appreciate your continued support, and we are committed to enhancing your experience with our platform. The upcoming update aims to introduce exciting new features and improvements that will elevate your user experience to new heights.</p>
+                    <p>To stay up-to-date with the latest information and be among the first to explore the updated portal, we encourage you to stay tuned.</p>
+                    <p>We will be sharing more details about the update, including its specific benefits and enhancements, in the coming days.</p>
+                    <p>Thank you for being a valued user. We look forward to delivering an even better experience with our updated main portal. If you have any questions or need assistance, please don't hesitate to reach out to our dedicated support team.</p>
+                    <p class="font-semibold">Best regards,</p>
+                    <p>Quantum Capital Global</p>
+
+                </div>
+            </div>
+        </Modal>
 
         <div class="mb-6">
             <Carousel :autoplay="2000" :items-to-show="2.5" :wrap-around="true" class="my-carousel">

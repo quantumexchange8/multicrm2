@@ -18,16 +18,21 @@ const formatter = ref({
     date: 'YYYY-MM-DD',
     month: 'MM'
 })
+const props = defineProps({
+    countries: Object,
+    leverages: Object,
+    referral: String,
+})
 
 const form = useForm({
     form_step: 1,
-    name: '',
+    first_name: '',
     chinese_name: '',
     email: '',
-    mobile: '',
+    phone: '',
     password: '',
     password_confirmation: '',
-    dateOfBirth: '',
+    dob: '',
     country: '',
     leverage: '',
     account_platform: '',
@@ -36,10 +41,17 @@ const form = useForm({
     back_identity: null,
     verification_via: 'email',
     verification_code: '',
+    referral_code: props.referral,
     terms: '',
 });
 
 const submit = () => {
+    // Get the selected country code
+    const countryCode = phoneInputInstance.value.getSelectedCountryData().dialCode;
+    // Concatenate the country code with the phone number
+    form.phone = `+${countryCode}${form.phone}`;
+
+    // Submit the form
     form.post(route('register'), {
         onSuccess: () => {
             form.reset('password', 'password_confirmation');
@@ -68,11 +80,6 @@ onMounted(() => {
             return '<div class="iti__country iti__standard"><div class="iti__flag-box"><div class="iti__flag iti__' + sanitizedCountry + '"></div></div><span class="iti__country-name">' + country + '</span><span class="iti__dial-code">+' + selectedCountryData.dialCode + '</span></div>';
         },
     });
-});
-
-defineProps({
-    countries: Object,
-    leverages: Object,
 });
 
 const platforms = [
@@ -136,9 +143,12 @@ function startCountdown() {
         if (count === 59) {
             const otp = generateOTP();
             const email = form.email;
-
+            let url = 'register/send-otp';
+            if (props.referral_code) {
+                url = `register/${props.referral_code}/send-otp`;
+            }
             axios
-                .post('register/send-otp', { otp, email })
+                .post(url, { otp, email })
                 .then(response => {
 
                     console.log(response.data);
@@ -225,23 +235,23 @@ function startCountdown() {
                     <Input id="email" type="email" class="block w-full px-4" placeholder="Email" v-model="form.email" autocomplete="email" autofocus />
                     <InputError :message="form.errors.email"/>
 
-                    <Label for="mobile" value="Mobile Phone" />
+                    <Label for="phone" value="Mobile Phone" />
                     <input
                         ref="phoneInput"
                         type="tel"
-                        id="mobile"
-                        name="mobile"
+                        id="phone"
+                        name="phone"
                         :class="[
                           'py-2 border-gray-400 rounded-full placeholder:text-sm',
                           'focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white',
                           'dark:border-gray-600 bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1',
                           'w-[342px] sm:w-[624px]'
                         ]"
-                        v-model="form.mobile"
+                        v-model="form.phone"
                         autocomplete="tel"
                         class="block"
                     />
-                    <InputError :message="form.errors.mobile"/>
+                    <InputError :message="form.errors.phone"/>
 
                     <Label for="password" value="Password" />
                     <Input id="password" type="password" class="block w-full px-4" placeholder="Password" v-model="form.password" autocomplete="new-password" />
@@ -266,16 +276,16 @@ function startCountdown() {
                     </div>
 
                     <Label for="full_name" value="Full Name" />
-                    <Input id="full_name" type="text" class="block w-full px-4" placeholder="Full Name" v-model="form.name" autocomplete="full_name" />
-                    <InputError :message="form.errors.name"/>
+                    <Input id="full_name" type="text" class="block w-full px-4" placeholder="Full Name" v-model="form.first_name" autocomplete="full_name" />
+                    <InputError :message="form.errors.first_name"/>
 
                     <Label for="chinese_name">Chinese Name (Optional)</Label>
                     <Input id="chinese_name" type="text" class="block w-full px-4" placeholder="Chinese Name" v-model="form.chinese_name" autocomplete="chinese_name" />
                     <InputError :message="form.errors.chinese_name"/>
 
                     <Label for="dob" value="Date of Birth" />
-                    <vue-tailwind-datepicker :formatter="formatter" as-single v-model="form.dateOfBirth" input-classes="py-2 border-gray-400 w-full rounded-full text-sm placeholder:text-sm focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:border-gray-600 bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1" />
-                    <InputError :message="form.errors.dateOfBirth"/>
+                    <vue-tailwind-datepicker :formatter="formatter" as-single v-model="form.dob" input-classes="py-2 border-gray-400 w-full rounded-full text-sm placeholder:text-sm focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:border-gray-600 bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1" />
+                    <InputError :message="form.errors.dob"/>
 
                     <Label for="religion" value="Country" />
                     <InputSelect v-model="form.country" class="block w-full text-sm" placeholder="Choose Country">
@@ -354,7 +364,7 @@ function startCountdown() {
                                 </div>
 
 <!--                                <div class="flex">-->
-<!--                                    <input type="radio" name="verification_via" v-model="form.verification_via" class="shrink-0 mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-radio-group-2" value="mobile">-->
+<!--                                    <input type="radio" name="verification_via" v-model="form.verification_via" class="shrink-0 mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-radio-group-2" value="phone">-->
 <!--                                    <label for="hs-radio-group-2" class="text-sm text-gray-500 ml-2 dark:text-gray-400">Phone</label>-->
 <!--                                </div>-->
                             </div>
@@ -372,6 +382,8 @@ function startCountdown() {
                             </div>
                             <InputError :message="form.errors.verification_code"/>
                         </div>
+
+                        <Input id="referral" type="hidden" v-model="form.referral_code" />
                     </div>
 
                     <h3 class="list-decimal list-inside text-xl text-gray-900 dark:text-gray-200">Terms & Conditions</h3>

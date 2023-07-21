@@ -32,12 +32,9 @@ class CreateAccount
         $user->nationality = $data->nationality;
         $user->race = $data->race;
         $user->dob = $data->dob;
-        //  $user->doc_identity = $data->doc_identity;
-        // $user->doc_address = $data->doc_address;
-        $user->referral = $data->referral;
         $hierarchyList = null;
-        if ($data->referral) {
-            $upline = User::firstWhere('ib_id', $data->referral);
+        if ($data->referral_code) {
+            $upline = User::firstWhere('referral_code', $data->referral_code);
             if ($upline) {
                 $upline->increment('direct_client');
                 $parent = $upline;
@@ -60,35 +57,7 @@ class CreateAccount
 
         $user->register_ip = $data->register_ip;
 
-
         $user->cash_wallet_id = RunningNumberService::getID('cash_wallet');
-
-        DB::transaction(function () use ($user) {
-            $user->save();
-        });
-        $path_url = 'uploads/' . $user->id;
-
-
-        $doc_identity_front = $data->doc_identity_front;
-        if ($doc_identity_front) {
-            $doc_identity_front_imageName = pathinfo($doc_identity_front->getClientOriginalName(), PATHINFO_FILENAME) . time() . '.' . $doc_identity_front->getClientOriginalExtension();
-            $doc_identity_front->move($path_url, $doc_identity_front_imageName);
-            $user->doc_identity_front  = $doc_identity_front_imageName;
-        }
-
-        $doc_identity_back = $data->doc_identity_back;
-        if ($doc_identity_back) {
-            $doc_identity_front_imageName = pathinfo($doc_identity_back->getClientOriginalName(), PATHINFO_FILENAME) . time() . '.' . $doc_identity_back->getClientOriginalExtension();
-            $doc_identity_back->move($path_url, $doc_identity_front_imageName);
-            $user->doc_identity_back  = $doc_identity_front_imageName;
-        }
-
-        $doc_address = $data->doc_address;
-        if ($doc_address) {
-            $doc_address_imageName = pathinfo($doc_address->getClientOriginalName(), PATHINFO_FILENAME) . time() . '.' . $doc_address->getClientOriginalExtension();
-            $doc_address->move($path_url, $doc_address_imageName);
-            $user->doc_address = $doc_address_imageName;
-        }
 
         DB::transaction(function () use ($user) {
             $user->save();

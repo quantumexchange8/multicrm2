@@ -8,8 +8,8 @@ import { TemplateIcon } from '@heroicons/vue/outline'
 import { ClipboardListIcon } from '@heroicons/vue/outline'
 import { library } from '@fortawesome/fontawesome-svg-core'
 /* import specific icons */
-import { faGaugeHigh, faClipboardUser, faMoneyBillTransfer } from '@fortawesome/free-solid-svg-icons'
-library.add(faGaugeHigh, faClipboardUser, faMoneyBillTransfer)
+import { faGaugeHigh, faClipboardUser, faMoneyBillTransfer, faSitemap } from '@fortawesome/free-solid-svg-icons'
+library.add(faGaugeHigh, faClipboardUser, faMoneyBillTransfer, faSitemap)
 
 </script>
 
@@ -60,6 +60,25 @@ library.add(faGaugeHigh, faClipboardUser, faMoneyBillTransfer)
                 />
             </template>
         </SidebarLink>
+
+        <SidebarCollapsible
+            title="Group Network"
+            :active="route().current('group_network.*')"
+        >
+            <template #icon>
+                <font-awesome-icon
+                    icon="fa-solid fa-sitemap"
+                    class="flex-shrink-0 w-5 h-5"
+                    aria-hidden="true"
+                />
+            </template>
+
+            <SidebarCollapsibleItem
+                :href="route('group_network.network_tree')"
+                title="Network Tree"
+                :active="route().current('group_network.network_tree')"
+            />
+        </SidebarCollapsible>
 
 <!--        <SidebarCollapsible-->
 <!--            title="Components"-->

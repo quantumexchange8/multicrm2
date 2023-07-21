@@ -1,5 +1,4 @@
 <script setup>
-import Paginator from "@/Components/Paginator.vue";
 import DataTable from "datatables.net-vue3";
 import 'datatables.net-dt/css/jquery.dataTables.css';
 import ButtonsHtml5 from 'datatables.net-buttons/js/buttons.html5';
@@ -15,7 +14,7 @@ window.JSZip = JsZip;
 DataTable.use(ButtonsHtml5);
 
 defineProps({
-    payments: Object
+    withdrawals: Object
 })
 
 const columns = ref([]);
@@ -32,8 +31,21 @@ columns.value = [
             return data;
         }
     },
-    {data: 'gateway'},
-    {data: 'to'},
+    {
+        data: 'created_at',
+        render: function (data, type, row) {
+            if (type === 'display') {
+                const date = new Date(data);
+                const hours = date.getHours().toString().padStart(2, '0');
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+                const seconds = date.getSeconds().toString().padStart(2, '0');
+
+                return `${hours}:${minutes}:${seconds}`;
+            }
+            return data;
+        }
+    },
+    {data: 'channel'},
     {data: 'amount'},
     {
         data: 'status',
@@ -46,17 +58,17 @@ columns.value = [
 
 buttons.value = [
     {
-        title: 'Deposit To Account',
+        title: 'Withdrawal From Wallet',
         extend: 'excelHtml5',
         className: 'text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700'
     },
     {
-        title: 'Deposit To Account',
+        title: 'Withdrawal From Wallet',
         extend: 'pdfHtml5',
         className: 'text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700'
     },
     {
-        title: 'Deposit To Account',
+        title: 'Withdrawal From Wallet',
         extend: 'print',
         className: 'text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700'
     },
@@ -74,26 +86,24 @@ function getStatusClass(status) {
             return '';
     }
 }
-
 </script>
 <template>
-    <div class="px-6 py-4 mt-6 overflow-hidden bg-white rounded-md shadow-md dark:bg-dark-eval-1">
+    <div class="p-4 mt-6 overflow-hidden bg-white rounded-md shadow-md dark:bg-dark-eval-1">
         <div class="relative overflow-x-auto sm:rounded-lg mt-4">
-
             <DataTable
-                :data="payments"
+                :data="withdrawals"
                 :columns="columns"
                 class="w-full text-sm text-center text-gray-500 dark:text-gray-400"
                 :options="{responsive:true, autoWidth:false, dom:'Bfrtip', buttons:buttons}"
             >
                 <thead class="text-xs font-bold text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-white text-center">
-                    <tr>
-                        <th class="py-2" style="text-align: center">Date</th>
-                        <th class="py-2" style="text-align: center">Deposit Method</th>
-                        <th class="py-2" style="text-align: center">Account No</th>
-                        <th class="py-2" style="text-align: center">Amount ($)</th>
-                        <th class="py-2" style="text-align: center">Status</th>
-                    </tr>
+                <tr>
+                    <th class="py-2" style="text-align: center">Date</th>
+                    <th class="py-2" style="text-align: center">Time</th>
+                    <th class="py-2" style="text-align: center">Withdrawal Methods</th>
+                    <th class="py-2" style="text-align: center">Amount ($)</th>
+                    <th class="py-2" style="text-align: center">Status</th>
+                </tr>
                 </thead>
 
             </DataTable>

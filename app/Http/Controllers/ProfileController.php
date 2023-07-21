@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\SettingCountry;
 
 class ProfileController extends Controller
 {
@@ -18,9 +19,18 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $countries = SettingCountry::all();
+        $avatar = Auth::user()->getFirstMediaUrl('profile_photo');
+        $frontIdentity = Auth::user()->getFirstMediaUrl('front_identity');
+        $backIdentity = Auth::user()->getFirstMediaUrl('back_identity');
+
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
+            'countries' => $countries,
+            'avatar' => $avatar,
+            'frontIdentity' => $frontIdentity,
+            'backIdentity' => $backIdentity,
         ]);
     }
 
@@ -37,7 +47,22 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit');
+        if ($request->hasFile('avatar')) {
+            $request->user()->clearMediaCollection('profile_photo');
+            $request->user()->addMedia($request->avatar)->toMediaCollection('profile_photo');
+        }
+
+        if ($request->hasFile('front_identity')) {
+            $request->user()->clearMediaCollection('front_identity');
+            $request->user()->addMedia($request->front_identity)->toMediaCollection('front_identity');
+        }
+
+        if ($request->hasFile('back_identity')) {
+            $request->user()->clearMediaCollection('back_identity');
+            $request->user()->addMedia($request->back_identity)->toMediaCollection('back_identity');
+        }
+
+        return Redirect::route('profile.edit')->with('toast', 'Successfully Updated Profile');
     }
 
     /**

@@ -7,7 +7,12 @@ import DeleteUserForm from './Partials/DeleteUserForm.vue'
 defineProps({
     mustVerifyEmail: Boolean,
     status: String,
+    countries: Object,
+    avatar: String,
+    frontIdentity: String,
+    backIdentity: String
 })
+
 </script>
 
 <template>
@@ -27,7 +32,11 @@ defineProps({
                 <UpdateProfileInformationForm
                     :must-verify-email="mustVerifyEmail"
                     :status="status"
-                    class="max-w-xl"
+                    :countries="countries"
+                    :avatar="avatar"
+                    :frontIdentity="frontIdentity"
+                    :backIdentity="backIdentity"
+                    class="w-full"
                 />
             </div>
 

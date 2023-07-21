@@ -27,13 +27,13 @@ class RegisterUserRequest extends FormRequest
 
             //Page 1
             'email' => 'required|string|email|max:255|unique:'.User::class,
-            'mobile' => 'required|string|max:100|unique:'.User::class,
+            'phone' => 'required|string|max:100|unique:'.User::class,
             'password' => ['required', 'confirmed', Password::min(6)->letters()->mixedCase()->numbers()],
 
             //Page 2
-            'name' => 'required|regex:/^[a-zA-Z0-9\p{Han}. ]+$/u|max:255',
+            'first_name' => 'required|regex:/^[a-zA-Z0-9\p{Han}. ]+$/u|max:255',
             'chinese_name' => 'nullable|regex:/^[a-zA-Z0-9\p{Han}. ]+$/u',
-            'dateOfBirth' => 'required',
+            'dob' => 'required',
             'country' => 'required',
 
             //Page 3
@@ -45,7 +45,8 @@ class RegisterUserRequest extends FormRequest
             'front_identity' => 'nullable|image|max:5120',
             'back_identity' => 'nullable|image|max:5120',
             'verification_via' => 'required',
-            'verification_code' => 'required',
+            'verification_code' => 'required|string',
+            'referral_code' => 'nullable|string',
             'terms' => 'required',
         ];
     }

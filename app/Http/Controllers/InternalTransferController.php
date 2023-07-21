@@ -17,19 +17,41 @@ use Inertia\Inertia;
 
 class InternalTransferController extends Controller
 {
+    protected function getFilteredPayments($category, $type)
+    {
+        return Payment::query()
+            ->where('user_id', Auth::id())
+            ->where('category', $category)
+            ->where('type', $type)
+            ->latest()
+            ->get();
+    }
+
     public function transaction()
     {
         $user = Auth::user();
-        $payments = Payment::query()
-            ->where('user_id', Auth::id())
-            ->where('category', 'payment')
-            ->where('type', 'Deposit')
-            ->latest()
-            ->paginate(10);
+
+        $payments = $this->getFilteredPayments('payment', 'Deposit');
+        $withdrawals = $this->getFilteredPayments('payment', 'Withdrawal');
+        $walletToAccounts = $this->getFilteredPayments('internal_transfer', 'WalletToAccount');
+        $accountToWallets = $this->getFilteredPayments('internal_transfer', 'AccountToWallet');
+        $accountToAccounts = $this->getFilteredPayments('internal_transfer', 'AccountToAccount');
+        $rebateToAccounts = $this->getFilteredPayments('apply_rebate', '');
+
+        if ($user->hasRole('ib')) {
+            $tradingUsers = TradingUser::where('user_id', $user->id)->where('module', '!=', 'pamm')->get();
+        } else {
+            $tradingUsers = $user->tradingUsers; // or $trading_users = [];
+        }
 
         return Inertia::render('Transaction/InternalTransfer', [
-            'tradingUsers' => $user->tradingUsers,
+            'tradingUsers' => $tradingUsers,
             'payments' => $payments,
+            'withdrawals' => $withdrawals,
+            'walletToAccounts' => $walletToAccounts,
+            'accountToWallets' => $accountToWallets,
+            'accountToAccounts' => $accountToAccounts,
+            'rebateToAccounts' => $rebateToAccounts,
         ]);
     }
 
@@ -70,8 +92,8 @@ class InternalTransferController extends Controller
         Payment::create([
             'user_id' => $user_id,
             'payment_id' => $payment_id,
-            'category' => 'internal transfer',
-            'type' => 'WalletToMeta',
+            'category' => 'internal_transfer',
+            'type' => 'WalletToAccount',
             'to' => $request->account_no,
             'amount' => $amount,
             'ticket' => $ticket,
@@ -125,8 +147,8 @@ class InternalTransferController extends Controller
         Payment::create([
             'user_id' => $user->id,
             'payment_id' => $payment_id,
-            'category' => 'internal transfer',
-            'type' => 'MetaToWallet',
+            'category' => 'internal_transfer',
+            'type' => 'AccountToWallet',
             'from' => $request->account_no,
             'amount' => $request->amount,
             'ticket' => $ticket,
@@ -163,7 +185,6 @@ class InternalTransferController extends Controller
             throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
         }
 
-
         $payment_id = RunningNumberService::getID('transaction');
         try {
             $trade_1 = (new CTraderService)->createTrade($request->account_no_1, $request->amount, "Account To Account", ChangeTraderBalanceType::WITHDRAW);
@@ -190,8 +211,8 @@ class InternalTransferController extends Controller
         Payment::create([
             'user_id' => $user->id,
             'payment_id' => $payment_id,
-            'category' => 'internal transfer',
-            'type' => 'MetaToMeta',
+            'category' => 'internal_transfer',
+            'type' => 'AccountToAccount',
             'from' => $request->account_no_1,
             'to' => $request->account_no_2,
             'amount' => $request->amount,
