@@ -172,7 +172,7 @@ function formatDate(date) {
                             </div>
                             <div class="grid grid-cols-2 gap-4 w-full md:w-1/2 md:float-right">
                                 <Button class="px-6 justify-center" variant="danger" @click="cancel">Cancel</Button>
-                                <Button class="px-6 justify-center">Save</Button>
+                                <Button class="px-6 justify-center" :disabled="form.processing">Save</Button>
                             </div>
                         </form>
                     </div>
