@@ -44,30 +44,6 @@ class PaymentController extends Controller
     private $base_url = "http://api.doitwallet.asia";
 
 
-    public function get_trading_account()
-    {
-        $conn = (new CTraderService)->connectionStatus();
-        $user = Auth::user();
-        $cryptoWallets = SettingCryptoWallet::with('media')
-            ->where('status', SettingCryptoWallet::STATUS_ACTIVE)
-            ->get();
-
-        if ($conn['code'] == 0) {
-            (new CTraderService)->getUserInfo($user->tradingUsers);
-            $trading_account = TradingAccount::where('user_id', Auth::id())->with(['accountType'])->get();
-            $payment_account = TradingUser::where('user_id', $user->id)->whereNot('module', 'pamm')->get();
-        } else {
-            return redirect()->back()->with('toast', 'No Connection with CTrader');
-        }
-//        $trading_account = TradingAccount::where('user_id', Auth::id())->with(['accountType'])->get();
-//        $payment_account = TradingUser::where('user_id', $user->id)->whereNot('module', 'pamm')->get();
-        return response()->json([
-            'tradingAccounts' => $trading_account,
-            'paymentAccounts' => $payment_account,
-            'cryptoWallets' => $cryptoWallets,
-        ]);
-    }
-
     public function deposit(DepositRequest $request)
     {
         $conn = (new CTraderService)->connectionStatus();

@@ -10,39 +10,16 @@ import { useForm } from 'laravel-precognition-vue-inertia';
 import QrcodeVue from 'qrcode.vue';
 import {DuplicateIcon} from "@heroicons/vue/outline";
 import toast from "@/Composables/toast.js";
+import {usePage} from "@inertiajs/vue3";
 
 const submitDeposit = ref(false)
 const cryptoWallets = ref([]);
-const paymentAccounts = ref([]);
 const isLoading = ref(false);
 const error = ref(null);
 const selectedAccountPlatform = ref(null);
 
-onMounted(async () => {
-    isLoading.value = true;
-    try {
-        // const response1 = await axios.get('/get_trading_account');
-        // const response2 = await axios.get('/get_crypto_wallet');
-        //
-        // const paymentAccResponse = response1.data;
-        // const cryptoResponse  = response2.data;
-        //
-        // paymentAccounts.value = paymentAccResponse.paymentAccounts;
-        // cryptoWallets.value = cryptoResponse.cryptoWallets;
-
-        const response = await axios.get('/get_trading_account');
-
-        const depositData = response.data;
-
-        paymentAccounts.value = depositData.paymentAccounts;
-        cryptoWallets.value = depositData.cryptoWallets;
-    } catch (error) {
-        error.value = 'Failed to fetch data';
-    } finally {
-        isLoading.value = false;
-    }
-});
-
+const page = usePage();
+const getPaymentAccount = page.props.getPaymentAccount;
 
 const depositMethods = [
     { id: 'deposit_method', src: '/assets/finance/bank.png', value: 1, name: 'Bank' },
@@ -164,7 +141,7 @@ const closeModal = () => {
                     <div class="space-y-2">
                         <Label for="account_no" value="Account No." />
                         <InputSelect class="w-full" id="account_no" v-model="form.account_no" placeholder="Select Account No." >
-                            <option v-for="paymentAccount in paymentAccounts" :value="paymentAccount.meta_login" :key="paymentAccount.id">{{ paymentAccount.meta_login }}</option>
+                            <option v-for="paymentAccount in getPaymentAccount" :value="paymentAccount.meta_login" :key="paymentAccount.id">{{ paymentAccount.meta_login }}</option>
                         </InputSelect>
                         <InputError :message="form.errors.account_no"/>
                     </div>
@@ -192,7 +169,7 @@ const closeModal = () => {
                     <div class="space-y-2">
                         <Label for="account_no" value="Account No." />
                         <InputSelect class="w-full" id="account_no" v-model="form.account_no" placeholder="Select Account No." >
-                            <option v-for="paymentAccount in paymentAccounts" :value="paymentAccount.meta_login" :key="paymentAccount.id">{{ paymentAccount.meta_login }}</option>
+                            <option v-for="paymentAccount in getPaymentAccount" :value="paymentAccount.meta_login" :key="paymentAccount.id">{{ paymentAccount.meta_login }}</option>
                         </InputSelect>
                         <InputError :message="form.errors.account_no"/>
                     </div>

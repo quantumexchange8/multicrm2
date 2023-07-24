@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\IbAccountType;
+use App\Services\RightbarService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
@@ -37,6 +38,8 @@ class HandleInertiaRequests extends Middleware
             $IBAccountTypes = IbAccountType::where('user_id', $user->id)->with('accountType')->get();
         }
 
+        $rightBarService = new RightbarService();
+
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $user,
@@ -50,6 +53,7 @@ class HandleInertiaRequests extends Middleware
                 ]);
             },
             'toast' => session('toast'),
+            'getPaymentAccount' => $user ? $rightBarService->getPaymentAccount() : null,
             'monthlyDeposit' => $user ? $user->getMonthlyDeposit() : null,
             'monthlyWithdrawal' => $user ? $user->getMonthlyWithdrawal() : null,
             'IBAccountTypes' => $IBAccountTypes ?? null,

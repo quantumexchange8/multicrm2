@@ -9,30 +9,13 @@ import {onMounted, ref} from "vue";
 import { useForm } from 'laravel-precognition-vue-inertia';
 import QrcodeVue from 'qrcode.vue';
 import {DuplicateIcon} from "@heroicons/vue/outline";
+import {usePage} from "@inertiajs/vue3";
 
 const submitWithdrawal = ref(false)
 const cryptoWallets = ref([]);
 const paymentAccounts = ref([]);
 const isLoading = ref(false);
 const error = ref(null);
-
-onMounted(async () => {
-    isLoading.value = true;
-    try {
-        const response = await axios.get('/get_trading_account');
-
-        const withdrawalData = response.data;
-
-        paymentAccounts.value = withdrawalData.paymentAccounts;
-        cryptoWallets.value = withdrawalData.cryptoWallets;
-
-    } catch (error) {
-        error.value = 'Failed to fetch data';
-    } finally {
-        isLoading.value = false;
-    }
-});
-
 
 const channels = [
     { id: 'channel', src: '/assets/finance/bank.png', value: 'bank', name: 'Bank Account' },
