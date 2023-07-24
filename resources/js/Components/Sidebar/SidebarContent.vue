@@ -6,11 +6,14 @@ import SidebarCollapsible from '@/Components/Sidebar/SidebarCollapsible.vue'
 import SidebarCollapsibleItem from '@/Components/Sidebar/SidebarCollapsibleItem.vue'
 import { TemplateIcon } from '@heroicons/vue/outline'
 import { ClipboardListIcon } from '@heroicons/vue/outline'
+import { usePermission } from '@/Composables/permissions.js'
+
 import { library } from '@fortawesome/fontawesome-svg-core'
 /* import specific icons */
 import { faGaugeHigh, faClipboardUser, faMoneyBillTransfer, faSitemap } from '@fortawesome/free-solid-svg-icons'
 library.add(faGaugeHigh, faClipboardUser, faMoneyBillTransfer, faSitemap)
 
+const { hasRole } = usePermission();
 </script>
 
 <template>
@@ -77,6 +80,12 @@ library.add(faGaugeHigh, faClipboardUser, faMoneyBillTransfer, faSitemap)
                 :href="route('group_network.network_tree')"
                 title="Network Tree"
                 :active="route().current('group_network.network_tree')"
+            />
+            <SidebarCollapsibleItem
+                v-if="hasRole('ib')"
+                :href="route('group_network.rebate_allocation')"
+                title="Rebate Allocation"
+                :active="route().current('group_network.rebate_allocation')"
             />
         </SidebarCollapsible>
 

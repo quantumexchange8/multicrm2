@@ -6,7 +6,6 @@ import Input from "@/Components/Input.vue";
 import InputIconWrapper from "@/Components/InputIconWrapper.vue";
 import { faSearch,faX } from '@fortawesome/free-solid-svg-icons';
 import { library } from "@fortawesome/fontawesome-svg-core";
-import Label from "@/Components/Label.vue";
 import { ref, watch } from "vue";
 import { router } from '@inertiajs/vue3'
 import debounce from "lodash/debounce.js";
@@ -67,7 +66,6 @@ function clearField() {
                     @click="clearField"
                 /></button>
             </div>
-
         </div>
 
         <NetworkChild

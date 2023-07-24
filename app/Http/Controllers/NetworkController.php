@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\IbAccountTypeSymbolGroupRate;
+use App\Models\RebateAllocation;
+use App\Models\RebateAllocationRate;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AccountType;
 use App\Models\IbAccountType;
 use App\Models\User;
+use function GuzzleHttp\Promise\all;
 
 class NetworkController extends Controller
 {
@@ -69,58 +74,81 @@ class NetworkController extends Controller
         ]);
     }
 
-    public function getRebateAllocation(Request $request)
+    public function getRebateAllocation()
     {
-
         $user = Auth::user();
+        $search = \Request::input('search');
 
-        $accountTypes = IbAccountType::where('user_id', $user->id)->with(['accountType'])->get();
+        $ib = IbAccountType::where('user_id', $user->id)->with(['ofUser', 'symbolGroups.symbolGroup', 'accountType'])->first();
 
-        $accounts = IbAccountType::where('user_id', $user->id)->with(['ofUser', 'symbolGroups.symbolGroup', 'accountType'])->first();
-        
-        $childrens = $this->getDownlinesRecursive($accounts);
+        $childrenIds = $ib->getIbChildrenIds();
 
+        $query = IbAccountType::whereIn('id', $childrenIds)
+            ->with(['ofUser', 'symbolGroups.symbolGroup', 'accountType']);
 
-        // dd($userGroupSymbol);
-
-        return Inertia::render('GroupNetwork/RebateAllocation', [
-            'accounts' => $accounts,
-            'childrens' => $childrens,
-        ]);
-    }
-
-    private function getDownlinesRecursive($account)
-    {
-        
-        $childrens = [];
-
-        if ($account->downline) {
-            foreach ($account->downline as $downline) {
-                $children = [
-                    'account' => $downline->load(['ofUser', 'accountType', 'symbolGroups.symbolGroup']),
-                    'children' => $this->getDownlinesRecursive($downline),
-                ];
-    
-                // If the child has downlines, include them in the $children array
-                if (count($children['children']) > 0) {
-                    $children['children'] = $this->getDownlinesRecursive($downline);
-                }
-    
-                $childrens[] = $children;
-            }
+        if ($search) {
+            $query->whereHas('ofUser', function ($userQuery) use ($search) {
+                $userQuery->where('first_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
         }
 
-        return $childrens;
+        $children = $query->get();
+
+        $children->each(function ($child) {
+            $profilePicUrl = $child->ofUser->getFirstMediaUrl('profile_photo');
+            $child->profile_pic = $profilePicUrl;
+        });
+
+        return Inertia::render('GroupNetwork/RebateAllocation', [
+            'ib' => $ib,
+            'children' => $children,
+            'filters' => \Request::only(['search'])
+        ]);
     }
 
     public function updateRebateAllocation(Request $request)
     {
-        dd($request->all());
+        $curIb = IbAccountType::find($request->user_id);
+        $upline = IbAccountType::where('user_id', Auth::id())->first();
+        $downline = $curIb->downline;
+        $curIbRate = IbAccountTypeSymbolGroupRate::where('ib_account_type', $request->user_id)->get()->keyBy('symbol_group');
 
-        if ($request->ajax()) {
-            
+        foreach ($request->symbolGroupItems as $key => $amount) {
+            $parent = IbAccountTypeSymbolGroupRate::with('symbolGroup')->where('ib_account_type', $upline->id)->where('symbol_group', $key)->first();
+            if ($parent && $amount > $parent->amount) {
+                throw ValidationException::withMessages([
+                    'symbolGroupItems' => [$key => 'Invalid Amount for ' . $parent->symbolGroup->name],
+                ]);
+            }
         }
 
-        return Redirect::route('group_network.rebate_allocation')->with('toast', 'Successfully Updated Rebate Allocation');
+        foreach ($downline as $child) {
+            foreach ($request->symbolGroupItems as $key => $amount) {
+                $childRate = IbAccountTypeSymbolGroupRate::with('symbolGroup')->where('ib_account_type', $child->id)->where('symbol_group', $key)->first();
+                if ($amount < $childRate->amount) {
+                    return response()->json([
+                        'invalidAmount' => 'Invalid Amount for ' . $childRate->symbolGroup->name
+                    ]);
+                }
+            }
+        }
+
+        $rebateAllocation = RebateAllocation::create(['from' => $curIb->upline_id, 'to' => $request->user_id]);
+
+        foreach ($request->symbolGroupItems as $key => $amount) {
+
+            RebateAllocationRate::create([
+                'allocation_id' => $rebateAllocation->id,
+                'symbol_group' => $key,
+                'old' => $curIbRate[$key]->amount,
+                'new' => $amount
+            ]);
+
+            $curIbRate[$key]->update(['amount' => $amount]);
+
+        }
+
+        return back()->with('toast', 'The rebate allocation has been saved!');
     }
 }

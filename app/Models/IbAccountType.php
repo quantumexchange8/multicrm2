@@ -10,13 +10,21 @@ class IbAccountType extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $guarded = [];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     protected $casts = [
         'rebate_wallet' => 'decimal:2',
         'trade_lot' => 'decimal:2',
         'created_at' => 'datetime:Y-m-d',
     ];
+
+    public function getIbChildrenIds()
+    {
+        $ibUsers = IbAccountType::query()->where('hierarchyList', 'like', '%-' . $this->id . '-%')
+            ->pluck('id')->toArray();
+
+        return $ibUsers;
+    }
 
     public function ofUser()
     {
