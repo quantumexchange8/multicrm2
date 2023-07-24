@@ -88,7 +88,7 @@ function formatDate(date) {
 </script>
 
 <template>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-12 container">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
         <div
             v-for="child in children"
             :key="children.id"
