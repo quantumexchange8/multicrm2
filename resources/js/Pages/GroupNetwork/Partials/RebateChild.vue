@@ -18,13 +18,21 @@ const children = props.children;
 const ib = props.ib;
 const errors = ref([]);
 const groupRateItems = ref({});
+const currentChildId = ref(null);
 
 const form = useForm({
     user_id: '',
 });
 
+if (localStorage.groupRateItems) {
+  groupRateItems.value = JSON.parse(localStorage.groupRateItems);
+}
+
 const updateGroupRate = (symbolGroupId, value) => {
     groupRateItems.value[symbolGroupId] = value;
+
+    // Save groupRateItems to localStorage
+    localStorage.groupRateItems = JSON.stringify(groupRateItems.value);
 };
 
 const submitForm  = () => {
@@ -51,14 +59,16 @@ const submitForm  = () => {
     form.post(route('updateRebate.update', { symbolGroupItems: groupRateItems.value }), {
         onSuccess: () => {
             showForm.value = false;
-            closeModal();
+            childDetail.value = null;
+            currentChildId.value && openRebateAllocationModal(currentChildId.value); // Return to the previous childDetail view
         },
-    });
+    }); 
 }
 
 const openRebateAllocationModal = (childId) => {
     const child = children.find((child) => child.id === childId);
     if (child) {
+        currentChildId.value = childId;
         childDetail.value = child;
         submitAllocation.value = true;
         form.user_id = childId;
@@ -69,10 +79,23 @@ const closeModal = () => {
     childDetail.value = null;
     submitAllocation.value = false
 
+     // Reset groupRateItems when the modal is closed
+     groupRateItems.value = {};
+
+    // Also remove groupRateItems from localStorage
+    delete localStorage.groupRateItems;
+
 }
 
 const cancel = () => {
     showForm.value = false;
+    childDetail.value = null;
+    submitAllocation.value = false;
+    // Reset groupRateItems when the user cancels
+    groupRateItems.value = {};
+
+    // Also remove groupRateItems from localStorage
+    delete localStorage.groupRateItems;
 }
 
 const getAmount = (childRebateInfo) => {
