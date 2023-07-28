@@ -1,5 +1,4 @@
 <script setup>
-import { HeartIcon } from '@heroicons/vue/solid'
 </script>
 
 <template>

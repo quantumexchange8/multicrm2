@@ -22,7 +22,7 @@ const props = defineProps({
     filters: Object,
 });
 
-const children = props.children;
+// const children = props.children;
 const ib = props.ib;
 
 let search = ref(props.filters.search);
@@ -32,9 +32,6 @@ watch(search, debounce(function  (value) {
         preserveState:true,
         preserveScroll:true,
         replace:true,
-        onFinish: () => {
-            location.reload();
-        }
     });
 }, 300));
 
@@ -45,6 +42,12 @@ function formatDate(date) {
 
 function clearField() {
     search.value = '';
+}
+
+function handleKeyDown(event) {
+    if (event.keyCode === 27) {
+        clearField();
+    }
 }
 
 </script>
@@ -124,7 +127,7 @@ function clearField() {
                             aria-hidden="true"
                         />
                     </template>
-                    <Input withIcon id="name" type="text" placeholder="Name / Email" class="block w-full" v-model="search" />
+                    <Input withIcon id="name" type="text" placeholder="Name / Email" class="block w-full" v-model="search" @keydown="handleKeyDown" />
                 </InputIconWrapper>
                 <button type="submit" class="absolute right-1 bottom-2 py-2.5 text-gray-500 hover:text-dark-eval-4 font-medium rounded-full w-8 h-8 text-sm"><font-awesome-icon
                     icon="fa-solid fa-x"
@@ -143,7 +146,7 @@ function clearField() {
             </Button>
         </div>
 
-        <RebateChild :children="children" :ib="ib" />
+        <RebateChild :children="props.children" :ib="ib" />
 
     </AuthenticatedLayout>
 </template>

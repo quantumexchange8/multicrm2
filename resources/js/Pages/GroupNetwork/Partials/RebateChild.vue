@@ -14,7 +14,6 @@ const props = defineProps({
 const submitAllocation = ref(false);
 const showForm = ref(false);
 const childDetail = ref(null);
-const children = props.children;
 const ib = props.ib;
 const errors = ref([]);
 const groupRateItems = ref({});
@@ -57,7 +56,7 @@ const submitForm  = () => {
 }
 
 const openRebateAllocationModal = (childId) => {
-    const child = children.find((child) => child.id === childId);
+    const child = props.children.find((child) => child.id === childId);
     if (child) {
         childDetail.value = child;
         submitAllocation.value = true;
@@ -66,6 +65,7 @@ const openRebateAllocationModal = (childId) => {
 };
 
 const closeModal = () => {
+    showForm.value = false;
     childDetail.value = null;
     submitAllocation.value = false
 
@@ -74,11 +74,6 @@ const closeModal = () => {
 const cancel = () => {
     showForm.value = false;
 }
-
-const getAmount = (childRebateInfo) => {
-    const amount = groupRateItems.value[childRebateInfo.symbol_group.id] || childRebateInfo.amount;
-    return parseFloat(amount).toFixed(2);
-};
 
 function formatDate(date) {
     const formattedDate = new Date(date).toISOString().slice(0, 10);
@@ -90,8 +85,8 @@ function formatDate(date) {
 <template>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
         <div
-            v-for="child in children"
-            :key="children.id"
+            v-for="child in props.children"
+            :key="child.id"
         >
             <div class="w-full bg-white rounded-lg shadow dark:bg-dark-eval-1 p-6">
                 <div class="flex flex-col items-center mb-4">
@@ -160,7 +155,7 @@ function formatDate(date) {
                                     <Input
                                         :id="'symbol_group_' + childRebateInfo.symbol_group.id"
                                         :name="'groupRateItems[' + childRebateInfo.symbol_group.id + ']'"
-                                        :model-value="getAmount(childRebateInfo)"
+                                        :model-value="childRebateInfo.amount"
                                         @input="updateGroupRate(childRebateInfo.symbol_group.id, $event.target.value)"
                                         type="number"
                                         step="0.01"
@@ -182,7 +177,7 @@ function formatDate(date) {
                         <div v-for="childRebateInfo in childDetail.symbol_groups" >
                             <div class="grid grid-cols-2 text-black dark:text-white pr-4 mb-5 items-center">
                                 <span class="text-black dark:text-dark-eval-3 uppercase">{{ childRebateInfo.symbol_group.name }} (USD)/LOT</span>
-                                <span class="text-black dark:text-white text-right md:text-center py-2">{{ getAmount(childRebateInfo) }}</span>
+                                <span class="text-black dark:text-white text-right md:text-center py-2">{{ childRebateInfo.amount }}</span>
                             </div>
 
                         </div>

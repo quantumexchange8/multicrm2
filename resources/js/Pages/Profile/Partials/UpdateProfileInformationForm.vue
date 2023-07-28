@@ -213,7 +213,7 @@ const submit = () => {
 
                 <div class="space-y-2">
                     <Label for="front_identity">
-                        Proof of Identity (Front)
+                        Proof of Identity (FRONT)
                         <a v-if="frontIdentity" href="javascript:void(0);" @click.prevent="openFrontIdentityModal" class="text-blue-500 hover:underline ml-2">Click to view</a>
                     </Label>
                     <Modal :show="frontIdentityModal" @close="closeModal">
@@ -264,19 +264,6 @@ const submit = () => {
 
             <div class="flex items-center gap-4 mt-6">
                 <Button @click="submit" :disabled="form.processing">Save</Button>
-
-                <Transition
-                    enter-from-class="opacity-0"
-                    leave-to-class="opacity-0"
-                    class="transition ease-in-out"
-                >
-                    <p
-                        v-if="form.recentlySuccessful"
-                        class="text-sm text-gray-600 dark:text-gray-400"
-                    >
-                        Saved.
-                    </p>
-                </Transition>
             </div>
         </form>
     </section>

@@ -11,6 +11,7 @@ import { usePermission } from '@/Composables/permissions.js'
 import { library } from '@fortawesome/fontawesome-svg-core'
 /* import specific icons */
 import { faGaugeHigh, faClipboardUser, faMoneyBillTransfer, faSitemap } from '@fortawesome/free-solid-svg-icons'
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 library.add(faGaugeHigh, faClipboardUser, faMoneyBillTransfer, faSitemap)
 
 const { hasRole } = usePermission();

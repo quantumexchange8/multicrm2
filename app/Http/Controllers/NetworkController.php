@@ -149,6 +149,6 @@ class NetworkController extends Controller
 
         }
 
-        return back()->with('toast', 'The rebate allocation has been saved!');
+        return redirect()->back()->with('toast', 'The rebate allocation has been saved!');
     }
 }
