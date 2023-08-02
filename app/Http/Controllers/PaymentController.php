@@ -96,6 +96,7 @@ class PaymentController extends Controller
             'category' => 'payment',
             'payment_id' => $payment_id,
             'type' => 'Deposit',
+            'channel' => $request->deposit_method,
             'comment' => 'Deposit',
             'amount' => $amount,
             'gateway' => 'ompay',
@@ -108,12 +109,32 @@ class PaymentController extends Controller
         $notifyUrl = url('ompay/updateStatus');
         // Get the currency configuration based on the provided currency code
         $currencyConfig = config('currency_setting');
-        $apiUrl = $currencyConfig[$currency]['base_url'] . "/Merchant/Pay";
 
-        $mode = 3;
-        $token = md5($payment_id . $currencyConfig[$currency]['apiKey'] . $currencyConfig[$currency]['secretKey'] . $real_amount);
+        switch ($request->deposit_method) {
+            case 'crypto':
+            case 'bank':
+                $apiUrl = $currencyConfig[$currency]['base_url'] . "/Merchant/Pay";
 
-        $redirectUrl = $apiUrl . "?mode={$mode}&merchantCode={$currencyConfig[$currency]['merchantID']}&serialNo={$payment_id}&currency={$currency}&amount={$real_amount}&returnUrl={$returnUrl}&notifyUrl={$notifyUrl}&token={$token}";
+                $mode = 3;
+                $token = md5($payment_id . $currencyConfig[$currency]['apiKey'] . $currencyConfig[$currency]['secretKey'] . $real_amount);
+
+                $redirectUrl = $apiUrl . "?mode={$mode}&merchantCode={$currencyConfig[$currency]['merchantID']}&serialNo={$payment_id}&currency={$currency}&amount={$real_amount}&returnUrl={$returnUrl}&notifyUrl={$notifyUrl}&token={$token}";
+                break;
+
+            case 'fpx':
+                $apiUrl = $currencyConfig[$currency]['base_url'] . "merchant/reqfpx";
+
+                $payType = 1001;
+                $token = md5($payment_id . $currencyConfig[$currency]['apiKey'] . $currencyConfig[$currency]['secretKey'] . $real_amount);
+
+                $redirectUrl = $apiUrl . "?merchantCode={$currencyConfig[$currency]['merchantID']}&serialNo={$payment_id}&currency={$currency}&amount={$real_amount}&returnUrl={$returnUrl}&notifyUrl={$notifyUrl}&payType={$payType}&token={$token}";
+                break;
+
+            default:
+
+                $redirectUrl = url('/dashboard');
+                break;
+        }
 
         return Inertia::location($redirectUrl);
 
