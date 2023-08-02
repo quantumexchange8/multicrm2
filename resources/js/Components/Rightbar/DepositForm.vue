@@ -22,8 +22,9 @@ const page = usePage();
 const getPaymentAccount = page.props.getPaymentAccount;
 
 const depositMethods = [
-    { id: 'deposit_method', src: '/assets/finance/bank.png', value: 1, name: 'Bank' },
-    { id: 'deposit_method', src: '/assets/finance/cryptocurrency.png', value: 2, name: 'Cryptocurrency' },
+    { id: 'deposit_method', src: '/assets/finance/bank.png', value: 'bank', name: 'Bank' },
+    { id: 'deposit_method', src: '/assets/finance/cryptocurrency.png', value: 'crypto', name: 'Cryptocurrency' },
+    { id: 'deposit_method', src: '/assets/finance/fpx-gateway.png', value: 'fpx', name: 'FPX' },
 ];
 
 const platforms = [
@@ -42,14 +43,12 @@ const handlePaymentReceipt = (event) => {
 
 const form = useForm('post', route('payment.deposit'), {
     deposit_method: '',
-    // account_platform: '',
     account_no: '',
     currency: '',
     amount: '',
     txid: '',
     payment_receipt: '',
     description: '',
-    // password: '',
 });
 
 function copyTestingCode () {
@@ -134,7 +133,7 @@ const closeModal = () => {
                 </ul>
             </div>
             <!-- Bank -->
-            <div v-if="form.deposit_method === 1">
+            <div v-if="form.deposit_method === 'bank'">
                 <h2 class="text-lg mb-2 font-medium text-gray-900 dark:text-gray-100">Bank</h2>
                 <hr>
                 <div class="grid gap-6 my-6 md:grid-cols-2">
@@ -162,7 +161,7 @@ const closeModal = () => {
             </div>
 
             <!-- Crypto -->
-            <div v-if="form.deposit_method === 2">
+            <div v-if="form.deposit_method === 'crypto'">
                 <h2 class="text-lg mb-2 font-medium text-gray-900 dark:text-gray-100">Cryptocurrency</h2>
                 <hr>
                 <div class="grid gap-6 my-6 md:grid-cols-2">
@@ -177,6 +176,33 @@ const closeModal = () => {
                         <Label for="currency" value="Currency" />
                         <InputSelect v-model="form.currency" class="w-full" id="currency" placeholder="Select Currency">
                             <option value="USDT">USDT</option>
+                        </InputSelect>
+                        <InputError :message="form.errors.currency"/>
+                    </div>
+                    <div class="space-y-2">
+                        <Label for="amount" value="Deposit Amount (USD)" />
+                        <Input id="amount" type="number" min="30" class="block w-full px-4" placeholder="Deposit Amount" v-model="form.amount" @change="form.validate('amount')" />
+                        <InputError :message="form.errors.amount"/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FPX -->
+            <div v-if="form.deposit_method === 'fpx'">
+                <h2 class="text-lg mb-2 font-medium text-gray-900 dark:text-gray-100">FPX</h2>
+                <hr>
+                <div class="grid gap-6 my-6 md:grid-cols-2">
+                    <div class="space-y-2">
+                        <Label for="account_no" value="Account No." />
+                        <InputSelect class="w-full" id="account_no" v-model="form.account_no" placeholder="Select Account No." >
+                            <option v-for="paymentAccount in getPaymentAccount" :value="paymentAccount.meta_login" :key="paymentAccount.id">{{ paymentAccount.meta_login }}</option>
+                        </InputSelect>
+                        <InputError :message="form.errors.account_no"/>
+                    </div>
+                    <div class="space-y-2">
+                        <Label for="currency" value="Currency" />
+                        <InputSelect v-model="form.currency" class="w-full" id="currency" placeholder="Select Currency">
+                            <option value="MYR">MYR</option>
                         </InputSelect>
                         <InputError :message="form.errors.currency"/>
                     </div>
