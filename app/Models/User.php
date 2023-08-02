@@ -157,6 +157,24 @@ class User extends Authenticatable implements JWTSubject, HasMedia
         return $members;
     }
 
+    public function getIbUserIds()
+    {
+        $users = User::query()->where('role', 'ib')->where('hierarchyList', 'like', '%-' . $this->id . '-%')
+            ->where('status', 1)
+            ->pluck('id')->toArray();
+
+        return $users;
+    }
+
+    public function getMemberUserIds()
+    {
+        $users = User::query()->where('role', 'member')->where('hierarchyList', 'like', '%-' . $this->id . '-%')
+            ->where('status', 1)
+            ->pluck('id')->toArray();
+
+        return $users;
+    }
+
     public function tradingUsers()
     {
         return $this->hasMany(TradingUser::class, 'user_id', 'id');

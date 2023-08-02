@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AccountTypeSymbolGroup;
 use App\Models\IbAccountTypeSymbolGroupRate;
 use App\Models\RebateAllocation;
 use App\Models\RebateAllocationRate;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\MessageBag;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -23,8 +25,8 @@ class NetworkController extends Controller
         $user->load('downline:id,first_name,email,total_group_deposit,total_group_withdrawal,upline_id,role');
 
         // Count the total_ib and total_client using collection methods
-        $totalIB = $user->downline->where('role', 'ib')->count();
-        $totalClient = $user->downline->where('role', 'member')->count();
+        $totalIB = count($user->getIbUserIds());
+        $totalClient = count($user->getMemberUserIds());
 
         $userData = [
             'parent' => $user,
@@ -114,29 +116,46 @@ class NetworkController extends Controller
         $downline = $curIb->downline;
         $curIbRate = IbAccountTypeSymbolGroupRate::where('ib_account_type', $request->user_id)->get()->keyBy('symbol_group');
 
-        foreach ($request->symbolGroupItems as $key => $amount) {
-            $parent = IbAccountTypeSymbolGroupRate::with('symbolGroup')->where('ib_account_type', $upline->id)->where('symbol_group', $key)->first();
+        $validationErrors = new MessageBag();
+
+        // Collect the validation errors for ibGroupRates
+        foreach ($request->ibGroupRates as $key => $amount) {
+            $parent = IbAccountTypeSymbolGroupRate::with('symbolGroup')
+                ->where('ib_account_type', $upline->id)
+                ->where('symbol_group', $key)
+                ->first();
+
             if ($parent && $amount > $parent->amount) {
-                throw ValidationException::withMessages([
-                    'symbolGroupItems' => [$key => 'Invalid Amount for ' . $parent->symbolGroup->name],
-                ]);
+                $fieldKey = 'ibGroupRates.' . $key;
+                $errorMessage = $parent->symbolGroup->name . ' amount cannot be higher than ' . $parent->amount;
+                $validationErrors->add($fieldKey, $errorMessage);
             }
         }
 
+        // Collect the validation errors for each downline's ibGroupRates
         foreach ($downline as $child) {
-            foreach ($request->symbolGroupItems as $key => $amount) {
-                $childRate = IbAccountTypeSymbolGroupRate::with('symbolGroup')->where('ib_account_type', $child->id)->where('symbol_group', $key)->first();
-                if ($amount < $childRate->amount) {
-                    return response()->json([
-                        'invalidAmount' => 'Invalid Amount for ' . $childRate->symbolGroup->name
-                    ]);
+            foreach ($request->ibGroupRates as $key => $amount) {
+                $childRate = IbAccountTypeSymbolGroupRate::with('symbolGroup')
+                    ->where('ib_account_type', $child->id)
+                    ->where('symbol_group', $key)
+                    ->first();
+
+                if ($childRate && $amount < $childRate->amount) {
+                    $fieldKey = 'ibGroupRates.' . $key;
+                    $errorMessage = $childRate->symbolGroup->name . ' amount cannot be lower than ' . $childRate->amount;
+                    $validationErrors->add($fieldKey, $errorMessage);
                 }
             }
         }
 
+        // If there are validation errors, return them in the response
+        if ($validationErrors->count() > 0) {
+            return redirect()->back()->withErrors($validationErrors);
+        }
+
         $rebateAllocation = RebateAllocation::create(['from' => $curIb->upline_id, 'to' => $request->user_id]);
 
-        foreach ($request->symbolGroupItems as $key => $amount) {
+        foreach ($request->ibGroupRates as $key => $amount) {
 
             RebateAllocationRate::create([
                 'allocation_id' => $rebateAllocation->id,

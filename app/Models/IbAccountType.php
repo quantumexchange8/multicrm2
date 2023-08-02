@@ -30,6 +30,7 @@ class IbAccountType extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
     public function symbolGroups()
     {
         return $this->hasMany(IbAccountTypeSymbolGroupRate::class, 'ib_account_type', 'id');
