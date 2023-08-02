@@ -6,7 +6,7 @@ import Input from '@/Components/Input.vue'
 import InputSelect from '@/Components/InputSelect.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3'
 import VueTailwindDatepicker from "vue-tailwind-datepicker";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import Modal from "@/Components/Modal.vue";
 import AvatarInput from "@/Pages/Profile/Partials/AvatarInput.vue";
 import intlTelInput from 'intl-tel-input';
@@ -22,6 +22,31 @@ const props = defineProps({
 })
 const frontIdentityModal = ref(false);
 const backIdentityModal = ref(false);
+const user = usePage().props.auth.user
+
+const form = useForm({
+    avatar: null,
+    first_name: user.first_name,
+    chinese_name: user.chinese_name,
+    email: user.email,
+    country: user.country,
+    dob: user.dob,
+    phone: user.phone,
+    front_identity: null,
+    back_identity: null,
+});
+
+const selectedCountry = ref(form.country);
+
+function onchangeDropdown() {
+    const selectedCountryName = selectedCountry.value;
+    const country = props.countries.find((country) => country.name_en === selectedCountryName);
+
+    if (country) {
+        form.phone = `${country.phone_code}`;
+        form.country = selectedCountry;
+    }
+}
 
 const openFrontIdentityModal = () => {
     frontIdentityModal.value = true
@@ -40,46 +65,12 @@ const formatter = ref({
     date: 'YYYY-MM-DD',
     month: 'MM'
 });
-const user = usePage().props.auth.user
-const phoneInput = ref(null);
-const phoneInputInstance = ref(null);
-onMounted(() => {
-    phoneInputInstance.value = intlTelInput(phoneInput.value, {
-        initialCountry: 'my',
-        separateDialCode: true,
-        preferredCountries: ['my', 'vn'],
-        utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/js/utils.js',
-        dropdownContainer: document.body,
-        customPlaceholder: function (selectedCountryPlaceholder, selectedCountryData) {
-            return selectedCountryPlaceholder.replace('+' + selectedCountryData.dialCode + ' ', '');
-        },
-        customDropdownItem: function (country, sanitizedCountry, selectedCountryData) {
-            return '<div class="iti__country iti__standard"><div class="iti__flag-box"><div class="iti__flag iti__' + sanitizedCountry + '"></div></div><span class="iti__country-name">' + country + '</span><span class="iti__dial-code">+' + selectedCountryData.dialCode + '</span></div>';
-        },
-    });
-});
-const form = useForm({
-    avatar: null,
-    first_name: user.first_name,
-    chinese_name: user.chinese_name,
-    email: user.email,
-    country: user.country,
-    dob: user.dob,
-    phone: user.phone,
-    front_identity: null,
-    back_identity: null,
+
+watch(selectedCountry, () => {
+    onchangeDropdown();
 });
 
 const submit = () => {
-    // Get the selected country code
-    const countryCode = phoneInputInstance.value.getSelectedCountryData().dialCode;
-    // Concatenate the country code with the phone number
-    if (!form.phone.startsWith(`+${countryCode}`)) {
-        // Concatenate the country code with the phone number
-        form.phone = `+${countryCode}${form.phone}`;
-    }
-
-    // Submit the form
     form.post(route('profile.update'));
 };
 
@@ -138,41 +129,6 @@ const submit = () => {
                     <InputError class="mt-2" :message="form.errors.dob" />
                 </div>
 
-
-                <div class="space-y-2">
-                    <Label for="country" value="Country" />
-
-                    <InputSelect v-model="form.country" class="block w-full text-sm" placeholder="Choose Country">
-                        <option v-for="country in props.countries" :value="country.name_en" :key="country.id">{{ country.name_en }}</option>
-                    </InputSelect>
-
-                    <InputError class="mt-2" :message="form.errors.country" />
-                </div>
-
-
-                <div class="space-y-2">
-                    <Label for="phone" value="Mobile Phone" />
-
-                    <input
-                        ref="phoneInput"
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        :class="[
-                          'py-2 border-gray-400 rounded-full placeholder:text-sm',
-                          'focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white',
-                          'dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1',
-                        ]"
-                        v-model="form.phone"
-                        autocomplete="tel"
-                        class="block w-full"
-                    />
-
-                    <InputError class="mt-2" :message="form.errors.phone" />
-                </div>
-
-
-
                 <div class="space-y-2">
                     <Label for="email" value="Email" />
 
@@ -212,6 +168,31 @@ const submit = () => {
                 </div>
 
                 <div class="space-y-2">
+                    <Label for="country" value="Country" />
+
+                    <InputSelect v-model="selectedCountry" class="block w-full text-sm" placeholder="Choose Country">
+                        <option v-for="country in props.countries" :value="country.name_en" :key="country.id">{{ country.name_en }}</option>
+                    </InputSelect>
+
+                    <InputError class="mt-2" :message="form.errors.country" />
+                </div>
+
+
+                <div class="space-y-2">
+                    <Label for="phone" value="Mobile Phone" />
+
+                    <Input
+                        id="phone"
+                        type="text"
+                        class="mt-1 block w-full"
+                        autocomplete="phone"
+                        v-model="form.phone"
+                    />
+
+                    <InputError class="mt-2" :message="form.errors.phone" />
+                </div>
+
+                <div class="space-y-2">
                     <Label for="front_identity">
                         Proof of Identity (FRONT)
                         <a v-if="frontIdentity" href="javascript:void(0);" @click.prevent="openFrontIdentityModal" class="text-blue-500 hover:underline ml-2">Click to view</a>
@@ -232,7 +213,13 @@ const submit = () => {
                             </div>
                         </div>
                     </Modal>
-                    <input type="file" id="front_identity" @input="form.front_identity = $event.target.files[0]" class="block border border-gray-400 w-full rounded-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1"/>
+                    <input
+                        type="file"
+                        id="front_identity"
+                        @input="form.front_identity = $event.target.files[0]"
+                        class="block border border-gray-400 w-full rounded-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1 disabled:dark:bg-dark-eval-0 disabled:dark:text-dark-eval-4"
+                        :disabled="frontIdentity !== ''"
+                    />
                     <InputError :message="form.errors.front_identity"/>
                 </div>
 
@@ -257,7 +244,13 @@ const submit = () => {
                             </div>
                         </div>
                     </Modal>
-                    <input type="file" id="back_identity" @input="form.back_identity = $event.target.files[0]" class="block border border-gray-400 w-full rounded-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1"/>
+                    <input
+                        type="file"
+                        id="back_identity"
+                        @input="form.back_identity = $event.target.files[0]"
+                        class="block border border-gray-400 w-full rounded-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1 disabled:dark:bg-dark-eval-0 disabled:dark:text-dark-eval-4"
+                        :disabled="backIdentity !== ''"
+                    />
                     <InputError :message="form.errors.back_identity"/>
                 </div>
             </div>

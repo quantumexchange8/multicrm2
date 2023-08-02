@@ -290,7 +290,7 @@ const closeModal = () => {
 <!--                </div>-->
 <!--            </div>-->
 
-            <div class="mt-6 flex justify-end">
+            <div class="mt-6 flex justify-end" v-if="form.deposit_method">
                 <Button variant="secondary" @click="closeModal">
                     Cancel
                 </Button>
