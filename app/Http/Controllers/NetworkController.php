@@ -22,16 +22,20 @@ class NetworkController extends Controller
 {
     private function convertToNestedStructure($user, $search = null, $level = 0)
     {
-        $user->load('downline:id,first_name,email,total_group_deposit,total_group_withdrawal,upline_id,role');
+        $user->load('downline:id,first_name,email,upline_id,role');
 
         // Count the total_ib and total_client using collection methods
         $totalIB = count($user->getIbUserIds());
         $totalClient = count($user->getMemberUserIds());
+        $totalGroupDeposit = $user->totalGroupDeposit();
+        $totalGroupWithdrawal = $user->totalGroupWithdrawal();
 
         $userData = [
             'parent' => $user,
             'level' => $level,
             'profile_photo' => $user->getFirstMediaUrl('profile_photo'),
+            'total_group_deposit' => $totalGroupDeposit,
+            'total_group_withdrawal' => $totalGroupWithdrawal,
             'total_ib' => $totalIB,
             'total_client' => $totalClient,
         ];
@@ -125,7 +129,7 @@ class NetworkController extends Controller
                 ->where('symbol_group', $key)
                 ->first();
 
-            if ($parent && $amount > $parent->amount) {
+            if ($parent && $amount >= $parent->amount) {
                 $fieldKey = 'ibGroupRates.' . $key;
                 $errorMessage = $parent->symbolGroup->name . ' amount cannot be higher than ' . $parent->amount;
                 $validationErrors->add($fieldKey, $errorMessage);

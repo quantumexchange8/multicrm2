@@ -103,11 +103,11 @@ export default {
                     <span class="text-xs dark:text-dark-eval-4">Level</span>
                 </div>
                 <div class="flex flex-col text-center">
-                    <span>{{ users.parent.total_group_deposit }}</span>
+                    <span>{{ users.total_group_deposit }}</span>
                     <span class="text-xs dark:text-dark-eval-4">Total Group Deposit</span>
                 </div>
                 <div class="flex flex-col text-center">
-                    <span>{{ users.parent.total_group_withdrawal }}</span>
+                    <span>{{ users.total_group_withdrawal }}</span>
                     <span class="text-xs dark:text-dark-eval-4">Total Group Withdrawal</span>
                 </div>
                 <div class="flex flex-col text-center">

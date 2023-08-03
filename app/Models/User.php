@@ -133,28 +133,28 @@ class User extends Authenticatable implements JWTSubject, HasMedia
         return $users;
     }
 
-    public static function get_member_tree_record($search)
+    public function totalGroupDeposit()
     {
-        $user = Auth::user();
+        $users = $this->getChildrenIds();
+        $users[] = Auth::id();
 
-        $searchTerms = @$search['freetext'] ?? NULL;
-        $freetext = explode(' ', $searchTerms);
-        $members = [];
-        if ($searchTerms) {
-            $query =  User::query();
-            foreach ($freetext as $freetexts) {
-                $query->where('email', 'like', '%' . $freetexts . '%')
-                    ->orWhere('name', 'like', '%' . $freetexts . '%');
+        return Payment::query()
+            ->whereIn('user_id', $users)
+            ->where('type','=', 'Deposit')
+            ->where('status', '=', 'Successful')
+            ->sum('amount');
+    }
 
-            }
-            $compare_users = array_intersect($query->pluck('id')->toArray(), $user->getChildrenIds());
+    public function totalGroupWithdrawal()
+    {
+        $users = $this->getChildrenIds();
+        $users[] = Auth::id();
 
-            $members = User::whereIn('id', $compare_users)->take(1)->get();
-        } else {
-            $members = collect([(object) $user]);
-        }
-
-        return $members;
+        return Payment::query()
+            ->whereIn('user_id', $users)
+            ->where('type','=', 'Withdrawal')
+            ->where('status', '=', 'Successful')
+            ->sum('amount');
     }
 
     public function getIbUserIds()
