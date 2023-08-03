@@ -113,30 +113,52 @@ class PaymentController extends Controller
         switch ($request->deposit_method) {
             case 'crypto':
             case 'bank':
-                $apiUrl = $currencyConfig[$currency]['base_url'] . "/Merchant/Pay";
-
+                $apiEndpoint = "/Merchant/Pay";
                 $mode = 3;
-                $token = md5($payment_id . $currencyConfig[$currency]['apiKey'] . $currencyConfig[$currency]['secretKey'] . $real_amount);
-
-                $redirectUrl = $apiUrl . "?mode={$mode}&merchantCode={$currencyConfig[$currency]['merchantID']}&serialNo={$payment_id}&currency={$currency}&amount={$real_amount}&returnUrl={$returnUrl}&notifyUrl={$notifyUrl}&token={$token}";
                 break;
 
             case 'fpx':
-                $apiUrl = $currencyConfig[$currency]['base_url'] . "merchant/reqfpx";
-
+                $apiEndpoint = "merchant/reqfpx";
                 $payType = 1001;
-                $token = md5($payment_id . $currencyConfig[$currency]['apiKey'] . $currencyConfig[$currency]['secretKey'] . $real_amount);
-
-                $redirectUrl = $apiUrl . "?merchantCode={$currencyConfig[$currency]['merchantID']}&serialNo={$payment_id}&currency={$currency}&amount={$real_amount}&returnUrl={$returnUrl}&notifyUrl={$notifyUrl}&payType={$payType}&token={$token}";
                 break;
 
             default:
-
                 $redirectUrl = url('/dashboard');
                 break;
         }
 
-        return Inertia::location($redirectUrl);
+        if (isset($apiEndpoint)) {
+            $apiUrl = $currencyConfig[$currency]['base_url'] . $apiEndpoint;
+            $token = md5($payment_id . $currencyConfig[$currency]['apiKey'] . $currencyConfig[$currency]['secretKey'] . $real_amount);
+
+            $params = [
+                'merchantCode' => $currencyConfig[$currency]['merchantID'],
+                'serialNo' => $payment_id,
+                'currency' => $currency,
+                'amount' => $real_amount,
+                'returnUrl' => $returnUrl,
+                'notifyUrl' => $notifyUrl,
+                'token' => $token,
+            ];
+
+            if ($request->deposit_method === 'fpx') {
+                $params['payType'] = $payType;
+                $response = \Http::post($apiUrl, $params);
+                $jsonResponse = json_decode($response->body(), true);
+                $dataValue = $jsonResponse['data'];
+
+                // Check the response and handle accordingly
+                if ($response->successful()) {
+                    return Inertia::location($dataValue);
+                } else {
+                    return redirect()->back();
+                }
+            } else {
+                $redirectUrl = $apiUrl . "?mode={$mode}&" . http_build_query($params);
+            }
+        }
+
+        return Inertia::location($redirectUrl ?? url('/dashboard'));
 
     }
 
