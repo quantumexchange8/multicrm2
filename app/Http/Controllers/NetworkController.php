@@ -16,67 +16,120 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\AccountType;
 use App\Models\IbAccountType;
 use App\Models\User;
-use function GuzzleHttp\Promise\all;
 
 class NetworkController extends Controller
 {
-    private function convertToNestedStructure($user, $search = null, $level = 0)
-    {
-        $user->load('downline:id,first_name,email,upline_id,role');
+    private function buildTree($users, $isRoot = false, $parentLevel = 0) {
+        $tree = [];
+        foreach ($users as $user) {
+            $level = $isRoot ? $parentLevel : $parentLevel + 1;
 
-        // Count the total_ib and total_client using collection methods
-        $totalIB = count($user->getIbUserIds());
-        $totalClient = count($user->getMemberUserIds());
-        $totalGroupDeposit = $user->totalGroupDeposit();
-        $totalGroupWithdrawal = $user->totalGroupWithdrawal();
+            $userNode = [
+                'name' => $user->first_name,
+                'profile_photo' => $user->getFirstMediaUrl('profile_photo'),
+                'total_group_deposit' => $user->totalGroupDeposit($user->id),
+                'total_group_withdrawal' => $user->totalGroupWithdrawal($user->id),
+                'email' => $user->email,
+                'role' => $user->role,
+                'level' => $level,
+                'total_ib' => count($user->getIbUserIds()),
+                'total_member' => count($user->getMemberUserIds()),
+            ];
 
-        $userData = [
-            'parent' => $user,
-            'level' => $level,
-            'profile_photo' => $user->getFirstMediaUrl('profile_photo'),
-            'total_group_deposit' => $totalGroupDeposit,
-            'total_group_withdrawal' => $totalGroupWithdrawal,
-            'total_ib' => $totalIB,
-            'total_client' => $totalClient,
-        ];
+            if ($user->downline->isNotEmpty()) {
+                // Pass the correct arguments: $user->downline for users and $isRoot remains the same
+                // Also, increment the level for the recursive call
+                $userNode['children'] = $this->buildTree($user->downline, false, $level);
+            }
 
-        $children = $user->downline;
+            // If it's the root node and has only one child with no further children,
+            // return its single child directly instead of an array containing the child
+            if ($isRoot && count($tree) === 0 && isset($userNode['children'])) {
+                return $userNode['children'];
+            }
 
-        if ($search) {
-            $children = $children->filter(function ($child) use ($search) {
-                if (str_contains($child->first_name, $search) || str_contains($child->email, $search)) {
-                    return true;
-                }
-
-                if ($child->downline->count() > 0) {
-                    // Recursively search in deeper levels
-                    $nestedResult = $this->convertToNestedStructure($child, $search, 1);
-                    return !empty($nestedResult['children']);
-                }
-
-                return false;
-            });
+            $tree[] = $userNode;
         }
 
-        if ($children->count() > 0) {
-            $userData['children'] = [];
-            foreach ($children as $child) {
-                $userData['children'][] = $this->convertToNestedStructure($child, $search, $level + 1);
+        return $tree;
+    }
+
+    protected function searchChildren($user, $search)
+    {
+        $filteredChildren = collect();
+
+        foreach ($user->downline as $child) {
+            if (str_contains($child->first_name, $search) || str_contains($child->email, $search)) {
+                $filteredChildren->push($child);
+            }
+
+            $nestedFiltered = $this->searchChildren($child, $search);
+            if ($nestedFiltered->count() > 0) {
+                $child->downline = $nestedFiltered;
+                $filteredChildren->push($child);
             }
         }
 
-        return $userData;
+        return $filteredChildren;
     }
 
     public function network(Request $request)
     {
         $user = Auth::user();
-        $search = $request->input('search');
 
-        $users = $this->convertToNestedStructure($user, $search);
+        $usersQuery = User::where('id', $user->id)
+            ->orWhereHas('upline', function ($query) use ($user) {
+                $query->where('id', $user->id);
+            });
+
+        $users = $usersQuery->get();
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+
+            $filteredUsers = collect();
+            foreach ($users as $user) {
+                if (str_contains($user->first_name, $search) || str_contains($user->email, $search)) {
+                    $filteredUsers->push($user);
+                }
+
+                $filteredChildren = $this->searchChildren($user, $search);
+                if ($filteredChildren->count() > 0) {
+                    $user->downline = $filteredChildren;
+                    $filteredUsers->push($user);
+                }
+            }
+
+            $users = $filteredUsers;
+        }
+
+        if ($users->isEmpty()) {
+            // For view = no or no upline and no users, set the root node to an empty array
+            $rootNode = [
+                'name' => 'No Records'
+            ];
+        } else {
+            // For view = no or no upline, set the root node to the current user's data
+            $rootNode = [
+                'name' => $users->first()->first_name,
+                'profile_photo' => $users->first()->getFirstMediaUrl('profile_photo'),
+                'total_group_deposit' => $users->first()->totalGroupDeposit($users->first()->id),
+                'total_group_withdrawal' => $users->first()->totalGroupWithdrawal($users->first()->id),
+                'total_ib' => count($users->first()->getIbUserIds()),
+                'total_member' => count($users->first()->getMemberUserIds()),
+                'email' => $users->first()->email,
+                'role' => $users->first()->role,
+                'level' => 1,
+                'children' => []
+            ];
+
+            $tree = $this->buildTree($users, 1, 1);
+            $rootNode['children'] = $tree;
+        }
 
         return Inertia::render('GroupNetwork/NetworkTree', [
-            'users' => $users,
+            'root' => $rootNode,
+            'filters' => $request->only('search')
         ]);
     }
 
