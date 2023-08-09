@@ -16,11 +16,16 @@ class RightbarService
         $conn = (new CTraderService)->connectionStatus();
 
         $user = Auth::user();
+        $paymentAccounts = TradingUser::where('user_id', $user->id)->whereNot('module', 'pamm')->get();
 
         if ($conn['code'] == 0) {
-            (new CTraderService)->getUserInfo($user->tradingUsers);
+            try {
+                (new CTraderService)->getUserInfo($user->tradingUsers);
+            } catch (\Exception $e) {
+                \Log::error('CTrader Down');
+            }
         }
 
-        return TradingUser::where('user_id', $user->id)->whereNot('module', 'pamm')->get();
+        return $paymentAccounts;
     }
 }
