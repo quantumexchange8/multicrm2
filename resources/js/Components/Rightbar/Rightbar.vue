@@ -4,7 +4,7 @@ import RightbarContent from "@/Components/Rightbar/RightbarContent.vue";
 import DepositForm from "@/Components/Rightbar/DepositForm.vue";
 import WithdrawalForm from "@/Components/Rightbar/WithdrawalForm.vue";
 import {usePage} from "@inertiajs/vue3";
-import {computed, ref} from "vue";
+import {computed, ref, watch} from "vue";
 import Button from "@/Components/Button.vue";
 import { usePermission } from '@/Composables/permissions.js'
 import Swal from "sweetalert2";
@@ -17,7 +17,12 @@ const user = computed(() => page.props.auth.user)
 const { hasRole } = usePermission();
 const cashWalletComponent = ref({
     title: 'Cash Wallet ($)',
-    amount: formatAmount(user.value.cash_wallet), // Use .value to access the reactive value
+    amount: formatAmount(page.props.auth.user.cash_wallet),
+});
+
+// Watch for changes in page.props.auth.user.cash_wallet
+watch(() => page.props.auth.user.cash_wallet, (newCashWallet) => {
+    cashWalletComponent.value.amount = formatAmount(newCashWallet);
 });
 
 const rebateEarnedComponent = ref({
