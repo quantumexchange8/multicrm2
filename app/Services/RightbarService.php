@@ -17,11 +17,10 @@ class RightbarService
 
         $user = Auth::user();
 
-        if (App::environment('production')) {
-            if ($conn['code'] == 0) {
-                (new CTraderService)->getUserInfo($user->tradingUsers);
-            }
+        if ($conn['code'] == 0) {
+            (new CTraderService)->getUserInfo($user->tradingUsers);
         }
+
         return TradingUser::where('user_id', $user->id)->whereNot('module', 'pamm')->get();
     }
 }
