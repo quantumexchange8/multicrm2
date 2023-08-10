@@ -105,43 +105,43 @@ function selectedTransactionHistoryType(index) {
             <AccountToAccount :tradingUsers="tradingUsers" v-if="transferType === 2"/>
         </div>
 
-        <div class="mt-8">
-            <h2 class="text-xl font-semibold leading-tight">
-                Transaction History
-            </h2>
-            <ul class="grid w-full gap-4 grid-cols-1 mt-4" :class="hasRole('ib') ? 'md:grid-cols-6' : 'md:grid-cols-5'">
-                <li v-for="(transactionHistory, index) in transactionHistories" :key="index">
-                    <input
-                        type="radio"
-                        :id="transactionHistory.id"
-                        name="transactionHistory"
-                        class="hidden peer"
-                        :checked="index === 0"
-                        @click="selectedTransactionHistoryType(index)"
-                    >
-                    <label :for="transactionHistory.id" class="inline-flex items-center justify-center w-full p-4 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-[#007BFF] dark:peer-checked:bg-[#007BFF] peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-transparent dark:shadow-lg dark:hover:shadow-blue-600">
-                        <div class="flex flex-col items-center gap-2">
-                            <img class="object-cover w-10 h-10" :src="transactionHistory.src" alt="account_type">
-                            <p class="text-sm text-gray-500 text-center dark:text-white">{{ transactionHistory.title }}</p>
-                        </div>
-                    </label>
-                </li>
-                <li v-if="hasRole('ib')">
-                    <input
-                        type="radio"
-                        id="transaction_history_6"
-                        name="transactionHistory"
-                        class="hidden peer"
-                        @click="selectedTransactionHistoryType(5)"
-                    >
-                    <label for="transaction_history_6" class="inline-flex items-center justify-center w-full p-4 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-[#007BFF] dark:peer-checked:bg-[#007BFF] peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-transparent dark:shadow-lg dark:hover:shadow-blue-600">
-                        <div class="flex flex-col items-center gap-2">
-                            <img class="object-cover w-10 h-10" src="/assets/finance/rebate-to-wallet.png" alt="account_type">
-                            <p class="text-sm text-gray-500 text-center dark:text-white">Rebate To Wallet</p>
-                        </div>
-                    </label>
-                </li>
-            </ul>
+<!--        <div class="mt-8">-->
+<!--            <h2 class="text-xl font-semibold leading-tight">-->
+<!--                Transaction History-->
+<!--            </h2>-->
+<!--            <ul class="grid w-full gap-4 grid-cols-1 mt-4" :class="hasRole('ib') ? 'md:grid-cols-6' : 'md:grid-cols-5'">-->
+<!--                <li v-for="(transactionHistory, index) in transactionHistories" :key="index">-->
+<!--                    <input-->
+<!--                        type="radio"-->
+<!--                        :id="transactionHistory.id"-->
+<!--                        name="transactionHistory"-->
+<!--                        class="hidden peer"-->
+<!--                        :checked="index === 0"-->
+<!--                        @click="selectedTransactionHistoryType(index)"-->
+<!--                    >-->
+<!--                    <label :for="transactionHistory.id" class="inline-flex items-center justify-center w-full p-4 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-[#007BFF] dark:peer-checked:bg-[#007BFF] peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-transparent dark:shadow-lg dark:hover:shadow-blue-600">-->
+<!--                        <div class="flex flex-col items-center gap-2">-->
+<!--                            <img class="object-cover w-10 h-10" :src="transactionHistory.src" alt="account_type">-->
+<!--                            <p class="text-sm text-gray-500 text-center dark:text-white">{{ transactionHistory.title }}</p>-->
+<!--                        </div>-->
+<!--                    </label>-->
+<!--                </li>-->
+<!--                <li v-if="hasRole('ib')">-->
+<!--                    <input-->
+<!--                        type="radio"-->
+<!--                        id="transaction_history_6"-->
+<!--                        name="transactionHistory"-->
+<!--                        class="hidden peer"-->
+<!--                        @click="selectedTransactionHistoryType(5)"-->
+<!--                    >-->
+<!--                    <label for="transaction_history_6" class="inline-flex items-center justify-center w-full p-4 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-[#007BFF] dark:peer-checked:bg-[#007BFF] peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-transparent dark:shadow-lg dark:hover:shadow-blue-600">-->
+<!--                        <div class="flex flex-col items-center gap-2">-->
+<!--                            <img class="object-cover w-10 h-10" src="/assets/finance/rebate-to-wallet.png" alt="account_type">-->
+<!--                            <p class="text-sm text-gray-500 text-center dark:text-white">Rebate To Wallet</p>-->
+<!--                        </div>-->
+<!--                    </label>-->
+<!--                </li>-->
+<!--            </ul>-->
 
 <!--            <TransactionHistoryDTA :payments="payments" v-show="transactionHistory === 0"/>-->
 <!--            <TransactionHistoryWFW :withdrawals="withdrawals" v-show="transactionHistory === 1"/>-->
@@ -150,7 +150,7 @@ function selectedTransactionHistoryType(index) {
 <!--            <TransactionHistoryATA :accountToAccounts="accountToAccounts" v-show="transactionHistory === 4"/>-->
 <!--            <TransactionHistoryRTW :rebateToAccounts="rebateToAccounts" v-if="transactionHistory === 5"/>-->
 
-        </div>
+<!--        </div>-->
 
     </AuthenticatedLayout>
 </template>
