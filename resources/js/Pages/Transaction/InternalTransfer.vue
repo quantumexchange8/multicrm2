@@ -143,12 +143,12 @@ function selectedTransactionHistoryType(index) {
                 </li>
             </ul>
 
-            <TransactionHistoryDTA :payments="payments" v-show="transactionHistory === 0"/>
-            <TransactionHistoryWFW :withdrawals="withdrawals" v-show="transactionHistory === 1"/>
-            <TransactionHistoryWTA :walletToAccounts="walletToAccounts" v-show="transactionHistory === 2"/>
-            <TransactionHistoryATW :accountToWallets="accountToWallets" v-show="transactionHistory === 3"/>
-            <TransactionHistoryATA :accountToAccounts="accountToAccounts" v-show="transactionHistory === 4"/>
-            <TransactionHistoryRTW :rebateToAccounts="rebateToAccounts" v-if="transactionHistory === 5"/>
+<!--            <TransactionHistoryDTA :payments="payments" v-show="transactionHistory === 0"/>-->
+<!--            <TransactionHistoryWFW :withdrawals="withdrawals" v-show="transactionHistory === 1"/>-->
+<!--            <TransactionHistoryWTA :walletToAccounts="walletToAccounts" v-show="transactionHistory === 2"/>-->
+<!--            <TransactionHistoryATW :accountToWallets="accountToWallets" v-show="transactionHistory === 3"/>-->
+<!--            <TransactionHistoryATA :accountToAccounts="accountToAccounts" v-show="transactionHistory === 4"/>-->
+<!--            <TransactionHistoryRTW :rebateToAccounts="rebateToAccounts" v-if="transactionHistory === 5"/>-->
 
         </div>
 
