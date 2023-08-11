@@ -21,6 +21,7 @@ class UpdateTradingAccount
         $tradingAccount->credit = $data['nonWithdrawableBonus'] / 100;
         $tradingAccount->margin_leverage = $data['leverageInCents'] / 100;
         $tradingAccount->equity = $data['equity'] / 100;
+        $tradingAccount->account_type = $tradingAccount->accountType->id;
         DB::transaction(function () use ($tradingAccount) {
             $tradingAccount->save();
         });

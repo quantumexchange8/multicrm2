@@ -22,7 +22,7 @@ class RightbarService
             try {
                 (new CTraderService)->getUserInfo($user->tradingUsers);
             } catch (\Exception $e) {
-                \Log::error('CTrader Down');
+                \Log::error('CTrader Error');
             }
         }
 

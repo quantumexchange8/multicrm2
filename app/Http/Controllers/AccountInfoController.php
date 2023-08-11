@@ -19,6 +19,15 @@ class AccountInfoController extends Controller
 {
     public function account_info($setting = null)
     {
+        $user = Auth::user();
+        $conn = (new CTraderService)->connectionStatus();
+        if ($conn['code'] == 0) {
+            try {
+                (new CTraderService)->getUserInfo($user->tradingUsers);
+            } catch (\Exception $e) {
+                \Log::error('CTrader Error');
+            }
+        }
         $trading_accounts = TradingAccount::query()
             ->with('accountType')
             ->where('user_id', Auth::id())
