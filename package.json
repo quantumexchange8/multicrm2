@@ -41,7 +41,6 @@
         "laravel-precognition-vue": "^0.3.2",
         "laravel-precognition-vue-inertia": "^0.3.2",
         "laravel-vue-i18n": "^2.5.2",
-        "pdfmake": "^0.2.7",
         "qrcode.vue": "^3.4.0",
         "sweetalert2": "^11.7.18",
         "tw-elements": "^1.0.0-beta2",
