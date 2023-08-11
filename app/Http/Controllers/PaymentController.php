@@ -256,8 +256,8 @@ class PaymentController extends Controller
         Payment::create([
             'user_id' => $user->id,
             'payment_id' => $payment_id,
-            'category' => 'apply_rebate',
-            'type' => '',
+            'category' => 'rebate_payout',
+            'type' => 'RebateToWallet',
             'amount' => $accountType->rebate_wallet,
             'status' => 'Successful',
         ]);
