@@ -9,13 +9,17 @@ import Input from "@/Components/Input.vue";
 import Modal from "@/Components/Modal.vue";
 import Label from "@/Components/Label.vue";
 import Checkbox from "@/Components/Checkbox.vue";
+import { TailwindPagination } from 'laravel-vue-pagination';
+import {library} from "@fortawesome/fontawesome-svg-core";
+import {faRotateRight} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+library.add(faRotateRight);
 
 const settingLeverage = ref(false);
 const passwordInput = ref(null);
 const id = ref('');
 
 const props = defineProps({
-    tradingAccounts: Object,
     leverages: Object,
 });
 
@@ -48,9 +52,52 @@ const closeModal = () => {
 
     form.reset()
 }
+
+const tradingAccounts = ref({data: []});
+const isLoading = ref(false);
+const getResults = async (page = 1) => {
+    isLoading.value = true;
+    try {
+        let url = `/account_info/getTradingAccounts?page=${page}`;
+
+        const response = await axios.get(url);
+        tradingAccounts.value = response.data;
+    } catch (error) {
+        console.error(error);
+    } finally {
+        isLoading.value = false;
+    }
+}
+
+getResults()
+
+function refreshTable() {
+    getResults()
+}
+
+const paginationClass = [
+    'bg-transparent border-0 text-gray-500'
+];
+
+const paginationActiveClass = [
+    'dark:bg-transparent border-0 text-[#FF9E23] dark:text-[#FF9E23]'
+];
 </script>
 <template>
-    <div class="relative overflow-x-auto sm:rounded-lg mt-4">
+    <div class="flex justify-end">
+        <font-awesome-icon
+            icon="fa-solid fa-rotate-right"
+            class="flex-shrink-0 w-5 h-5 cursor-pointer dark:text-dark-eval-4"
+            aria-hidden="true"
+            @click="refreshTable"
+        />
+    </div>
+    <div v-if="isLoading" class="w-full flex justify-center mt-8">
+        <div class="px-4 py-2 text-sm font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">
+            loading...
+        </div>
+    </div>
+    <div v-else class="relative overflow-x-auto sm:rounded-lg mt-4">
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs font-bold text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-white text-center">
             <tr>
@@ -78,7 +125,7 @@ const closeModal = () => {
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(tradingAccount, index) in tradingAccounts" class="bg-white odd:dark:bg-transparent even:dark:bg-dark-eval-0 text-xs font-thin text-gray-900 dark:text-white text-center">
+            <tr v-for="tradingAccount in tradingAccounts.data" class="bg-white odd:dark:bg-transparent even:dark:bg-dark-eval-0 text-xs font-thin text-gray-900 dark:text-white text-center">
                 <th scope="row" class="px-6 py-4 font-thin rounded-l-full">
                     {{ tradingAccount.meta_login }}
                 </th>
@@ -114,6 +161,14 @@ const closeModal = () => {
             </tr>
             </tbody>
         </table>
+        <div class="flex justify-end mt-4">
+            <TailwindPagination
+                :item-classes=paginationClass
+                :active-classes=paginationActiveClass
+                :data="tradingAccounts"
+                @pagination-change-page="getResults"
+            />
+        </div>
     </div>
 
     <Modal :show="settingLeverage" @close="closeModal">

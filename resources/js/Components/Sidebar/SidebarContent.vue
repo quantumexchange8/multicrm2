@@ -39,8 +39,8 @@ const { hasRole } = usePermission();
 
         <SidebarLink
             title="Account Info"
-            :href="route('account_info')"
-            :active="route().current('account_info')"
+            :href="route('account_info.account_info')"
+            :active="route().current('account_info.account_info')"
         >
             <template #icon>
                 <font-awesome-icon

@@ -7,6 +7,7 @@ use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\InternalTransferController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\NetworkController;
+use App\Http\Controllers\TradingController;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use Inertia\Inertia;
@@ -68,9 +69,15 @@ Route::middleware('auth')->group(function () {
      *         Account Info
      * ==============================
      */
-    Route::get('/account_info', [AccountInfoController::class, 'account_info'])->name('account_info');
-    Route::post('/add-trading-account', [AccountInfoController::class, 'add_trading_account'])->name('add_trading_account');
-    Route::post('change-leverage', [AccountInfoController::class, 'change_leverage'])->name('change_leverage');
+
+    Route::prefix('account_info')->group(function () {
+        Route::get('/account_listing', [AccountInfoController::class, 'account_info'])->name('account_info.account_info');
+        Route::post('/add-trading-account', [AccountInfoController::class, 'add_trading_account'])->name('account_info.add_trading_account');
+        Route::post('change-leverage', [AccountInfoController::class, 'change_leverage'])->name('account_info.change_leverage');
+
+        Route::get('/getTradingAccounts', [AccountInfoController::class, 'getTradingAccounts'])->name('account_info.getTradingAccounts');
+    });
+
 
     /**
      * ==============================
@@ -93,6 +100,15 @@ Route::middleware('auth')->group(function () {
          Route::get('/rebate_allocation', [NetworkController::class, 'getRebateAllocation'])->middleware('role:ib')->name('group_network.rebate_allocation');
          Route::post('/rebate_allocation', [NetworkController::class, 'updateRebateAllocation'])->middleware('role:ib')->name('updateRebate.update');
      });
+
+     /**
+     * ==============================
+     *            Trading
+     * ==============================
+     */
+//     Route::prefix('trading')->group(function () {
+//         Route::get('/trade_history', [TradingController::class, 'index'])->name('trading.trade_history');
+//     });
 });
 
 Route::get('/components/buttons', function () {

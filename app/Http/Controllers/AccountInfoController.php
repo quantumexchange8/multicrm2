@@ -19,6 +19,17 @@ class AccountInfoController extends Controller
 {
     public function account_info($setting = null)
     {
+        $accountTypes = AccountType::where('id', 1)->first();
+
+        return Inertia::render('AccountInfo/AccountInfo', [
+            'accountTypes' => $accountTypes,
+            'leverages' => SettingLeverage::all(),
+            'setting' => $setting,
+        ]);
+    }
+
+    public function getTradingAccounts()
+    {
         $user = Auth::user();
         $conn = (new CTraderService)->connectionStatus();
         if ($conn['code'] == 0) {
@@ -28,19 +39,13 @@ class AccountInfoController extends Controller
                 \Log::error('CTrader Error');
             }
         }
+
         $trading_accounts = TradingAccount::query()
             ->with('accountType')
-            ->where('user_id', Auth::id())
-            ->orderByDesc('created_at')
-            ->get();
-        $accountTypes = AccountType::where('id', 1)->first();
+            ->where('user_id', $user->id)
+            ->paginate(5);
 
-        return Inertia::render('AccountInfo/AccountInfo', [
-            'tradingAccounts' => $trading_accounts,
-            'accountTypes' => $accountTypes,
-            'leverages' => SettingLeverage::all(),
-            'setting' => $setting,
-        ]);
+        return response()->json($trading_accounts);
     }
 
     public function add_trading_account(AddTradingAccountRequest $request)

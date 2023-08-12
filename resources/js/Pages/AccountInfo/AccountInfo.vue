@@ -14,7 +14,6 @@ import ToastList from "@/Components/ToastList.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 
 defineProps({
-    tradingAccounts: Object,
     accountTypes: Object,
     leverages: Object,
 });
@@ -47,7 +46,7 @@ const addTradingAccount = () => {
 }
 
 const addNewAccount = () => {
-    form.post(route('add_trading_account'), {
+    form.post(route('account_info.add_trading_account'), {
         preserveScroll: true,
         onSuccess: () => {
             closeModal();
@@ -185,7 +184,9 @@ const closeModal = () => {
 
         <div class="p-6 overflow-hidden bg-white rounded-md shadow-md dark:bg-dark-eval-1">
             <img src="/assets/platform/icon/ctrader.png" style="width: 160px" alt="Ctrader">
-            <TradingAccountTable :tradingAccounts="tradingAccounts" :leverages="leverages" />
+            <TradingAccountTable
+                :leverages="leverages"
+            />
         </div>
 
     </AuthenticatedLayout>
