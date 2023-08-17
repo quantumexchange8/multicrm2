@@ -20,21 +20,10 @@ import TransactionHistoryRTW from "@/Pages/Transaction/Partials/TransactionHisto
 
 defineProps({
     tradingUsers: Object,
-    payments: Object,
-    withdrawals: Object,
-    walletToAccounts: Object,
-    accountToWallets: Object,
-    accountToAccounts: Object,
-    rebateToAccounts: Object,
 })
 
 const page = usePage()
 const user = computed(() => page.props.auth.user)
-const dateValue = ref([])
-const formatter = ref({
-    date: 'DD/MM/YYYY',
-    month: 'MM'
-});
 const { hasRole } = usePermission();
 const transfer_types = [
     { id: 'account_type_2', src: '/assets/finance/wallet-to-account.png', value: 2, title: 'Wallet To Account' },
@@ -44,7 +33,7 @@ const transfer_types = [
 
 const transactionHistories = [
     { id: 'transaction_history_1', src: '/assets/finance/cash-in.png', title: 'Deposit To Account' },
-    { id: 'transaction_history_2', src: '/assets/finance/cash-out.png', title: 'Withdrawal From Wallet' },
+    { id: 'transaction_history_2', src: '/assets/finance/cash-out.png', title: 'Withdraw From Wallet' },
     { id: 'transaction_history_3', src: '/assets/finance/wallet-to-account.png', title: 'Wallet To Account' },
     { id: 'transaction_history_4', src: '/assets/finance/account-to-wallet.png', title: 'Account To Wallet' },
     { id: 'transaction_history_5', src: '/assets/finance/account-to-account.png', title: 'Account To Account' },
@@ -119,10 +108,10 @@ function selectedTransactionHistoryType(index) {
                         :checked="index === 0"
                         @click="selectedTransactionHistoryType(index)"
                     >
-                    <label :for="transactionHistory.id" class="inline-flex items-center justify-center w-full p-4 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-[#007BFF] dark:peer-checked:bg-[#007BFF] peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-transparent dark:shadow-lg dark:hover:shadow-blue-600">
+                    <label :for="transactionHistory.id" class="inline-flex items-center justify-center w-full px-2 py-4 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-[#007BFF] dark:peer-checked:bg-[#007BFF] peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-transparent dark:shadow-lg dark:hover:shadow-blue-600">
                         <div class="flex flex-col items-center gap-2">
-                            <img class="object-cover w-10 h-10" :src="transactionHistory.src" alt="account_type">
-                            <p class="text-sm text-gray-500 text-center dark:text-white">{{ transactionHistory.title }}</p>
+                            <img class="object-cover w-8 h-8" :src="transactionHistory.src" alt="account_type">
+                            <p class="text-[10px] text-gray-500 text-center dark:text-white">{{ transactionHistory.title }}</p>
                         </div>
                     </label>
                 </li>
@@ -134,21 +123,21 @@ function selectedTransactionHistoryType(index) {
                         class="hidden peer"
                         @click="selectedTransactionHistoryType(5)"
                     >
-                    <label for="transaction_history_6" class="inline-flex items-center justify-center w-full p-4 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-[#007BFF] dark:peer-checked:bg-[#007BFF] peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-transparent dark:shadow-lg dark:hover:shadow-blue-600">
+                    <label for="transaction_history_6" class="inline-flex items-center justify-center w-full px-2 py-4 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-[#007BFF] dark:peer-checked:bg-[#007BFF] peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-transparent dark:shadow-lg dark:hover:shadow-blue-600">
                         <div class="flex flex-col items-center gap-2">
-                            <img class="object-cover w-10 h-10" src="/assets/finance/rebate-to-wallet.png" alt="account_type">
-                            <p class="text-sm text-gray-500 text-center dark:text-white">Rebate To Wallet</p>
+                            <img class="object-cover w-8 h-8" src="/assets/finance/rebate-to-wallet.png" alt="account_type">
+                            <p class="text-[10px] text-gray-500 text-center dark:text-white">Rebate To Wallet</p>
                         </div>
                     </label>
                 </li>
             </ul>
 
-            <TransactionHistoryDTA :payments="payments" v-show="transactionHistory === 0"/>
-            <TransactionHistoryWFW :withdrawals="withdrawals" v-show="transactionHistory === 1"/>
-            <TransactionHistoryWTA :walletToAccounts="walletToAccounts" v-show="transactionHistory === 2"/>
-            <TransactionHistoryATW :accountToWallets="accountToWallets" v-show="transactionHistory === 3"/>
-            <TransactionHistoryATA :accountToAccounts="accountToAccounts" v-show="transactionHistory === 4"/>
-            <TransactionHistoryRTW :rebateToAccounts="rebateToAccounts" v-if="transactionHistory === 5"/>
+            <TransactionHistoryDTA v-if="transactionHistory === 0"/>
+            <TransactionHistoryWFW v-if="transactionHistory === 1"/>
+            <TransactionHistoryWTA v-if="transactionHistory === 2"/>
+            <TransactionHistoryATW v-if="transactionHistory === 3"/>
+            <TransactionHistoryATA v-if="transactionHistory === 4"/>
+            <TransactionHistoryRTW v-if="transactionHistory === 5"/>
 
         </div>
 

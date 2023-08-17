@@ -1,5 +1,5 @@
-import { useDark, useToggle } from '@vueuse/core'
-import { reactive } from 'vue'
+import {useDark, useToggle} from '@vueuse/core'
+import {reactive} from 'vue'
 
 export const isDark = useDark()
 export const toggleDarkMode = useToggle(isDark)
@@ -65,6 +65,18 @@ export function transactionFormat() {
         return formattedDate.split('-').join('/');
     }
 
+    function formatTime(date) {
+        const options = {
+            hour12: false, // Disable AM/PM indicator
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZone: 'Asia/Kuala_Lumpur'
+        };
+
+        return new Date(date).toLocaleTimeString('en-CA', options);
+    }
+
     function getStatusClass(status) {
         if (status === 'Successful') {
             return 'success';
@@ -91,6 +103,7 @@ export function transactionFormat() {
         formatDate,
         getStatusClass,
         formatAmount,
-        formatType
+        formatType,
+        formatTime
     };
 }

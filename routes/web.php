@@ -95,6 +95,7 @@ Route::middleware('auth')->group(function () {
      * ==============================
      */
     Route::get('/transaction', [InternalTransferController::class, 'transaction'])->name('transaction');
+    Route::get('/transaction/getTransaction', [InternalTransferController::class, 'getTransaction'])->name('getTransaction');
 
     Route::post('/wallet_to_account', [InternalTransferController::class, 'wallet_to_account'])->name('wallet_to_account');
     Route::post('/account_to_wallet', [InternalTransferController::class, 'account_to_wallet'])->name('account_to_wallet');

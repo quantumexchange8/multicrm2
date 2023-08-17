@@ -17,26 +17,18 @@ use Inertia\Inertia;
 
 class InternalTransferController extends Controller
 {
-    protected function getFilteredPayments($category, $type)
-    {
-        return Payment::query()
-            ->where('user_id', Auth::id())
-            ->where('category', $category)
-            ->where('type', $type)
-            ->latest()
-            ->get();
-    }
-
     public function transaction()
     {
         $user = Auth::user();
+        $conn = (new CTraderService)->connectionStatus();
 
-        $payments = $this->getFilteredPayments('payment', 'Deposit');
-        $withdrawals = $this->getFilteredPayments('payment', 'Withdrawal');
-        $walletToAccounts = $this->getFilteredPayments('internal_transfer', 'WalletToAccount');
-        $accountToWallets = $this->getFilteredPayments('internal_transfer', 'AccountToWallet');
-        $accountToAccounts = $this->getFilteredPayments('internal_transfer', 'AccountToAccount');
-        $rebateToAccounts = $this->getFilteredPayments('apply_rebate', '');
+        if ($conn['code'] == 0) {
+            try {
+                (new CTraderService)->getUserInfo($user->tradingUsers);
+            } catch (\Exception $e) {
+                \Log::error('CTrader Error');
+            }
+        }
 
         if ($user->hasRole('ib')) {
             $tradingUsers = TradingUser::where('user_id', $user->id)->where('module', '!=', 'pamm')->get();
@@ -46,13 +38,45 @@ class InternalTransferController extends Controller
 
         return Inertia::render('Transaction/InternalTransfer', [
             'tradingUsers' => $tradingUsers,
-            'payments' => $payments,
-            'withdrawals' => $withdrawals,
-            'walletToAccounts' => $walletToAccounts,
-            'accountToWallets' => $accountToWallets,
-            'accountToAccounts' => $accountToAccounts,
-            'rebateToAccounts' => $rebateToAccounts,
         ]);
+    }
+
+    public function getTransaction(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $paymentTypes = [
+            'Deposit' => 'payment',
+            'Withdrawal' => 'payment',
+            'WalletToAccount' => 'internal_transfer',
+            'AccountToWallet' => 'internal_transfer',
+            'AccountToAccount' => 'internal_transfer',
+            'RebateToWallet' => 'rebate_payout'
+        ];
+
+        $filteredPayments = [];
+
+        foreach ($paymentTypes as $type => $category) {
+            $payments = Payment::query()
+                ->where('user_id', Auth::id())
+                ->where('category', $category)
+                ->where('type', $type)
+                ->when($request->filled('date'), function ($query) use ($request) {
+                    $date = $request->input('date');
+                    $start_date = Carbon::createFromFormat('Y-m-d', $date[0])->startOfDay();
+                    $end_date = Carbon::createFromFormat('Y-m-d', $date[1])->endOfDay();
+                    $query->whereBetween('created_at', [$start_date, $end_date]);
+                })
+                ->when($request->filled('search'), function ($query) use ($request) {
+                    $search = $request->input('search');
+                    $query->where('to', 'like', '%' . $search . '%')
+                        ->orWhere('from', 'like', '%' . $search . '%');
+                })
+                ->latest()
+                ->paginate(10);
+
+            $filteredPayments[$type] = $payments;
+        }
+
+        return response()->json($filteredPayments);
     }
 
     public function wallet_to_account(Request $request)
