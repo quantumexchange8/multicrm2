@@ -11,6 +11,7 @@ import {router} from "@inertiajs/vue3";
 import {library} from "@fortawesome/fontawesome-svg-core";
 import {faRotateRight, faSearch, faX} from "@fortawesome/free-solid-svg-icons";
 import NetworkChild from "@/Pages/GroupNetwork/Partials/NetworkChild.vue";
+import Loading from "@/Components/Loading.vue";
 library.add(faSearch,faX,faRotateRight);
 const props = defineProps({
     root: Object,
@@ -96,9 +97,7 @@ function handleKeyDown(event) {
 
         <div v-if="search">
             <div v-if="isLoading" class="w-full flex justify-center mt-4">
-                <div class="px-4 py-2 text-sm font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">
-                    loading...
-                </div>
+                <Loading />
             </div>
             <div v-else>
                 <NetworkChild

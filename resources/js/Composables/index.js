@@ -43,3 +43,54 @@ export const handleScroll = () => {
     }
     lastScrollTop = st <= 0 ? 0 : st // For Mobile or negative scrolling
 }
+
+export function transactionFormat() {
+    function getChannelName(name) {
+        if (name === 'bank') {
+            return 'Bank Transfer';
+        } else if (name === 'crypto') {
+            return 'Cryptocurrency';
+        }else if (name === 'fpx') {
+            return 'FPX';
+        }
+    }
+
+    function formatDate(date) {
+        const formattedDate = new Date(date).toLocaleDateString('en-CA', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            timeZone: 'Asia/Kuala_Lumpur'
+        });
+        return formattedDate.split('-').join('/');
+    }
+
+    function getStatusClass(status) {
+        if (status === 'Successful') {
+            return 'success';
+        } else if (status === 'Submitted') {
+            return 'warning';
+        } else if (status === 'Rejected') {
+            return 'danger';
+        } else {
+            return ''; // Default case or handle other statuses
+        }
+    }
+
+    function formatAmount(amount) {
+        return parseFloat(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    const formatType = (type) => {
+        const formattedType = type.replace(/([a-z])([A-Z])/g, '$1 $2');
+        return formattedType.charAt(0).toUpperCase() + formattedType.slice(1);
+    };
+
+    return {
+        getChannelName,
+        formatDate,
+        getStatusClass,
+        formatAmount,
+        formatType
+    };
+}

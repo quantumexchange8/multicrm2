@@ -13,6 +13,7 @@ import { TailwindPagination } from 'laravel-vue-pagination';
 import {library} from "@fortawesome/fontawesome-svg-core";
 import {faRotateRight} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import Loading from "@/Components/Loading.vue";
 library.add(faRotateRight);
 
 const settingLeverage = ref(false);
@@ -93,9 +94,7 @@ const paginationActiveClass = [
         />
     </div>
     <div v-if="isLoading" class="w-full flex justify-center mt-8">
-        <div class="px-4 py-2 text-sm font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">
-            loading...
-        </div>
+        <Loading />
     </div>
     <div v-else class="relative overflow-x-auto sm:rounded-lg mt-4">
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">

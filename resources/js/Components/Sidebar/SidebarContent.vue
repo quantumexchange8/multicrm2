@@ -10,9 +10,15 @@ import { usePermission } from '@/Composables/permissions.js'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 /* import specific icons */
-import { faGaugeHigh, faClipboardUser, faMoneyBillTransfer, faSitemap } from '@fortawesome/free-solid-svg-icons'
+import {
+    faGaugeHigh,
+    faClipboardUser,
+    faMoneyBillTransfer,
+    faSitemap,
+    faHandshakeSimple
+} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-library.add(faGaugeHigh, faClipboardUser, faMoneyBillTransfer, faSitemap)
+library.add(faGaugeHigh, faClipboardUser, faMoneyBillTransfer, faSitemap, faHandshakeSimple)
 
 const { hasRole } = usePermission();
 </script>
@@ -50,6 +56,26 @@ const { hasRole } = usePermission();
                 />
             </template>
         </SidebarLink>
+
+        <SidebarCollapsible
+            v-if="hasRole('ib')"
+            title="Trading"
+            :active="route().current('trading.*')"
+        >
+            <template #icon>
+                <font-awesome-icon
+                    icon="fa-solid fa-handshake-simple"
+                    class="flex-shrink-0 w-5 h-5"
+                    aria-hidden="true"
+                />
+            </template>
+
+            <SidebarCollapsibleItem
+                :href="route('trading.rebate_summary')"
+                title="Rebate Summary"
+                :active="route().current('trading.rebate_summary')"
+            />
+        </SidebarCollapsible>
 
         <SidebarLink
             title="Transaction"

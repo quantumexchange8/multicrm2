@@ -78,6 +78,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/getTradingAccounts', [AccountInfoController::class, 'getTradingAccounts'])->name('account_info.getTradingAccounts');
     });
 
+    /**
+     * ==============================
+     *           Trading
+     * ==============================
+     */
+
+    Route::prefix('trading')->middleware('role:ib')->group(function () {
+        Route::get('/rebate_summary', [TradingController::class, 'rebate_summary'])->name('trading.rebate_summary');
+        Route::get('/getRebateSummary', [TradingController::class, 'getRebateSummary'])->name('account_info.getRebateSummary');
+    });
 
     /**
      * ==============================
@@ -101,14 +111,6 @@ Route::middleware('auth')->group(function () {
          Route::post('/rebate_allocation', [NetworkController::class, 'updateRebateAllocation'])->middleware('role:ib')->name('updateRebate.update');
      });
 
-     /**
-     * ==============================
-     *            Trading
-     * ==============================
-     */
-//     Route::prefix('trading')->group(function () {
-//         Route::get('/trade_history', [TradingController::class, 'index'])->name('trading.trade_history');
-//     });
 });
 
 Route::get('/components/buttons', function () {
