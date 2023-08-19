@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PaymentAccountRequest;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\PaymentAccount;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,6 +19,22 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
+    public function detail(Request $request): Response
+    {
+        $countries = SettingCountry::all();
+        $avatar = Auth::user()->getFirstMediaUrl('profile_photo');
+        $frontIdentity = Auth::user()->getFirstMediaUrl('front_identity');
+        $backIdentity = Auth::user()->getFirstMediaUrl('back_identity');
+
+        return Inertia::render('Profile/ProfileDetail', [
+            'status' => session('status'),
+            'countries' => $countries,
+            'avatar' => $avatar,
+            'frontIdentity' => $frontIdentity,
+            'backIdentity' => $backIdentity,
+        ]);
+    }
+
     public function edit(Request $request): Response
     {
         $countries = SettingCountry::all();
@@ -25,6 +43,23 @@ class ProfileController extends Controller
         $backIdentity = Auth::user()->getFirstMediaUrl('back_identity');
 
         return Inertia::render('Profile/Edit', [
+            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'status' => session('status'),
+            'countries' => $countries,
+            'avatar' => $avatar,
+            'frontIdentity' => $frontIdentity,
+            'backIdentity' => $backIdentity,
+        ]);
+    }
+
+    public function payment_account(Request $request): Response
+    {
+        $countries = SettingCountry::get('name_en');
+        $avatar = Auth::user()->getFirstMediaUrl('profile_photo');
+        $frontIdentity = Auth::user()->getFirstMediaUrl('front_identity');
+        $backIdentity = Auth::user()->getFirstMediaUrl('back_identity');
+
+        return Inertia::render('Profile/PaymentAccount', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
             'countries' => $countries,
@@ -62,7 +97,41 @@ class ProfileController extends Controller
             $request->user()->addMedia($request->back_identity)->toMediaCollection('back_identity');
         }
 
-        return Redirect::route('profile.edit')->with('toast', 'Successfully Updated Profile');
+        return Redirect::route('profile.detail')->with('toast', 'Successfully Updated Profile');
+    }
+
+    public function create_payment_account(PaymentAccountRequest $request)
+    {
+        $payment_platform = $request->payment_platform;
+
+        if ($payment_platform == 'bank') {
+            $paymentAccount = PaymentAccount::create([
+                'user_id' => Auth::id(),
+                'payment_platform' => $payment_platform,
+                'payment_platform_name' => $request->payment_platform_name,
+                'bank_branch_address' => $request->bank_branch_address,
+                'payment_account_name' => $request->payment_account_name,
+                'account_no' => $request->account_no,
+                'bank_swift_code' => $request->bank_swift_code,
+                'bank_code_type' => $request->bank_code_type,
+                'bank_code' => $request->bank_code,
+                'country' => $request->country,
+                'currency' => $request->currency,
+            ]);
+
+            if ($request->hasFile('proof_of_bank')){
+                $paymentAccount->addMedia($request->proof_of_bank)->toMediaCollection('proof_of_bank_account');
+            }
+        } else {
+            PaymentAccount::create([
+                'user_id' => Auth::id(),
+                'payment_platform' => $payment_platform,
+                'payment_platform_name' => $request->payment_platform_name,
+                'account_no' => $request->account_no,
+            ]);
+        }
+
+        return to_route('profile.detail')->with('toast', 'Your payment account has been created successfully!');
     }
 
     /**

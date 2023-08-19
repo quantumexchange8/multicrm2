@@ -49,9 +49,19 @@ Route::post('ompay/updateStatus', [PaymentController::class, 'updateResult']);
 Route::middleware('auth')->group(function () {
     Route::get('/monthly-deposit', [GeneralController::class, 'monthly_deposit'])->name('monthly_deposit');
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    /**
+     * ==============================
+     *           Profile
+     * ==============================
+     */
+    Route::prefix('profile')->group(function () {
+        Route::get('/detail', [ProfileController::class, 'detail'])->name('profile.detail');
+        Route::get('/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::get('/payment_account', [ProfileController::class, 'payment_account'])->name('profile.payment_account');
+        Route::post('/create_payment_account', [ProfileController::class, 'create_payment_account'])->name('profile.create_payment_account');
+        Route::post('/profile_update', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile_delete', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
 
     /**
      * ==============================

@@ -24,6 +24,6 @@ class PasswordController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return back();
+        return back()->with('toast', 'Your portal password has been reset successfully!');
     }
 }

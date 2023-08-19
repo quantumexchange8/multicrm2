@@ -18,7 +18,10 @@ const form = useForm({
 const updatePassword = () => {
     form.put(route('password.update'), {
         preserveScroll: true,
-        onSuccess: () => form.reset(),
+        onSuccess: () => {
+            closeModal()
+            form.reset()
+        },
         onError: () => {
             if (form.errors.password) {
                 form.reset('password', 'password_confirmation')
@@ -31,88 +34,87 @@ const updatePassword = () => {
         },
     })
 }
+
+const emit = defineEmits(['update:resetPasswordModal']);
+const closeModal = () => {
+    emit('update:resetPasswordModal', false);
+}
 </script>
 
 <template>
-    <section>
-        <header>
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                Update Password
-            </h2>
+    <form class="mt-6 space-y-6">
+        <div>
+            <Label for="current_password" value="Current Password" />
 
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Ensure your account is using a long, random password to stay
-                secure.
-            </p>
-        </header>
+            <Input
+                id="current_password"
+                ref="currentPasswordInput"
+                v-model="form.current_password"
+                type="password"
+                class="mt-1 block w-full"
+                autocomplete="current-password"
+            />
 
-        <form @submit.prevent="updatePassword" class="mt-6 space-y-6">
-            <div>
-                <Label for="current_password" value="Current Password" />
+            <InputError
+                :message="form.errors.current_password"
+                class="mt-2"
+            />
+        </div>
 
-                <Input
-                    id="current_password"
-                    ref="currentPasswordInput"
-                    v-model="form.current_password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    autocomplete="current-password"
-                />
+        <div>
+            <Label for="password" value="New Password" />
 
-                <InputError
-                    :message="form.errors.current_password"
-                    class="mt-2"
-                />
+            <Input
+                id="password"
+                ref="passwordInput"
+                v-model="form.password"
+                type="password"
+                class="mt-1 block w-full"
+                autocomplete="new-password"
+            />
+
+            <InputError :message="form.errors.password" class="mt-2" />
+        </div>
+
+        <ul class="space-y-1 text-xs text-gray-500 list-disc list-inside dark:text-gray-400">
+            <li>
+                Password must be at least 6 characters.
+            </li>
+            <li>
+                Contains at least one capital letter.
+            </li>
+            <li>
+                Contains at least one number.
+            </li>
+            <li>
+                Contains at least one letter.
+            </li>
+        </ul>
+
+        <div>
+            <Label for="password_confirmation" value="Confirm Password" />
+
+            <Input
+                id="password_confirmation"
+                v-model="form.password_confirmation"
+                type="password"
+                class="mt-1 block w-full"
+                autocomplete="new-password"
+            />
+
+            <InputError
+                :message="form.errors.password_confirmation"
+                class="mt-2"
+            />
+        </div>
+
+        <div class="flex items-center justify-end gap-2">
+            <div class="grid grid-cols-2 gap-2 float-right">
+                <Button variant="danger" class="px-6 justify-center" @click.prevent="closeModal">
+                    Cancel
+                </Button>
+                <Button class="justify-center" @click.prevent="updatePassword" :disabled="form.processing">Save</Button>
             </div>
-
-            <div>
-                <Label for="password" value="New Password" />
-
-                <Input
-                    id="password"
-                    ref="passwordInput"
-                    v-model="form.password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    autocomplete="new-password"
-                />
-
-                <InputError :message="form.errors.password" class="mt-2" />
-            </div>
-
-            <div>
-                <Label for="password_confirmation" value="Confirm Password" />
-
-                <Input
-                    id="password_confirmation"
-                    v-model="form.password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    autocomplete="new-password"
-                />
-
-                <InputError
-                    :message="form.errors.password_confirmation"
-                    class="mt-2"
-                />
-            </div>
-
-            <div class="flex items-center gap-4">
-                <Button :disabled="form.processing">Save</Button>
-
-                <Transition
-                    enter-from-class="opacity-0"
-                    leave-to-class="opacity-0"
-                    class="transition ease-in-out"
-                >
-                    <p
-                        v-if="form.recentlySuccessful"
-                        class="text-sm text-gray-600 dark:text-gray-400"
-                    >
-                        Saved.
-                    </p>
-                </Transition>
-            </div>
-        </form>
-    </section>
+        </div>
+    </form>
 </template>

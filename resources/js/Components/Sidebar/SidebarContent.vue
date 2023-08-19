@@ -15,10 +15,11 @@ import {
     faClipboardUser,
     faMoneyBillTransfer,
     faSitemap,
-    faHandshakeSimple
+    faHandshakeSimple,
+    faAddressCard
 } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-library.add(faGaugeHigh, faClipboardUser, faMoneyBillTransfer, faSitemap, faHandshakeSimple)
+library.add(faGaugeHigh, faClipboardUser, faMoneyBillTransfer, faSitemap, faHandshakeSimple, faAddressCard)
 
 const { hasRole } = usePermission();
 </script>
@@ -116,6 +117,19 @@ const { hasRole } = usePermission();
             />
         </SidebarCollapsible>
 
+        <SidebarLink
+            title="User Profile"
+            :href="route('profile.detail')"
+            :active="route().current('profile.detail')"
+        >
+            <template #icon>
+                <font-awesome-icon
+                    icon="fa-solid fa-address-card"
+                    class="flex-shrink-0 w-5 h-5"
+                    aria-hidden="true"
+                />
+            </template>
+        </SidebarLink>
 <!--        <SidebarCollapsible-->
 <!--            title="Components"-->
 <!--            :active="route().current('components.*')"-->
