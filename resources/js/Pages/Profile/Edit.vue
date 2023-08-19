@@ -259,12 +259,6 @@ const closeModal = () => {
                 </form>
             </div>
 
-            <div
-                class="p-4 sm:p-8 bg-white dark:bg-dark-eval-1 shadow sm:rounded-lg"
-            >
-                <UpdatePasswordForm class="max-w-xl" />
-            </div>
-
 <!--            <div-->
 <!--                class="p-4 sm:p-8 bg-white dark:bg-dark-eval-1 shadow sm:rounded-lg"-->
 <!--            >-->
