@@ -58,9 +58,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/detail', [ProfileController::class, 'detail'])->name('profile.detail');
         Route::get('/edit', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::get('/payment_account', [ProfileController::class, 'payment_account'])->name('profile.payment_account');
+        Route::get('/getPaymentAccount', [ProfileController::class, 'getPaymentAccount'])->name('profile.getPaymentAccount');
         Route::post('/create_payment_account', [ProfileController::class, 'create_payment_account'])->name('profile.create_payment_account');
         Route::post('/profile_update', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile_delete', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::delete('/payment_delete', [ProfileController::class, 'payment_delete'])->name('profile.payment_delete');
     });
 
     /**

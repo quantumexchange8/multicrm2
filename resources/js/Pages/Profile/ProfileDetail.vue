@@ -7,6 +7,8 @@ import {Link, usePage} from "@inertiajs/vue3";
 import {ref} from "vue";
 import Modal from "@/Components/Modal.vue";
 import UpdatePasswordForm from "@/Pages/Profile/Partials/UpdatePasswordForm.vue";
+import BankAccountList from "@/Pages/Profile/Partials/BankAccountList.vue";
+import CryptoAccountList from "@/Pages/Profile/Partials/CryptoAccountList.vue";
 
 defineProps({
     status: String,
@@ -36,6 +38,7 @@ const closeModal = () => {
     backIdentityModal.value = false
     resetPasswordModal.value = false
 }
+
 </script>
 
 <template>
@@ -235,6 +238,17 @@ const closeModal = () => {
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="mt-8 space-y-6">
+
+            <h2
+                class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mb-4"
+            >
+                Payment Account
+            </h2>
+            <BankAccountList />
+            <CryptoAccountList />
         </div>
 
         <Modal :show="resetPasswordModal" @close="closeModal" max-width="2xl">

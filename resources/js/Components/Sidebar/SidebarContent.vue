@@ -120,7 +120,7 @@ const { hasRole } = usePermission();
         <SidebarLink
             title="User Profile"
             :href="route('profile.detail')"
-            :active="route().current('profile.detail')"
+            :active="route().current('profile.*')"
         >
             <template #icon>
                 <font-awesome-icon

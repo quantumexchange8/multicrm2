@@ -127,6 +127,7 @@ class ProfileController extends Controller
                 'user_id' => Auth::id(),
                 'payment_platform' => $payment_platform,
                 'payment_platform_name' => $request->payment_platform_name,
+                'payment_account_name' => $request->payment_account_name,
                 'account_no' => $request->account_no,
             ]);
         }
@@ -153,5 +154,36 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function getPaymentAccount()
+    {
+        $user = Auth::user();
+
+        $bankAccounts = PaymentAccount::query()
+            ->where('user_id', $user->id)
+            ->where('payment_platform', '=', 'bank')
+            ->latest()
+            ->paginate(5);
+
+        $cryptoAccounts = PaymentAccount::query()
+            ->where('user_id', $user->id)
+            ->where('payment_platform', '=', 'crypto')
+            ->latest()
+            ->paginate(5);
+
+        return response()->json([
+            'bankAccounts' => $bankAccounts,
+            'cryptoAccounts' => $cryptoAccounts
+        ]);
+    }
+
+    public function payment_delete(Request $request): RedirectResponse
+    {
+        $paymentAccount = PaymentAccount::find($request->id);
+
+        $paymentAccount->delete();
+
+        return redirect()->back()->with('toast', 'Your payment account has been deleted successfully!');
     }
 }
