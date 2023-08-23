@@ -32,8 +32,8 @@ class PaymentAccountRequest extends FormRequest
         if ($paymentPlatform == 'bank') {
             $rules['bank_branch_address'] = 'required';
             $rules['bank_swift_code'] = 'required';
-            $rules['bank_code_type'] = 'required';
-            $rules['bank_code'] = 'required';
+            $rules['bank_code_type'] = 'nullable';
+            $rules['bank_code'] = 'nullable';
             $rules['country'] = 'required';
             $rules['currency'] = 'required';
             $rules['proof_of_bank'] = 'required|file';

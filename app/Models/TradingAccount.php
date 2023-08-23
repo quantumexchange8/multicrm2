@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class TradingAccount extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, LogsActivity;
 
     protected $guarded = [];
 
@@ -34,6 +36,21 @@ class TradingAccount extends Model
         'margin_maintenance' => 'decimal:2',
         'created_at' => 'datetime:Y-m-d',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        $trading_account = $this->fresh();
+
+        return LogOptions::defaults()
+            ->useLogName('trading_account')
+            ->logOnly(['user_id', 'meta_login', 'currency_digits', 'balance', 'credit', 'margin_leverage', 'equity', 'account_type'])
+            ->setDescriptionForEvent(function (string $eventName) use ($trading_account) {
+                $actorName = Auth::user() ? Auth::user()->first_name : 'User Meta Acc No - ' . $trading_account->meta_login;
+                return "{$actorName} has {$eventName} trading account of {$trading_account->meta_login}.";
+            })
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
 
     public function ofUser()
     {

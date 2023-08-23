@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Payment;
+use App\Models\PaymentAccount;
 use App\Models\TradingAccount;
 use App\Models\TradingUser;
 use Illuminate\Support\Facades\App;
@@ -27,5 +28,17 @@ class RightbarService
         }
 
         return $paymentAccounts;
+    }
+
+    public function getPaymentAccounts()
+    {
+        $user = Auth::user();
+        $bankAccounts = PaymentAccount::where('payment_platform', 'bank')->where('user_id', $user->id)->get();
+        $cryptoAccounts = PaymentAccount::where('payment_platform', 'crypto')->where('user_id', $user->id)->get();
+
+        return response()->json([
+            'bankAccounts' => $bankAccounts,
+            'cryptoAccounts' => $cryptoAccounts,
+        ]);
     }
 }

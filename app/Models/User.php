@@ -11,13 +11,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements JWTSubject, HasMedia
 {
-    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia, HasRoles, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia, HasRoles, SoftDeletes, LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -173,6 +175,21 @@ class User extends Authenticatable implements JWTSubject, HasMedia
             ->pluck('id')->toArray();
 
         return $users;
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        $user = $this->fresh();
+
+        return LogOptions::defaults()
+            ->useLogName('user')
+            ->logOnly(['first_name', 'email', 'password', 'phone', 'chinese_name', 'status', 'role', 'dob', 'country', 'referral', 'last_login_ip', 'cash_wallet', 'kyc_approval', 'kyc_approval_description', 'cash_wallet_id', 'referral_code', 'ib_id', 'upline_id', 'hierarchyList', 'ct_user_id'])
+            ->setDescriptionForEvent(function (string $eventName) use ($user) {
+                $actorName = Auth::user() ? Auth::user()->first_name : 'New Registered User - ' . $user->first_name;
+                return "{$actorName} has {$eventName} {$user->first_name}.";
+            })
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
     }
 
     public function tradingUsers()

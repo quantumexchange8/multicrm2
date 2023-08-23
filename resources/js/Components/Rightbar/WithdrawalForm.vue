@@ -5,17 +5,19 @@ import InputError from "@/Components/InputError.vue";
 import Label from "@/Components/Label.vue";
 import Modal from "@/Components/Modal.vue";
 import Input from "@/Components/Input.vue";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watchEffect} from "vue";
 import { useForm } from 'laravel-precognition-vue-inertia';
 import QrcodeVue from 'qrcode.vue';
 import {DuplicateIcon} from "@heroicons/vue/outline";
-import {usePage} from "@inertiajs/vue3";
+import {Link, usePage} from "@inertiajs/vue3";
 
 const submitWithdrawal = ref(false)
 const cryptoWallets = ref([]);
 const paymentAccounts = ref([]);
 const isLoading = ref(false);
 const error = ref(null);
+const page = usePage();
+const getAccountWallets = page.props.getAccountWallets;
 
 const channels = [
     { id: 'channel', src: '/assets/finance/bank.png', value: 'bank', name: 'Bank Account' },
@@ -28,6 +30,18 @@ const form = useForm('post', route('payment.requestWithdrawal'), {
     account_type: '',
     amount: '',
     channel: '',
+});
+
+watchEffect(() => {
+    const selectedCryptoAccount = getAccountWallets.original.cryptoAccounts.find(account => account.account_no === form.account_no);
+    if (selectedCryptoAccount) {
+        form.account_type = selectedCryptoAccount.payment_platform_name;
+    }
+
+    const selectedBankAccount = getAccountWallets.original.bankAccounts.find(account => account.account_no === form.account_no);
+    if (selectedBankAccount) {
+        form.account_type = selectedBankAccount.payment_platform_name;
+    }
 });
 
 const openWithdrawalModal = () => {
@@ -59,7 +73,7 @@ const closeModal = () => {
 
         <form class="p-6">
             <div v-if="!form.channel">
-                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Withdrawal Method</h2>
+                <h2 class="text-lg mb-2 font-medium text-gray-900 dark:text-gray-100">Withdrawal Method</h2>
                 <hr>
                 <p class="my-4 text-sm text-gray-600 dark:text-gray-400">
                     <span class="text-red-500">*</span> Select a withdrawal method
@@ -97,22 +111,32 @@ const closeModal = () => {
                     <p class="text-base dark:text-gray-400">Cash Wallet Balance</p>
                     <p class="text-4xl font-bold dark:text-white">$ {{ $page.props.auth.user.cash_wallet }}</p>
                 </div>
-                <div class="grid grid-cols-1 gap-6">
+                <div class="grid grid-cols-1 gap-6" v-if="getAccountWallets.original.bankAccounts.length > 0">
                     <div class="space-y-2">
-                        <Input id="account_type" type="text" class="block w-full px-4" placeholder="Bank" v-model="form.account_type" @change="form.validate('account_type')" autocomplete="off" />
-                        <InputError :message="form.errors.account_type"/>
+                        <Label for="account_no" value="Withdraw to Cryptocurrency Account " />
 
-                    </div>
-                    <div class="space-y-2">
-                        <Input id="account_no" type="text" class="block w-full px-4" placeholder="Bank Account" v-model="form.account_no" @change="form.validate('account_no')" autocomplete="off" />
+                        <InputSelect v-model="form.account_no" class="block w-full text-sm" placeholder="Select bank account">
+                            <option v-for="bankAccount in getAccountWallets.original.bankAccounts" :value="bankAccount.account_no" :key="bankAccount.id">{{ bankAccount.payment_platform_name }} - {{ bankAccount.account_no }}</option>
+                        </InputSelect>
+
                         <InputError :message="form.errors.account_no"/>
 
                     </div>
                     <div class="space-y-2">
-                        <Input id="amount" type="number" min="30" class="block w-full px-4" placeholder="Amount" v-model="form.amount" @change="form.validate('amount')" autocomplete="off" />
+                        <Input id="amount" type="number" min="30" class="block w-full px-4" placeholder="At least $ 30.00" v-model="form.amount" @change="form.validate('amount')" autocomplete="off" />
                         <InputError :message="form.errors.amount"/>
 
                     </div>
+                </div>
+                <div v-else class="mt-4 text-center">
+                    <p class="text-gray-500 dark:text-gray-400">Don't have an account?
+                        <Link :href="route('profile.detail')" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                            Click to Create
+                            <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                            </svg>
+                        </Link>
+                    </p>
                 </div>
 
             </div>
@@ -125,25 +149,39 @@ const closeModal = () => {
                     <p class="text-base dark:text-gray-400">Cash Wallet Balance</p>
                     <p class="text-4xl font-bold dark:text-white">$ {{ $page.props.auth.user.cash_wallet }}</p>
                 </div>
-                <div class="grid grid-cols-1 gap-6">
+                <div class="grid grid-cols-1 gap-6" v-if="getAccountWallets.original.cryptoAccounts.length > 0">
                     <div class="space-y-2">
-                        <Input id="account_type" type="text" class="block w-full px-4" placeholder="Cryptocurrency" v-model="form.account_type" @change="form.validate('account_type')" autocomplete="off" />
-                        <InputError :message="form.errors.account_type"/>
 
-                    </div>
-                    <div class="space-y-2">
-                        <Input id="account_no" type="text" class="block w-full px-4" placeholder="Cryptocurrency Address" v-model="form.account_no" @change="form.validate('account_no')" autocomplete="off" />
+                        <Label for="account_no" value="Withdraw to Cryptocurrency Account " />
+
+                        <InputSelect v-model="form.account_no" class="block w-full text-sm" placeholder="Select cryptocurrency account">
+                            <option v-for="cryptoAccount in getAccountWallets.original.cryptoAccounts" :value="cryptoAccount.account_no" :key="cryptoAccount.id">{{ cryptoAccount.payment_platform_name }} - {{ cryptoAccount.account_no }}</option>
+                        </InputSelect>
+
                         <InputError :message="form.errors.account_no"/>
 
                     </div>
+
                     <div class="space-y-2">
-                        <Input id="amount" type="number" min="30" class="block w-full px-4" placeholder="Amount" v-model="form.amount" @change="form.validate('amount')" autocomplete="off" />
+                        <Label for="amount" value="Withdrawal Amount" />
+
+                        <Input id="amount" type="number" min="30" class="block w-full px-4" placeholder="At least $ 30.00" v-model="form.amount" @change="form.validate('amount')" autocomplete="off" />
                         <InputError :message="form.errors.amount"/>
 
                     </div>
                 </div>
+                <div v-else class="mt-4 text-center">
+                    <p class="text-gray-500 dark:text-gray-400">Don't have an account?
+                        <Link :href="route('profile.detail')" class="inline-flex items-center font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                            Click to Create
+                            <svg class="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                            </svg>
+                        </Link>
+                    </p>
+                </div>
             </div>
-            <div class="mt-6 flex justify-end">
+            <div class="mt-6 flex justify-end" v-if="form.channel">
                 <Button variant="secondary" @click="closeModal">
                     Cancel
                 </Button>

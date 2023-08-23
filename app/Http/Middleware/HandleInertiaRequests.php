@@ -57,6 +57,7 @@ class HandleInertiaRequests extends Middleware
             'monthlyDeposit' => $user ? $user->getMonthlyDeposit() : null,
             'monthlyWithdrawal' => $user ? $user->getMonthlyWithdrawal() : null,
             'IBAccountTypes' => $IBAccountTypes ?? null,
+            'getAccountWallets' => $user ? $rightBarService->getPaymentAccounts() : null,
         ]);
     }
 

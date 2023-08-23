@@ -35,7 +35,7 @@ const closeModal = () => {
 
 <template>
     <Button
-        class="justify-center px-4 pt-2 mx-1 rounded-full w-8 h-8 focus:outline-none"
+        class="justify-center px-4 pt-2 mx-1 mt-1 rounded-full w-8 h-8 focus:outline-none"
         variant="danger-opacity"
         @click="confirmDeletion"
     >
