@@ -153,6 +153,7 @@ const back = () => {
                 <input
                     type="file"
                     id="proof_of_bank"
+                    accept="image/*,.pdf"
                     @input="form.proof_of_bank = $event.target.files[0]"
                     class="block border border-gray-400 w-full rounded-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1 disabled:dark:bg-dark-eval-0 disabled:dark:text-dark-eval-4"
                 />

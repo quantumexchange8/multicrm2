@@ -28,7 +28,7 @@ class Payment extends Model
             ->useLogName('payment')
             ->logOnly(['from', 'to', 'user_id', 'ticket', 'payment_id', 'category', 'type', 'amount', 'gateway', 'status', 'channel', 'currency', 'description', 'account_no', 'account_type', 'approval_date', 'comment', 'real_amount', 'payment_charges', 'handleBy'])
             ->setDescriptionForEvent(function (string $eventName) use ($payment) {
-                $actorName = Auth::user() ? Auth::user()->first_name : 'New Registered User - ' . $payment->user_id;
+                $actorName = Auth::user() ? Auth::user()->first_name : 'User with ID - ' . $payment->user_id;
                 return "{$actorName} has {$eventName} payment_id of {$payment->payment_id}.";
             })
             ->logOnlyDirty()

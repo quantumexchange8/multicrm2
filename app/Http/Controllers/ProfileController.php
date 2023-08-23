@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PaymentAccountRequest;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\PaymentAccount;
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\SettingCountry;
+use Spatie\Activitylog\Models\Activity;
 
 class ProfileController extends Controller
 {
@@ -82,19 +84,36 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
+        $description = '';
+
         if ($request->hasFile('avatar')) {
             $request->user()->clearMediaCollection('profile_photo');
             $request->user()->addMedia($request->avatar)->toMediaCollection('profile_photo');
+            $description = 'has uploaded a profile photo';
         }
 
         if ($request->hasFile('front_identity')) {
             $request->user()->clearMediaCollection('front_identity');
             $request->user()->addMedia($request->front_identity)->toMediaCollection('front_identity');
+            $description = ($description ? $description . ' and ' : '') . 'has uploaded the front identity document';
         }
 
         if ($request->hasFile('back_identity')) {
             $request->user()->clearMediaCollection('back_identity');
             $request->user()->addMedia($request->back_identity)->toMediaCollection('back_identity');
+            $description = ($description ? $description . ' and ' : '') . 'has uploaded the back identity document';
+        }
+
+        if ($description) {
+            Activity::create([
+                'log_name' => 'user', // Specify the log name here
+                'description' => Auth::user()->first_name . ' ' . $description,
+                'subject_type' => User::class,
+                'subject_id' => Auth::id(),
+                'causer_type' => get_class(auth()->user()),
+                'causer_id' => auth()->id(),
+                'event' => 'updated',
+            ]);
         }
 
         return Redirect::route('profile.detail')->with('toast', 'Successfully Updated Profile');
