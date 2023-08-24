@@ -142,7 +142,7 @@ const back = () => {
 
                 <InputSelect v-model="form.currency" class="block w-full text-sm" placeholder="Select a currency">
                     <option value="VND">VND</option>
-                    <option value="MYR">MYR</option>
+<!--                    <option value="MYR">MYR</option>-->
                 </InputSelect>
 
                 <InputError class="mt-2" :message="form.errors.currency" />
