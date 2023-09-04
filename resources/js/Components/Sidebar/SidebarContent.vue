@@ -16,10 +16,10 @@ import {
     faMoneyBillTransfer,
     faSitemap,
     faHandshakeSimple,
-    faAddressCard
+    faAddressCard, faBookOpen
 } from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-library.add(faGaugeHigh, faClipboardUser, faMoneyBillTransfer, faSitemap, faHandshakeSimple, faAddressCard)
+library.add(faGaugeHigh, faClipboardUser, faMoneyBillTransfer, faSitemap, faHandshakeSimple, faAddressCard, faBookOpen)
 
 const { hasRole } = usePermission();
 </script>
@@ -78,20 +78,6 @@ const { hasRole } = usePermission();
             />
         </SidebarCollapsible>
 
-        <SidebarLink
-            title="Transaction"
-            :href="route('transaction')"
-            :active="route().current('transaction')"
-        >
-            <template #icon>
-                <font-awesome-icon
-                    icon="fa-solid fa-money-bill-transfer"
-                    class="flex-shrink-0 w-5 h-5"
-                    aria-hidden="true"
-                />
-            </template>
-        </SidebarLink>
-
         <SidebarCollapsible
             title="Group Network"
             :active="route().current('group_network.*')"
@@ -116,6 +102,34 @@ const { hasRole } = usePermission();
                 :active="route().current('group_network.rebate_allocation')"
             />
         </SidebarCollapsible>
+
+        <SidebarLink
+            title="Transaction"
+            :href="route('transaction')"
+            :active="route().current('transaction')"
+        >
+            <template #icon>
+                <font-awesome-icon
+                    icon="fa-solid fa-money-bill-transfer"
+                    class="flex-shrink-0 w-5 h-5"
+                    aria-hidden="true"
+                />
+            </template>
+        </SidebarLink>
+
+        <SidebarLink
+            title="Report"
+            :href="route('report.listing')"
+            :active="route().current('report.listing')"
+        >
+            <template #icon>
+                <font-awesome-icon
+                    icon="fa-solid fa-book-open"
+                    class="flex-shrink-0 w-5 h-5"
+                    aria-hidden="true"
+                />
+            </template>
+        </SidebarLink>
 
         <SidebarLink
             title="User Profile"

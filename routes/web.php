@@ -7,6 +7,7 @@ use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\InternalTransferController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\NetworkController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TradingController;
 use App\Models\User;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
@@ -130,6 +131,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/wallet_to_account', [InternalTransferController::class, 'wallet_to_account'])->name('wallet_to_account');
     Route::post('/account_to_wallet', [InternalTransferController::class, 'account_to_wallet'])->name('account_to_wallet');
     Route::post('/account_to_account', [InternalTransferController::class, 'account_to_account'])->name('account_to_account');
+
+    /**
+     * ==============================
+     *         Report
+     * ==============================
+     */
+    Route::prefix('report')->group(function () {
+        Route::get('/listing', [ReportController::class, 'listing'])->name('report.listing');
+        Route::get('/getRevenueReport', [ReportController::class, 'getRevenueReport'])->name('report.getRevenueReport');
+
+    });
 
      /**
      * ==============================
