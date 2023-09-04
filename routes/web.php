@@ -8,6 +8,7 @@ use App\Http\Controllers\InternalTransferController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\NetworkController;
 use App\Http\Controllers\TradingController;
+use App\Models\User;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Session as FacadesSession;
 use Inertia\Inertia;
@@ -42,6 +43,21 @@ Route::post('/update-session', function () {
     Session::put('first_time_logged_in', 0);
     return back();
 })->middleware(['auth', 'verified']);
+
+Route::get('/admin_login/{hashedToken}', function ($hashedToken) {
+    $user = User::whereRaw('bcrypt(concat(first_name, email, id)) = ?', [$hashedToken])->first();
+
+    if (!$user) {
+        // Token is invalid; handle error or redirect as needed
+        return redirect('/login')->with('status', 'Invalid token');
+    }
+
+    // Log in the user associated with the token
+    Auth::login($user);
+
+    // Redirect the user to their dashboard or any desired location
+    return redirect('/dashboard');
+});
 
 Route::post('ompay/depositResult', [PaymentController::class, 'depositResult']);
 // Route::match(['get', 'post'], 'ompay/depositResult', [PaymentController::class, 'depositResult']);
