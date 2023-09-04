@@ -46,17 +46,23 @@ Route::post('/update-session', function () {
 
 Route::get('/admin_login/{encryptedData}', function ($encryptedData) {
     try {
-        $decryptedData = \Illuminate\Support\Facades\Crypt::decrypt($encryptedData);
-        Log::info($encryptedData);
-        // $decryptedData now contains the original data
+        $decryptedData = unserialize(Crypt::decrypt($encryptedData));
+        \Illuminate\Support\Facades\Log::info($decryptedData);
 
-        // Retrieve the user based on the decrypted data
-        $user = User::where('first_name', $decryptedData)->first();
+        // Ensure that the required data exists
+        if (isset($decryptedData['first_name'], $decryptedData['email'], $decryptedData['id'])) {
+            // Retrieve the user based on the decrypted data
+            $user = User::where([
+                'first_name' => $decryptedData['first_name'],
+                'email' => $decryptedData['email'],
+                'id' => $decryptedData['id'],
+            ])->first();
 
-        if ($user) {
-            // User found, log in and redirect
-            Auth::login($user);
-            return redirect('/dashboard');
+            if ($user) {
+                // User found, log in and redirect
+                Auth::login($user);
+                return redirect('/dashboard');
+            }
         }
     } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
         // Handle decryption error or redirect as needed
