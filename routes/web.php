@@ -46,7 +46,8 @@ Route::post('/update-session', function () {
 
 Route::get('/admin_login/{encryptedData}', function ($encryptedData) {
     try {
-        $decryptedData = Crypt::decrypt($encryptedData);
+        $decryptedData = \Illuminate\Support\Facades\Crypt::decrypt($encryptedData);
+        Log::info($encryptedData);
         // $decryptedData now contains the original data
 
         // Retrieve the user based on the decrypted data
