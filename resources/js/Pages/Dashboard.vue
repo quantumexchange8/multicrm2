@@ -60,7 +60,7 @@ onMounted(() => {
 const getMediaUrlByCollection = (announcement, collectionName) => {
     const media = announcement.media;
     const foundMedia = media.find((m) => m.collection_name === collectionName);
-    return foundMedia.original_url;
+    return foundMedia ? foundMedia.original_url : '';
 };
 
 </script>
@@ -87,7 +87,7 @@ const getMediaUrlByCollection = (announcement, collectionName) => {
                     <h3 class="mb-2 text-xl font-medium text-gray-900 dark:text-white">{{ announcements.title }}</h3>
                     <hr>
                     <div v-html="announcements.content"></div>
-                    <div class="mt-4">
+                    <div class="mt-4" v-if="announcements.media">
                         <img class="rounded-lg w-full" :src="getMediaUrlByCollection(announcements, 'announcement_image')" alt="" />
                     </div>
                 </div>
