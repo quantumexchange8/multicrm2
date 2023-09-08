@@ -178,7 +178,7 @@ const closeModal = () => {
                             aria-hidden="true"
                             :class="iconSizeClasses"
                         />
-                        <span v-show="$page.props.auth.user.unreadNotifications.length !== 0" class="top-2 left-5 absolute w-3 h-3 bg-[#F19828] border-2 border-white dark:border-dark-eval-2 rounded-full"></span>
+                        <span v-show="$page.props.auth.user.unreadNotifications.length !== 0" class="top-2 left-5 absolute w-3 h-3 bg-[#F19828] border-2 border-gray-500 dark:border-dark-eval-2 rounded-full"></span>
 
                     </Button>
                 </template>
@@ -193,7 +193,7 @@ const closeModal = () => {
                             <MailIcon
                                 v-else
                                 aria-hidden="true"
-                                class="w-10 h-10 dark:text-[#FF9E23]"
+                                class="w-10 h-10 text-[#FF9E23]"
                             />
                             <div class="flex flex-col">
                                 <span class="my-auto dark:text-white">{{ notification.data['title'] }}</span>
