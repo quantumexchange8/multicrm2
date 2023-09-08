@@ -148,6 +148,7 @@ class ProfileController extends Controller
                 'payment_platform_name' => $request->payment_platform_name,
                 'payment_account_name' => $request->payment_account_name,
                 'account_no' => $request->account_no,
+                'currency' => 'USD'
             ]);
         }
 

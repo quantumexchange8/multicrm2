@@ -7,6 +7,7 @@ use App\Http\Requests\Payment\WithdrawalRequest;
 use App\Models\GatewayExchangeRate;
 use App\Models\IbAccountType;
 use App\Models\Payment;
+use App\Models\PaymentAccount;
 use App\Models\SettingCryptoWallet;
 use App\Models\TradingAccount;
 use App\Models\TradingUser;
@@ -226,6 +227,11 @@ class PaymentController extends Controller
         $user->save();
         $payment_id = RunningNumberService::getID('transaction');
 
+        $currency = PaymentAccount::query()
+            ->where('account_no', $request->account_no)
+            ->select('currency')
+            ->first();
+
         Payment::create([
             'user_id' => $user->id,
             'payment_id' => $payment_id,
@@ -235,6 +241,7 @@ class PaymentController extends Controller
             'amount' => $amount,
             'account_no' => $request->account_no,
             'account_type' => $request->account_type,
+            'currency' => $currency->currency,
         ]);
 
         return back()->with('toast', 'Successfully Submitted Withdrawal Request');
