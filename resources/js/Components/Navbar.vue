@@ -233,6 +233,12 @@ const closeModal = () => {
                                 :src="$page.props.auth.user.picture ? $page.props.auth.user.picture : 'https://img.freepik.com/free-icon/user_318-159711.jpg'"
                                 alt="ProfilePic"
                             >
+                            <span class="bottom-1 left-9 absolute" v-if="$page.props.auth.user.kyc_approval === 'approve'">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 4.62782C6.99207 3.93274 9.00567 3.36562 12.0043 2C14.7389 3.28721 16.7869 3.75207 21 4.62782V10.0169C21 15.6811 17.3751 20.7097 12.0013 22.5002C6.62605 20.7097 3 15.68 3 10.0143V4.62782Z" fill="#05C46B"/><path d="M8.5 12L11.0923 14.5923C11.3075 14.8075 11.6633 14.7822 11.8459 14.5388L16 9" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+                            </span>
+                            <span class="bottom-1 left-9 absolute" v-else>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 4.62782C6.99207 3.93274 9.00567 3.36562 12.0043 2C14.7389 3.28721 16.7869 3.75207 21 4.62782V10.0169C21 15.6811 17.3751 20.7097 12.0013 22.5002C6.62605 20.7097 3 15.68 3 10.0143V4.62782Z" fill="#FF3F34"/><path d="M13.0002 17C13.0002 17.5523 12.5524 18 12.0001 18C11.4478 18 11 17.5523 11 17C11 16.4477 11.4478 16 12.0001 16C12.5524 16 13.0002 16.4477 13.0002 17Z" fill="white"/><path d="M12 13V7" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+                            </span>
                             <div class="flex flex-col text-left">
                                 <span>{{ $page.props.auth.user.first_name }}</span>
                                 <span>{{ $page.props.auth.user.email }}</span>
