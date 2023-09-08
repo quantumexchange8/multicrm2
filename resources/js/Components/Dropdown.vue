@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, onUnmounted, ref, computed } from 'vue'
+import PerfectScrollbar from "@/Components/PerfectScrollbar.vue";
 
 const props = defineProps({
     align: {
@@ -28,6 +29,7 @@ onUnmounted(() => document.removeEventListener('keydown', closeOnEscape))
 const widthClass = computed(() => {
     return {
         48: 'w-48',
+        96: 'w-96',
     }[props.width.toString()]
 })
 
@@ -74,7 +76,14 @@ const alignmentClasses = computed(() => {
                     class="rounded-md ring-1 ring-black ring-opacity-5"
                     :class="contentClasses"
                 >
-                    <slot name="content" />
+                    <PerfectScrollbar
+                        tagname="nav"
+                        aria-label="main"
+                        class="relative flex flex-col flex-1 max-h-64 gap-2 px-3"
+                    >
+                        <slot name="content" />
+
+                    </PerfectScrollbar>
                 </div>
             </div>
         </transition>

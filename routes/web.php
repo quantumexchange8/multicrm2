@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountInfoController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepositController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\InternalTransferController;
@@ -11,10 +12,8 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TradingController;
 use App\Models\User;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
-use Illuminate\Support\Facades\Session as FacadesSession;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Application;
 use App\Http\Controllers\ProfileController;
 
 /*
@@ -31,14 +30,6 @@ use App\Http\Controllers\ProfileController;
 Route::get('/', function () {
     return redirect()->route('login');
 });
-
-Route::get('/dashboard', function () {
-    $firstTimeLogin = FacadesSession::get('first_time_logged_in');
-
-    return Inertia::render('Dashboard', [
-        'firstTimeLogin' => $firstTimeLogin
-    ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::post('/update-session', function () {
     Session::put('first_time_logged_in', 0);
@@ -66,7 +57,9 @@ Route::post('ompay/depositResult', [PaymentController::class, 'depositResult']);
 // Route::match(['get', 'post'], 'ompay/depositResult', [PaymentController::class, 'depositResult']);
 Route::post('ompay/updateStatus', [PaymentController::class, 'updateResult']);
 Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/monthly-deposit', [GeneralController::class, 'monthly_deposit'])->name('monthly_deposit');
+    Route::post('/markAsRead', [DashboardController::class, 'markAsRead']);
 
     /**
      * ==============================

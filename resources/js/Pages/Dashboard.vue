@@ -23,16 +23,11 @@ defineComponent({
     },
 });
 
-const highlightCarousels = [
-    { src: '/assets/dashboard/highlight-1.png' },
-    { src: '/assets/dashboard/highlight-2.png' },
-    { src: '/assets/dashboard/highlight-3.png' },
-    { src: '/assets/dashboard/highlight-4.png' },
-];
-
 const announcementModal = ref(false);
 const props = defineProps({
-    firstTimeLogin: Number
+    firstTimeLogin: Number,
+    announcements: Object,
+    highlights: Object,
 });
 const firstTimeLogin = ref(props.firstTimeLogin);
 
@@ -42,8 +37,8 @@ const closeModal = () => {
     setValueInSession(0); // Update the session value to 0
 };
 
-const setValueInSession = (value) => {
-    axios.post('/update-session', { firstTimeLogin: value })
+const setValueInSession = async (value) => {
+    await axios.post('/update-session', {firstTimeLogin: value})
         .then(response => {
             // Session value has been updated successfully
             console.log('Session value updated:', value);
@@ -62,6 +57,12 @@ onMounted(() => {
     }
 });
 
+const getMediaUrlByCollection = (announcement, collectionName) => {
+    const media = announcement.media;
+    const foundMedia = media.find((m) => m.collection_name === collectionName);
+    return foundMedia.original_url;
+};
+
 </script>
 
 <template>
@@ -69,12 +70,12 @@ onMounted(() => {
         <template #header>
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <h2 class="text-xl font-semibold leading-tight">
-                    Dashboard
+                    Highlights
                 </h2>
             </div>
         </template>
 
-        <Modal :show="announcementModal" @close="closeModal">
+        <Modal :show="announcementModal" v-if="announcements" @close="closeModal" max-width="2xl">
             <div class="relative bg-white rounded-lg shadow dark:bg-dark-eval-1">
                 <button type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" @click="closeModal">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -83,26 +84,20 @@ onMounted(() => {
                     <span class="sr-only">Close modal</span>
                 </button>
                 <div class="px-6 py-6 lg:px-8 space-y-4 text-gray-500 dark:text-dark-eval-4">
-                    <h3 class="mb-2 text-xl font-medium text-gray-900 dark:text-white">Announcement</h3>
+                    <h3 class="mb-2 text-xl font-medium text-gray-900 dark:text-white">{{ announcements.title }}</h3>
                     <hr>
-                    <p class="text-lg font-semibold mt-2">Dear valued QCG user,</p>
-                    <p>We are excited to announce that we have an upcoming update for our QCG main portal, including IB ranking system, rebate scheme, promotion & more.</p>
-                    <p>We wanted to keep you informed and ensure that you stay connected with all the latest developments.</p>
-                    <p>We appreciate your continued support, and we are committed to enhancing your experience with our platform. The upcoming update aims to introduce exciting new features and improvements that will elevate your user experience to new heights.</p>
-                    <p>To stay up-to-date with the latest information and be among the first to explore the updated portal, we encourage you to stay tuned.</p>
-                    <p>We will be sharing more details about the update, including its specific benefits and enhancements, in the coming days.</p>
-                    <p>Thank you for being a valued user. We look forward to delivering an even better experience with our updated main portal. If you have any questions or need assistance, please don't hesitate to reach out to our dedicated support team.</p>
-                    <p class="font-semibold">Best regards,</p>
-                    <p>Quantum Capital Global</p>
-
+                    <div v-html="announcements.content"></div>
+                    <div class="mt-4">
+                        <img class="rounded-lg w-full" :src="getMediaUrlByCollection(announcements, 'announcement_image')" alt="" />
+                    </div>
                 </div>
             </div>
         </Modal>
 
         <div class="mb-6">
             <Carousel :autoplay="2000" :items-to-show="2.5" :wrap-around="true" class="my-carousel">
-                <Slide v-for="(highlight, index) in highlightCarousels" :key="index" class="carousel-slide">
-                    <img class="object-cover w-full" :src="highlight.src" alt="">
+                <Slide v-for="(highlight, index) in highlights" :key="index" class="carousel-slide">
+                    <img class="object-cover rounded-lg w-full h-56" :src="highlight.original_url" alt="">
                 </Slide>
 
                 <template #addons>
@@ -115,7 +110,7 @@ onMounted(() => {
         </div>
 
         <div class="p-6 overflow-hidden bg-white rounded-md shadow-md dark:bg-dark-eval-1">
-            Welcome back! {{ user.name }}
+            Welcome back! {{ user.first_name }}
         </div>
 
     </AuthenticatedLayout>

@@ -47,6 +47,9 @@ class HandleInertiaRequests extends Middleware
             'auth.user.picture' => fn() => $request->user() ? $request->user()->getFirstMediaUrl('profile_photo') : null,
             'auth.user.roles' => fn() => $request->user() ? $request->user()->getRoleNames() : null,
             'auth.user.permissions' => fn() => $request->user() ? $request->user()->getPermissionNames() : null,
+            'auth.user.notifications' => fn() => $request->user() ? $request->user()->notifications : null,
+            'auth.user.readNotifications' => fn() => $request->user() ? $request->user()->readNotifications : null,
+            'auth.user.unreadNotifications' => fn() => $request->user() ? $request->user()->unreadNotifications : null,
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [
                     'location' => $request->url(),
