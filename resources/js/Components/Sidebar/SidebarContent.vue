@@ -118,6 +118,7 @@ const { hasRole } = usePermission();
         </SidebarLink>
 
         <SidebarLink
+            v-if="hasRole('ib')"
             title="Report"
             :href="route('report.listing')"
             :active="route().current('report.listing')"

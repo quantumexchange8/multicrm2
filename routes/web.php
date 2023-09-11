@@ -132,7 +132,7 @@ Route::middleware('auth')->group(function () {
      *         Report
      * ==============================
      */
-    Route::prefix('report')->group(function () {
+    Route::prefix('report')->middleware('role:ib')->group(function () {
         Route::get('/listing', [ReportController::class, 'listing'])->name('report.listing');
         Route::get('/getRevenueReport', [ReportController::class, 'getRevenueReport'])->name('report.getRevenueReport');
 
