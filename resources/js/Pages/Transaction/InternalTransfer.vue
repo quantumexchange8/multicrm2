@@ -90,8 +90,8 @@ function selectedTransactionHistoryType(index) {
             </div>
 
             <WalletToAccountForm :tradingUsers="tradingUsers" v-if="transferType === 0"/>
-            <AccountToWallet :tradingUsers="tradingUsers" v-if="transferType === 1"/>
-            <AccountToAccount :tradingUsers="tradingUsers" v-if="transferType === 2"/>
+            <AccountToWallet :tradingUsers="tradingUsers" v-else-if="transferType === 1"/>
+            <AccountToAccount :tradingUsers="tradingUsers" v-else-if="transferType === 2"/>
         </div>
 
         <div class="mt-8">
@@ -133,11 +133,11 @@ function selectedTransactionHistoryType(index) {
             </ul>
 
             <TransactionHistoryDTA v-if="transactionHistory === 0"/>
-            <TransactionHistoryWFW v-if="transactionHistory === 1"/>
-            <TransactionHistoryWTA v-if="transactionHistory === 2"/>
-            <TransactionHistoryATW v-if="transactionHistory === 3"/>
-            <TransactionHistoryATA v-if="transactionHistory === 4"/>
-            <TransactionHistoryRTW v-if="transactionHistory === 5"/>
+            <TransactionHistoryWFW v-else-if="transactionHistory === 1"/>
+            <TransactionHistoryWTA v-else-if="transactionHistory === 2"/>
+            <TransactionHistoryATW v-else-if="transactionHistory === 3"/>
+            <TransactionHistoryATA v-else-if="transactionHistory === 4"/>
+            <TransactionHistoryRTW v-else-if="transactionHistory === 5"/>
 
         </div>
 

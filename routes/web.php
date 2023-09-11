@@ -36,21 +36,23 @@ Route::post('/update-session', function () {
     return back();
 })->middleware(['auth', 'verified']);
 
-Route::get('/admin_login/{hashedToken}', function ($hashedToken) {
+Route::get('admin_login/{hashedToken}', function ($hashedToken) {
     $users = User::all(); // Retrieve all users
-    \Illuminate\Support\Facades\Log::info($hashedToken);
-    foreach ($users as $user) {
-        $dataToHash = $user->first_name . $user->email . $user->id;
 
-        if (bcrypt($dataToHash) === $hashedToken) {
+    \Log::debug($hashedToken);
+    foreach ($users as $user) {
+        $dataToHash = md5($user->first_name . $user->email . $user->id);
+
+        if ($dataToHash === $hashedToken) {
             // Hash matches, log in the user and redirect
             Auth::login($user);
-            return redirect('/dashboard');
+            \Log::debug($user);
+            return redirect()->route('dashboard');
         }
     }
 
     // No matching user found, handle error or redirect as needed
-    return redirect('/login')->with('status', 'Invalid token');
+    return redirect()->route('login')->with('status', 'Invalid token');
 });
 
 Route::post('ompay/depositResult', [PaymentController::class, 'depositResult']);

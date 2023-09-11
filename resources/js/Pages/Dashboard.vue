@@ -7,21 +7,7 @@ import { Carousel, Pagination, Slide } from 'vue3-carousel'
 import { TickerTape } from "vue-tradingview-widgets";
 
 import 'vue3-carousel/dist/carousel.css'
-import {usePage} from "@inertiajs/vue3";
 import Modal from "@/Components/Modal.vue";
-
-const page = usePage()
-const user = computed(() => page.props.auth.user)
-
-defineComponent({
-    name: 'Highlight',
-    components: {
-        Carousel,
-        Slide,
-        Pagination,
-        TickerTape
-    },
-});
 
 const announcementModal = ref(false);
 const props = defineProps({
@@ -110,7 +96,7 @@ const getMediaUrlByCollection = (announcement, collectionName) => {
         </div>
 
         <div class="p-6 overflow-hidden bg-white rounded-md shadow-md dark:bg-dark-eval-1">
-            Welcome back! {{ user.first_name }}
+            Welcome back! {{ $page.props.auth.user.first_name }}
         </div>
 
     </AuthenticatedLayout>
