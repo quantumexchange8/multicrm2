@@ -43,6 +43,7 @@ Route::get('admin_login/{hashedToken}', function ($hashedToken) {
     foreach ($users as $user) {
         $dataToHash = md5($user->first_name . $user->email . $user->id);
 
+        \Log::debug($dataToHash);
         if ($dataToHash === $hashedToken) {
             // Hash matches, log in the user and redirect
             Auth::login($user);
