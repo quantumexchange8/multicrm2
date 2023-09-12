@@ -18,7 +18,7 @@ class ProfileUpdateRequest extends FormRequest
         return [
             'first_name' => ['string', 'max:255'],
             'chinese_name' => ['nullable', 'string', 'max:255'],
-            'dob' => ['date'],
+            'dob' => ['required'],
             'country' => ['string', 'max:255'],
             'phone' => ['string', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
             'email' => ['email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],

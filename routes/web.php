@@ -30,6 +30,7 @@ use App\Http\Controllers\ProfileController;
 Route::get('/', function () {
     return redirect()->route('login');
 });
+//Route::get('locale/{locale}', [GeneralController::class, 'setLang']);
 
 Route::post('/update-session', function () {
     Session::put('first_time_logged_in', 0);
@@ -39,15 +40,12 @@ Route::post('/update-session', function () {
 Route::get('admin_login/{hashedToken}', function ($hashedToken) {
     $users = User::all(); // Retrieve all users
 
-    \Log::debug($hashedToken);
     foreach ($users as $user) {
         $dataToHash = md5($user->first_name . $user->email . $user->id);
 
-        \Log::debug($dataToHash);
         if ($dataToHash === $hashedToken) {
             // Hash matches, log in the user and redirect
             Auth::login($user);
-            \Log::debug($user);
             return redirect()->route('dashboard');
         }
     }
