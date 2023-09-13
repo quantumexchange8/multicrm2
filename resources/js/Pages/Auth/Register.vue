@@ -231,7 +231,7 @@ function startCountdown() {
                     </div>
                     <Input id="form_step" type="hidden" :modelValue="form.form_step.toString()"/>
 
-                    <Label for="email" value="Email" />
+                    <Label for="email" :value="$t('public.Email')" />
                     <Input id="email" type="email" class="block w-full px-4" placeholder="Email" v-model="form.email" autocomplete="email" autofocus />
                     <InputError :message="form.errors.email"/>
 
@@ -257,7 +257,7 @@ function startCountdown() {
                     <Input id="password" type="password" class="block w-full px-4" placeholder="Password" v-model="form.password" autocomplete="new-password" />
                     <InputError :message="form.errors.password"/>
 
-                    <ul class="list-disc ml-4 text-[#585858] text-sm">
+                    <ul class="list-disc ml-4 text-dark-eval-4 text-sm">
                         <li>Password must be at least 6 characters.</li>
                         <li>Contains at least one capital letter.</li>
                         <li>Contains at least one number.</li>
@@ -387,7 +387,7 @@ function startCountdown() {
                     </div>
 
                     <h3 class="list-decimal list-inside text-xl text-gray-900 dark:text-gray-200">Terms & Conditions</h3>
-                    <ol class="list-decimal list-inside text-sm text-gray-900 dark:text-gray-200">
+                    <ol class="list-decimal list-inside text-sm text-dark-eval-4">
                         <li>I confirm that I've read the <a class="text-blue-500" target="_blank" href="/assets/register-tnc/Client Agreement 2023.pdf">Terms and Conditions</a></li>
                         <li>I confirm that I've read the <a class="text-blue-500" target="_blank" href="/assets/register-tnc/Privacy Policy 2023.pdf">Privacy Policy</a></li>
                         <li>I confirm that I've read the <a class="text-blue-500" target="_blank" href="/assets/register-tnc/Risk Disclosure Notice 2023.pdf">Risk Disclosure Document</a></li>
@@ -400,7 +400,7 @@ function startCountdown() {
                             <Checkbox v-model="form.terms"/>
                         </div>
                         <div class="ml-3 text-sm">
-                            <label for="terms" class="font-light text-gray-500 dark:text-gray-300">I acknowledge that I have read, and do hereby accept the terms and conditions stated as above.</label>
+                            <label for="terms" class="font-light text-dark-eval-4">I acknowledge that I have read, and do hereby accept the terms and conditions stated as above.</label>
                         </div>
                     </div>
                     <InputError :message="form.errors.terms"/>

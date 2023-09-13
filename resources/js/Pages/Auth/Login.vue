@@ -18,7 +18,6 @@ defineProps({
 const form = useForm({
     email: '',
     password: '',
-    remember: false
 })
 
 const submit = () => {
@@ -52,38 +51,33 @@ function closeDrawer() {
                     <div class="flex justify-center">
                         <img src="/assets/icon/email.png" alt="email_icon"/>
                     </div>
-                    <Input id="email" type="email" class="block w-full placeholder:text-center" placeholder="Email" v-model="form.email" autofocus autocomplete="username" />
+                    <Input id="email" type="email" class="block w-full text-center placeholder:text-center" :placeholder="$t('public.Email')" v-model="form.email" autofocus autocomplete="email" />
                 </div>
 
                 <div class="space-y-2">
                     <div class="flex justify-center">
                         <img src="/assets/icon/password.png" alt="password_icon"/>
                     </div>
-                    <Input id="password" type="password" class="block w-full placeholder:text-center" placeholder="Password" v-model="form.password" required autocomplete="current-password" />
+                    <Input id="password" type="password" class="block w-full placeholder:text-center" :placeholder="$t('public.Password')" v-model="form.password" autocomplete="current-password" />
                 </div>
 
-                <div class="flex items-center justify-between">
-                    <label class="flex items-center">
-                        <Checkbox name="remember" v-model:checked="form.remember" />
-                        <span class="ml-2 text-sm text-gray-600">Remember me</span>
-                    </label>
-
+                <div class="flex items-center justify-end">
                     <Link v-if="canResetPassword" :href="route('password.request')" class="text-sm text-blue-500 hover:underline">
-                        Forgot your password?
+                        {{ $t('public.Forgot Password') }}
                     </Link>
                 </div>
 
                 <div>
                     <Button class="justify-center gap-2 w-full" :disabled="form.processing" v-slot="{iconSizeClasses}">
                         <LoginIcon aria-hidden="true" :class="iconSizeClasses" />
-                        <span>Log in</span>
+                        <span>{{ $t('public.Login') }}</span>
                     </Button>
                 </div>
 
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                    Don't have an account?
+                    {{ $t("public.Don't have an account") }}
                     <Link :href="route('register')" class="text-blue-500 hover:underline">
-                        Register
+                        {{ $t('public.Register') }}
                     </Link>
                 </p>
             </div>

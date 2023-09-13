@@ -25,6 +25,7 @@ createInertiaApp({
             .use(i18nVue, {
                 resolve: async lang => {
                     const langs = import.meta.glob('../../lang/*.json');
+                    if (typeof langs[`../../lang/${lang}.json`] == "undefined") return; //Temporary workaround
                     return await langs[`../../lang/${lang}.json`]();
                 }
             })

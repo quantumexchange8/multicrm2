@@ -30,7 +30,7 @@ use App\Http\Controllers\ProfileController;
 Route::get('/', function () {
     return redirect()->route('login');
 });
-//Route::get('locale/{locale}', [GeneralController::class, 'setLang']);
+Route::get('locale/{locale}', [GeneralController::class, 'setLang']);
 
 Route::post('/update-session', function () {
     Session::put('first_time_logged_in', 0);

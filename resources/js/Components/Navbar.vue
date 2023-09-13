@@ -1,14 +1,12 @@
 <script setup>
 import {computed, onMounted, onUnmounted, ref, watchEffect} from 'vue'
 import {Link, usePage} from '@inertiajs/vue3'
-import { useFullscreen } from '@vueuse/core'
 import {
     SunIcon,
     MoonIcon,
     SearchIcon,
     MenuIcon,
     XIcon,
-    ArrowsExpandIcon,
     BellIcon,
 } from '@heroicons/vue/outline'
 import {
@@ -26,11 +24,10 @@ import Button from '@/Components/Button.vue'
 import ApplicationLogo from '@/Components/ApplicationLogo.vue'
 import Dropdown from '@/Components/Dropdown.vue'
 import DropdownLink from '@/Components/DropdownLink.vue'
-import { ArrowsInnerIcon } from '@/Components/Icons/outline'
+import { LangIconDark, LangIconWhite } from '@/Components/Icons/outline'
 import toast from "@/Composables/toast.js";
 import Modal from "@/Components/Modal.vue";
-
-const { isFullscreen, toggle: toggleFullScreen } = useFullscreen()
+import {loadLanguageAsync} from "laravel-vue-i18n";
 
 onMounted(() => {
     document.addEventListener('scroll', handleScroll)
@@ -79,12 +76,20 @@ const openNotificationModal = async (notification) => {
                 console.error('Error marking notification as read:', error);
             });
     }
-
 }
 
 const closeModal = () => {
     notificationModal.value = false
 }
+
+const changeLanguage = async (langVal) => {
+    try {
+        await loadLanguageAsync(langVal);
+        await axios.get(`/locale/${langVal}`);
+    } catch (error) {
+        console.error('Error changing locale:', error);
+    }
+};
 
 </script>
 
@@ -134,6 +139,7 @@ const closeModal = () => {
                 <MoonIcon
                     v-show="!isDark"
                     aria-hidden="true"
+                    class="text-dark-eval-1"
                     :class="iconSizeClasses"
                 />
                 <SunIcon
@@ -143,28 +149,7 @@ const closeModal = () => {
                 />
             </Button>
 
-            <Button
-                iconOnly
-                variant="secondary"
-                type="button"
-                @click="toggleFullScreen"
-                v-slot="{ iconSizeClasses }"
-                class="hidden md:inline-flex"
-                srText="Toggle dark mode"
-            >
-                <ArrowsExpandIcon
-                    v-show="!isFullscreen"
-                    aria-hidden="true"
-                    :class="iconSizeClasses"
-                />
-                <ArrowsInnerIcon
-                    v-show="isFullscreen"
-                    aria-hidden="true"
-                    :class="iconSizeClasses"
-                />
-            </Button>
-
-            <Dropdown align="right" width="96">
+            <Dropdown align="right">
                 <template #trigger>
                     <Button
                         iconOnly
@@ -174,11 +159,49 @@ const closeModal = () => {
                         class="hidden md:inline-flex"
                         srText="Toggle dark mode"
                     >
+                        <LangIconDark
+                            v-show="isDark"
+                            aria-hidden="true"
+                            :class="iconSizeClasses"
+                        />
+                        <LangIconWhite
+                            v-show="!isDark"
+                            aria-hidden="true"
+                            :class="iconSizeClasses"
+                        />
+                    </Button>
+                </template>
+                <template #content>
+                    <DropdownLink @click="changeLanguage('en')">
+                        <div class="inline-flex items-center gap-2">
+                            <img class="w-5 h-5 rounded-full" src="/assets/flags/gb.png" alt="Rounded Flag">
+                            English
+                        </div>
+                    </DropdownLink>
+                    <DropdownLink @click="changeLanguage('tw')">
+                        <div class="inline-flex items-center gap-2">
+                            <img class="w-5 h-5 rounded-full" src="/assets/flags/tw.png" alt="Rounded Flag">
+                            中文 (繁)
+                        </div>
+                    </DropdownLink>
+                </template>
+            </Dropdown>
+
+            <Dropdown align="right" width="96">
+                <template #trigger>
+                    <Button
+                        iconOnly
+                        variant="secondary"
+                        type="button"
+                        v-slot="{ iconSizeClasses }"
+                        class="text-[#212529] hidden md:inline-flex"
+                        srText="Toggle dark mode"
+                    >
                         <BellIcon
                             aria-hidden="true"
                             :class="iconSizeClasses"
                         />
-                        <span v-show="$page.props.auth.user.unreadNotifications.length !== 0" class="top-2 left-5 absolute w-3 h-3 bg-[#F19828] border-2 border-gray-500 dark:border-dark-eval-2 rounded-full"></span>
+                        <span v-show="$page.props.auth.user.unreadNotifications.length !== 0" class="top-2 left-5 absolute w-3 h-3 bg-[#F19828] border-2 border-[#212529] dark:border-dark-eval-2 rounded-full"></span>
 
                     </Button>
                 </template>
