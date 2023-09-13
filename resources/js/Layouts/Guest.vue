@@ -50,13 +50,13 @@ const changeLanguage = async (langVal) => {
                         <img src="/assets/logo.png" alt="Logo" class="flex-shrink-0" style="width: 300px" />
                     </Link>
                 </div>
-                <Dropdown align="right" width="48">
+                <Dropdown align="right" width="48" content-classes="bg-[#202020]">
                     <template #trigger>
                         <div class="flex justify-end mb-4">
                             <span class="inline-flex rounded-md">
                             <button
                                 type="button"
-                                class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out border border-transparent rounded-md hover:text-gray-700 focus:outline-none focus:ring focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-white dark:focus:ring-offset-dark-eval-1 dark:text-gray-400 dark:hover:text-gray-200"
+                                class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-dark-eval-4 transition duration-150 ease-in-out border border-transparent rounded-md hover:text-gray-400 focus:outline-none focus:ring focus:ring-gray-500 focus:ring-offset-1 focus:ring-offset-white dark:focus:ring-offset-dark-eval-1 dark:text-dark-eval-4 dark:hover:text-gray-200"
                             >
                                 <img src="/assets/lang_icon.png" alt="lang icon" style="width: 20px; margin-right: 10px">
                                 {{ currentLocaleText }}
@@ -77,14 +77,14 @@ const changeLanguage = async (langVal) => {
                         </div>
                     </template>
                     <template #content>
-                        <DropdownLink @click="changeLanguage('en')">
-                            <div class="inline-flex items-center gap-2">
+                        <DropdownLink class="hover:bg-dark-eval-3" @click="changeLanguage('en')">
+                            <div class="inline-flex items-center gap-2 text-white">
                                 <img class="w-5 h-5 rounded-full" src="/assets/flags/gb.png" alt="Rounded Flag">
                                 English
                             </div>
                         </DropdownLink>
-                        <DropdownLink @click="changeLanguage('tw')">
-                            <div class="inline-flex items-center gap-2">
+                        <DropdownLink class="hover:bg-dark-eval-3" @click="changeLanguage('tw')">
+                            <div class="inline-flex items-center gap-2 text-white">
                                 <img class="w-5 h-5 rounded-full" src="/assets/flags/tw.png" alt="Rounded Flag">
                                 中文 (繁)
                             </div>

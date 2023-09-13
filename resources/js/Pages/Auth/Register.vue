@@ -231,19 +231,19 @@ function startCountdown() {
                     </div>
                     <Input id="form_step" type="hidden" :modelValue="form.form_step.toString()"/>
 
-                    <Label for="email" :value="$t('public.Email')" />
-                    <Input id="email" type="email" class="block w-full px-4" placeholder="Email" v-model="form.email" autocomplete="email" autofocus />
+                    <Label for="email" class="text-white" :value="$t('public.Email')" />
+                    <Input id="email" type="email" class="block w-full px-4 bg-dark-eval-2 border-transparent text-gray-300 focus:ring-offset-dark-eval-1" placeholder="Email" v-model="form.email" autocomplete="email" autofocus />
                     <InputError :message="form.errors.email"/>
 
-                    <Label for="phone" value="Mobile Phone" />
+                    <Label for="phone" class="text-white" value="Mobile Phone" />
                     <input
                         ref="phoneInput"
                         type="tel"
                         id="phone"
                         name="phone"
                         :class="[
-                          'py-2 border-gray-400 rounded-full placeholder:text-sm',
-                          'focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white',
+                          'py-2 border-transparent rounded-full placeholder:text-sm',
+                          'focus:border-gray-400 focus:ring text-sm text-gray-300 focus:ring-blue-500',
                           'dark:border-gray-600 bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1',
                           'w-[342px] sm:w-[624px]'
                         ]"
@@ -253,8 +253,8 @@ function startCountdown() {
                     />
                     <InputError :message="form.errors.phone"/>
 
-                    <Label for="password" value="Password" />
-                    <Input id="password" type="password" class="block w-full px-4" placeholder="Password" v-model="form.password" autocomplete="new-password" />
+                    <Label class="text-white" for="password" value="Password" />
+                    <Input id="password" type="password" class="block w-full px-4 bg-dark-eval-2 border-transparent text-gray-300 focus:ring-offset-dark-eval-1" placeholder="Password" v-model="form.password" autocomplete="new-password" />
                     <InputError :message="form.errors.password"/>
 
                     <ul class="list-disc ml-4 text-dark-eval-4 text-sm">
@@ -263,8 +263,8 @@ function startCountdown() {
                         <li>Contains at least one number.</li>
                         <li>Contains at least one letter.</li>
                     </ul>
-                    <Label for="password_confirmation" value="Confirm Password" />
-                    <Input id="password_confirmation" type="password" class="block w-full px-4" placeholder="Confirm Password" v-model="form.password_confirmation" autocomplete="new-password" />
+                    <Label class="text-white" for="password_confirmation" value="Confirm Password" />
+                    <Input id="password_confirmation" type="password" class="block w-full px-4 bg-dark-eval-2 border-transparent text-gray-300 focus:ring-offset-dark-eval-1" placeholder="Confirm Password" v-model="form.password_confirmation" autocomplete="new-password" />
                 </div>
 
                 <!-- Page 2 -->
@@ -275,20 +275,20 @@ function startCountdown() {
                         <RegisterCaption title="Let us know more about you" caption="Please note that the information below cannot be changed later." />
                     </div>
 
-                    <Label for="full_name" value="Full Name" />
-                    <Input id="full_name" type="text" class="block w-full px-4" placeholder="Full Name" v-model="form.first_name" autocomplete="full_name" />
+                    <Label for="full_name" class="text-white" value="Full Name" />
+                    <Input id="full_name" type="text" class="block w-full px-4 bg-dark-eval-2 border-transparent text-gray-300 focus:ring-offset-dark-eval-1" placeholder="Full Name" v-model="form.first_name" autocomplete="full_name" />
                     <InputError :message="form.errors.first_name"/>
 
-                    <Label for="chinese_name">Chinese Name (Optional)</Label>
-                    <Input id="chinese_name" type="text" class="block w-full px-4" placeholder="Chinese Name" v-model="form.chinese_name" autocomplete="chinese_name" />
+                    <Label for="chinese_name" class="text-white">Chinese Name (Optional)</Label>
+                    <Input id="chinese_name" type="text" class="block w-full px-4 bg-dark-eval-2 border-transparent text-gray-300 focus:ring-offset-dark-eval-1" placeholder="Chinese Name" v-model="form.chinese_name" autocomplete="chinese_name" />
                     <InputError :message="form.errors.chinese_name"/>
 
-                    <Label for="dob" value="Date of Birth" />
-                    <vue-tailwind-datepicker :formatter="formatter" as-single v-model="form.dob" input-classes="py-2 border-gray-400 w-full rounded-full text-sm placeholder:text-sm focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:border-gray-600 bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1" />
+                    <Label for="dob" class="text-white" value="Date of Birth" />
+                    <vue-tailwind-datepicker :formatter="formatter" as-single v-model="form.dob" input-classes="py-2 border-transparent bg-[#202020] w-full rounded-full text-sm placeholder:text-sm focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-dark-eval-1 text-gray-300" />
                     <InputError :message="form.errors.dob"/>
 
-                    <Label for="religion" value="Country" />
-                    <InputSelect v-model="form.country" class="block w-full text-sm" placeholder="Choose Country">
+                    <Label for="religion" class="text-white" value="Country" />
+                    <InputSelect v-model="form.country" class="block w-full px-4 bg-dark-eval-2 border-transparent text-gray-300 focus:ring-offset-dark-eval-1 text-sm" placeholder="Choose Country">
                         <option v-for="country in countries" :value="country.name_en" :key="country.id">{{ country.name_en }}</option>
                     </InputSelect>
                     <InputError :message="form.errors.country"/>
@@ -303,11 +303,11 @@ function startCountdown() {
                         <RegisterCaption title="Create a trading account to join us!" caption="You can always add another trading account later." />
                     </div>
 
-                    <Label for="account_platform" value="Select Account Platform" />
+                    <Label for="account_platform" class="text-white" value="Select Account Platform" />
                     <ul class="grid w-full gap-6 md:grid-cols-3">
                         <li v-for="(platform, index) in platforms" :key="index">
                             <input type="radio" :id="platform.id" name="account_platform" :value="platform.value" class="hidden peer" v-model="form.account_platform" :required="platform.required">
-                            <label :for="platform.id" class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-[#007BFF] dark:peer-checked:bg-[#007BFF] peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-transparent dark:shadow-lg dark:hover:shadow-blue-600">
+                            <label :for="platform.id" class="inline-flex items-center justify-between w-full p-5 border rounded-lg cursor-pointer hover:text-gray-300 border-[#007BFF] peer-checked:bg-[#007BFF] peer-checked:border-blue-600 peer-checked:text-blue-600 text-gray-400 bg-transparent shadow-lg hover:shadow-blue-600">
                                 <div class="block">
                                     <img class="object-cover" :src="platform.src" alt="account_platform">
                                 </div>
@@ -330,8 +330,8 @@ function startCountdown() {
 <!--                    <InputError :message="form.errors.account_type"/>-->
                     <Input type="hidden" v-model="form.account_type"/>
 
-                    <Label for="leverage" value="Trading Account Leverage" />
-                    <InputSelect v-model="form.leverage" class="block w-full text-sm" placeholder="Choose Leverages">
+                    <Label for="leverage" class="text-white" value="Trading Account Leverage" />
+                    <InputSelect v-model="form.leverage" class="block w-full px-4 bg-dark-eval-2 border-transparent text-gray-300 focus:ring-offset-dark-eval-1 text-sm" placeholder="Choose Leverages">
                         <option v-for="leverage in leverages" :value="leverage.value" :key="leverage.id">{{ leverage.leverage }}</option>
                     </InputSelect>
                     <InputError :message="form.errors.leverage"/>
@@ -346,21 +346,21 @@ function startCountdown() {
 
                     <div class="grid w-full gap-6 md:grid-cols-2">
                         <div class="space-y-5">
-                            <Label for="front_identity">Proof of Identity (FRONT)</Label>
-                            <input type="file" id="front_identity" @change="handleFrontIdentity" class="block border border-gray-400 w-full rounded-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1"/>
+                            <Label for="front_identity" class="text-white">Proof of Identity (FRONT)</Label>
+                            <input type="file" id="front_identity" @change="handleFrontIdentity" class="block border border-transparent bg-dark-eval-2 w-full rounded-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:border-transparent file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:ring-offset-dark-eval-1"/>
                             <InputError :message="form.errors.front_identity"/>
                         </div>
                         <div class="space-y-5">
-                            <Label for="back_identity">Proof of Identity (BACK)</Label>
-                            <input type="file" id="back_identity" @change="handleBackIdentity" class="block border border-gray-400 w-full rounded-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1"/>
+                            <Label for="back_identity" class="text-white">Proof of Identity (BACK)</Label>
+                            <input type="file" id="back_identity" @change="handleBackIdentity" class="block border border-transparent bg-dark-eval-2 w-full rounded-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:border-transparent file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:ring-offset-dark-eval-1"/>
                             <InputError :message="form.errors.back_identity"/>
                         </div>
                         <div class="space-y-5">
-                            <Label for="full_name" value="Verification via" />
+                            <Label for="full_name" class="text-white" value="Verification via" />
                             <div class="flex gap-x-12">
                                 <div class="flex">
                                     <input type="radio" name="verification_via" v-model="form.verification_via" class="shrink-0 mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-radio-group-1" value="email" checked>
-                                    <label for="hs-radio-group-1" class="text-sm text-gray-500 ml-2 dark:text-gray-400">Email</label>
+                                    <label for="hs-radio-group-1" class="text-sm text-gray-300 ml-2">Email</label>
                                 </div>
 
 <!--                                <div class="flex">-->
@@ -371,14 +371,14 @@ function startCountdown() {
                             <InputError :message="form.errors.verification_via"/>
                         </div>
                         <div class="space-y-5">
-                            <Label for="full_name" value="Verification Code" />
+                            <Label for="full_name" class="text-white" value="Verification Code" />
                             <div class="flex rounded-md shadow-sm">
                                 <button type="button" class="py-2 px-4 inline-flex flex-shrink-0 justify-center items-center gap-2 rounded-l-full border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"
                                         :disabled="isButtonDisabled"
                                         @click="startCountdown">
                                     {{ buttonText }}
                                 </button>
-                                <input type="text" id="hs-leading-button-add-on" name="hs-leading-button-add-on" class="py-2 px-4 block w-full border-gray-200 shadow-sm rounded-r-full text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1" v-model="form.verification_code">
+                                <input type="text" id="hs-leading-button-add-on" name="hs-leading-button-add-on" class="py-2 px-4 block w-full border-transparent shadow-sm rounded-r-full text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 bg-[#202020] text-gray-300 focus:ring-offset-dark-eval-1" v-model="form.verification_code">
                             </div>
                             <InputError :message="form.errors.verification_code"/>
                         </div>
@@ -386,7 +386,7 @@ function startCountdown() {
                         <Input id="referral" type="hidden" v-model="form.referral_code" />
                     </div>
 
-                    <h3 class="list-decimal list-inside text-xl text-gray-900 dark:text-gray-200">Terms & Conditions</h3>
+                    <h3 class="list-decimal list-inside text-xl text-dark-eval-4">Terms & Conditions</h3>
                     <ol class="list-decimal list-inside text-sm text-dark-eval-4">
                         <li>I confirm that I've read the <a class="text-blue-500" target="_blank" href="/assets/register-tnc/Client Agreement 2023.pdf">Terms and Conditions</a></li>
                         <li>I confirm that I've read the <a class="text-blue-500" target="_blank" href="/assets/register-tnc/Privacy Policy 2023.pdf">Privacy Policy</a></li>
@@ -422,7 +422,7 @@ function startCountdown() {
 
                 </div>
 
-                <p class="text-sm text-gray-600 dark:text-gray-400">
+                <p class="text-sm text-dark-eval-4">
                     Already have an account?
                     <Link :href="route('login')" class="text-blue-500 hover:underline">
                         Login

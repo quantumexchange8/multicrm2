@@ -35,7 +35,7 @@ const submit = () => {
                     <div class="flex justify-center">
                         <img src="/assets/icon/email.png" alt="email_icon"/>
                     </div>
-                    <Input id="email" type="email" class="block w-full placeholder:text-center" placeholder="Email" v-model="form.email" autofocus autocomplete="username" />
+                    <Input id="email" type="email" class="block w-full px-4 bg-dark-eval-2 border-transparent text-gray-300 focus:ring-offset-dark-eval-1 text-center placeholder:text-center" placeholder="Email" v-model="form.email" autofocus autocomplete="username" />
                 </div>
 
                 <div>
