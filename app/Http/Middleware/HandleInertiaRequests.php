@@ -56,7 +56,7 @@ class HandleInertiaRequests extends Middleware
                 ]);
             },
             'toast' => session('toast'),
-            'locale' => session('locale'),
+            'locale' => session('locale') ? session('locale') : app()->getLocale(),
             'getPaymentAccount' => $user ? $rightBarService->getPaymentAccount() : null,
             'monthlyDeposit' => $user ? $user->getMonthlyDeposit() : null,
             'monthlyWithdrawal' => $user ? $user->getMonthlyWithdrawal() : null,
