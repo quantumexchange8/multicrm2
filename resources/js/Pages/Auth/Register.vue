@@ -341,7 +341,7 @@ function startCountdown() {
                 <!-- Page 4 -->
                 <div class="space-y-5" v-if="formStep === 4">
                     <div class="text-center">
-                        <RegisterCaption title="One last step to verify your identity" caption="You’re about to start using the Metabase." />
+                        <RegisterCaption title="One last step to verify your identity" caption="You’re about to start using the QCG." />
                     </div>
 
                     <div class="grid w-full gap-6 md:grid-cols-2">
