@@ -97,17 +97,17 @@ const closeModal = () => {
 
 <template>
     <Button class="w-full justify-center" variant="success-opacity" @click="openDepositModal">
-        Deposit
+        {{ $t('public.Deposit') }}
     </Button>
 
     <Modal :show="submitDeposit" @close="closeModal">
 
         <form class="p-6">
             <div v-if="!form.deposit_method">
-                <h2 class="text-lg mb-2 font-medium text-gray-900 dark:text-gray-100">Deposit Method</h2>
+                <h2 class="text-lg mb-2 font-medium text-gray-900 dark:text-gray-100">{{ $t('public.Deposit Method') }}</h2>
                 <hr>
                 <p class="my-4 text-sm text-gray-600 dark:text-gray-400">
-                    <span class="text-red-500">*</span> Select a deposit method
+                    <span class="text-red-500">*</span> {{ $t('public.Select a deposit method') }}
                 </p>
                 <ul class="my-4 grid w-full gap-6" :class="{'md:grid-cols-3': depositMethods.length >= 3, 'md:grid-cols-2': depositMethods.length === 2}">
                     <li v-for="(depositMethod, index) in depositMethods" :key="index">
@@ -126,7 +126,7 @@ const closeModal = () => {
                         >
                             <div class="flex flex-col items-center gap-2">
                                 <img class="object-cover" :src="depositMethod.src" alt="account_platform">
-                                <p class="dark:text-white">{{ depositMethod.name }}</p>
+                                <p class="dark:text-white">{{ $t('public.' + depositMethod.name) }}</p>
                             </div>
                         </label>
                     </li>
@@ -134,27 +134,27 @@ const closeModal = () => {
             </div>
             <!-- Bank -->
             <div v-if="form.deposit_method === 'bank'">
-                <h2 class="text-lg mb-2 font-medium text-gray-900 dark:text-gray-100">Bank</h2>
+                <h2 class="text-lg mb-2 font-medium text-gray-900 dark:text-gray-100">{{ $t('public.Bank') }}</h2>
                 <hr>
                 <div class="grid gap-6 my-6 md:grid-cols-2">
                     <div class="space-y-2">
-                        <Label for="account_no" value="Account No." />
-                        <InputSelect class="w-full" id="account_no" v-model="form.account_no" placeholder="Select Account No." >
+                        <Label for="account_no" :value="$t('public.Account No')" />
+                        <InputSelect class="w-full" id="account_no" v-model="form.account_no" :placeholder="$t('public.Select Account No')" >
                             <option v-for="paymentAccount in getPaymentAccount" :value="paymentAccount.meta_login" :key="paymentAccount.id">{{ paymentAccount.meta_login }}</option>
                         </InputSelect>
                         <InputError :message="form.errors.account_no"/>
                     </div>
                     <div class="space-y-2">
-                        <Label for="currency" value="Currency" />
-                        <InputSelect v-model="form.currency" class="w-full" id="currency" placeholder="Select Currency">
+                        <Label for="currency" :value="$t('public.Currency')" />
+                        <InputSelect v-model="form.currency" class="w-full" id="currency" :placeholder="$t('public.Select Currency')">
                             <option value="MYR">MYR</option>
                             <option value="VND">VND</option>
                         </InputSelect>
                         <InputError :message="form.errors.currency"/>
                     </div>
                     <div class="space-y-2">
-                        <Label for="amount" value="Deposit Amount (USD)" />
-                        <Input id="amount" type="number" min="30" class="block w-full px-4" placeholder="Deposit Amount" v-model="form.amount" @change="form.validate('amount')" />
+                        <Label for="amount" :value="$t('public.Deposit Amount') + ' (USD)'" />
+                        <Input id="amount" type="number" min="30" class="block w-full px-4" :placeholder="$t('public.Deposit Amount')" v-model="form.amount" @change="form.validate('amount')" />
                         <InputError :message="form.errors.amount"/>
                     </div>
                 </div>
@@ -162,26 +162,26 @@ const closeModal = () => {
 
             <!-- Crypto -->
             <div v-if="form.deposit_method === 'crypto'">
-                <h2 class="text-lg mb-2 font-medium text-gray-900 dark:text-gray-100">Cryptocurrency</h2>
+                <h2 class="text-lg mb-2 font-medium text-gray-900 dark:text-gray-100">{{ $t('public.Cryptocurrency') }}</h2>
                 <hr>
                 <div class="grid gap-6 my-6 md:grid-cols-2">
                     <div class="space-y-2">
-                        <Label for="account_no" value="Account No." />
-                        <InputSelect class="w-full" id="account_no" v-model="form.account_no" placeholder="Select Account No." >
+                        <Label for="account_no" :value="$t('public.Account No')" />
+                        <InputSelect class="w-full" id="account_no" v-model="form.account_no" :placeholder="$t('public.Select Account No')" >
                             <option v-for="paymentAccount in getPaymentAccount" :value="paymentAccount.meta_login" :key="paymentAccount.id">{{ paymentAccount.meta_login }}</option>
                         </InputSelect>
                         <InputError :message="form.errors.account_no"/>
                     </div>
                     <div class="space-y-2">
-                        <Label for="currency" value="Currency" />
-                        <InputSelect v-model="form.currency" class="w-full" id="currency" placeholder="Select Currency">
+                        <Label for="currency" :value="$t('public.Currency')" />
+                        <InputSelect v-model="form.currency" class="w-full" id="currency" :placeholder="$t('public.Select Currency')">
                             <option value="USDT">USDT</option>
                         </InputSelect>
                         <InputError :message="form.errors.currency"/>
                     </div>
                     <div class="space-y-2">
-                        <Label for="amount" value="Deposit Amount (USD)" />
-                        <Input id="amount" type="number" min="30" class="block w-full px-4" placeholder="Deposit Amount" v-model="form.amount" @change="form.validate('amount')" />
+                        <Label for="amount" :value="$t('public.Deposit Amount') + ' (USD)'" />
+                        <Input id="amount" type="number" min="30" class="block w-full px-4" :placeholder="$t('public.Deposit Amount')" v-model="form.amount" @change="form.validate('amount')" />
                         <InputError :message="form.errors.amount"/>
                     </div>
                 </div>
@@ -189,26 +189,26 @@ const closeModal = () => {
 
             <!-- FPX -->
             <div v-if="form.deposit_method === 'fpx'">
-                <h2 class="text-lg mb-2 font-medium text-gray-900 dark:text-gray-100">FPX</h2>
+                <h2 class="text-lg mb-2 font-medium text-gray-900 dark:text-gray-100">{{ $t('public.FPX') }}</h2>
                 <hr>
                 <div class="grid gap-6 my-6 md:grid-cols-2">
                     <div class="space-y-2">
-                        <Label for="account_no" value="Account No." />
-                        <InputSelect class="w-full" id="account_no" v-model="form.account_no" placeholder="Select Account No." >
+                        <Label for="account_no" :value="$t('public.Account No')" />
+                        <InputSelect class="w-full" id="account_no" v-model="form.account_no" :placeholder="$t('public.Select Account No')" >
                             <option v-for="paymentAccount in getPaymentAccount" :value="paymentAccount.meta_login" :key="paymentAccount.id">{{ paymentAccount.meta_login }}</option>
                         </InputSelect>
                         <InputError :message="form.errors.account_no"/>
                     </div>
                     <div class="space-y-2">
-                        <Label for="currency" value="Currency" />
-                        <InputSelect v-model="form.currency" class="w-full" id="currency" placeholder="Select Currency">
+                        <Label for="currency" :value="$t('public.Currency')" />
+                        <InputSelect v-model="form.currency" class="w-full" id="currency" :placeholder="$t('public.Select Currency')">
                             <option value="MYR">MYR</option>
                         </InputSelect>
                         <InputError :message="form.errors.currency"/>
                     </div>
                     <div class="space-y-2">
-                        <Label for="amount" value="Deposit Amount (USD)" />
-                        <Input id="amount" type="number" min="30" class="block w-full px-4" placeholder="Deposit Amount" v-model="form.amount" @change="form.validate('amount')" />
+                        <Label for="amount" :value="$t('public.Deposit Amount') + ' (USD)'" />
+                        <Input id="amount" type="number" min="30" class="block w-full px-4" :placeholder="$t('public.Deposit Amount')" v-model="form.amount" @change="form.validate('amount')" />
                         <InputError :message="form.errors.amount"/>
                     </div>
                 </div>
@@ -292,7 +292,7 @@ const closeModal = () => {
 
             <div class="mt-6 flex justify-end" v-if="form.deposit_method">
                 <Button variant="secondary" @click="closeModal">
-                    Cancel
+                    {{ $t('public.Cancel') }}
                 </Button>
 
                 <Button
@@ -302,7 +302,7 @@ const closeModal = () => {
                     :disabled="form.processing"
                     @click="submit"
                 >
-                    Process
+                    {{ $t('public.Process') }}
                 </Button>
             </div>
         </form>

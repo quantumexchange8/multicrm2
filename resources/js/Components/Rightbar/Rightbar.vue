@@ -15,14 +15,11 @@ const monthlyWithdrawal = page.props.monthlyWithdrawal;
 const IBAccountTypes = page.props.IBAccountTypes;
 const user = computed(() => page.props.auth.user)
 const { hasRole } = usePermission();
-const cashWalletComponent = ref({
-    title: 'Cash Wallet ($)',
-    amount: formatAmount(page.props.auth.user.cash_wallet),
-});
+const cashWalletComponent = ref(formatAmount(page.props.auth.user.cash_wallet));
 
 // Watch for changes in page.props.auth.user.cash_wallet
 watch(() => page.props.auth.user.cash_wallet, (newCashWallet) => {
-    cashWalletComponent.value.amount = formatAmount(newCashWallet);
+    cashWalletComponent.value = formatAmount(newCashWallet);
 });
 
 const rebateEarnedComponent = ref({
@@ -58,11 +55,7 @@ async function applyRebate() {
                 },
             });
             // Update cashWalletComponent with new value
-            cashWalletComponent.value = {
-                title: 'Cash Wallet ($)',
-                amount: formatAmount(response.data.cash_wallet),
-            };
-
+            cashWalletComponent.value = formatAmount(response.data.cash_wallet)
             if (hasRole('ib')) {
                 // Update rebateEarnedComponent with new value
                 rebateEarnedComponent.value = {
@@ -148,8 +141,8 @@ async function confirmApplyRebate() {
 <template>
     <aside class="w-full md:w-auto space-y-4">
         <RightbarTitle title="Personal Finances">
-            <RightbarContent title="Cash Wallet ($)" :amount="cashWalletComponent.amount" />
-            <RightbarContent v-if="hasRole('ib')" title="Rebate Earned ($)" :amount="rebateEarnedComponent.amount" />
+            <RightbarContent :title="$t('public.Cash Wallet') + ' ($)'" :amount="cashWalletComponent" />
+            <RightbarContent v-if="hasRole('ib')" :title="$t('public.Rebate Earn') + ' ($)'" :amount="rebateEarnedComponent.amount" />
 <!--            <RightbarContent title="Reward Point (RP)" amount="999,999" />-->
 
             <div class="grid grid-cols-2 gap-4 mt-8">
@@ -157,9 +150,11 @@ async function confirmApplyRebate() {
                 <WithdrawalForm />
             </div>
             <div v-if="hasRole('ib')">
-                <Button variant="secondary-opacity" @click.prevent="confirmApplyRebate()" class="w-full justify-center mt-4">Apply Rebate</Button>
+                <Button variant="secondary-opacity" @click.prevent="confirmApplyRebate()" class="w-full justify-center mt-4">
+                    {{ $t('public.Apply Rebate') }}</Button>
             </div>
-            <Button :href="route('transaction')" variant="primary-opacity" class="w-full bg-transparent border border-blue-800 justify-center mt-4">Internal Transfer</Button>
+            <Button :href="route('transaction')" variant="primary-opacity" class="w-full bg-transparent border border-blue-800 justify-center mt-4">
+                {{ $t('public.sidebar.Internal Transfer') }}</Button>
 
         </RightbarTitle>
 

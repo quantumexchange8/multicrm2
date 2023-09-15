@@ -26,6 +26,7 @@ class WithdrawalRequest extends FormRequest
             'account_type' => 'required|string',
             'amount' => 'required|numeric|min:30',
             'channel' => 'required|string',
+            'terms' => 'required',
         ];
     }
 
@@ -33,7 +34,8 @@ class WithdrawalRequest extends FormRequest
     {
         $attributeNames = [
             'amount' => 'Amount',
-            'channel' => 'Withdrawal Method'
+            'channel' => 'Withdrawal Method',
+            'terms' => 'Term and Conditions',
         ];
 
         if ($this->input('channel') =='bank') {

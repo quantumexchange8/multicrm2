@@ -52,11 +52,11 @@ const getMediaUrlByCollection = (announcement, collectionName) => {
 </script>
 
 <template>
-    <AuthenticatedLayout title="Dashboard">
+    <AuthenticatedLayout :title="$t('public.Dashboard')">
         <template #header>
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <h2 class="text-xl font-semibold leading-tight">
-                    Highlights
+                    {{ $t('public.Highlights') }}
                 </h2>
             </div>
         </template>

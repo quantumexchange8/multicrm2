@@ -10,6 +10,7 @@ import { useForm } from 'laravel-precognition-vue-inertia';
 import QrcodeVue from 'qrcode.vue';
 import {DuplicateIcon} from "@heroicons/vue/outline";
 import {Link, usePage} from "@inertiajs/vue3";
+import Checkbox from "@/Components/Checkbox.vue";
 
 const submitWithdrawal = ref(false)
 const cryptoWallets = ref([]);
@@ -30,6 +31,7 @@ const form = useForm('post', route('payment.requestWithdrawal'), {
     account_type: '',
     amount: '',
     channel: '',
+    terms: '',
 });
 
 watchEffect(() => {
@@ -181,6 +183,53 @@ const closeModal = () => {
                     </p>
                 </div>
             </div>
+            <div class="mt-6" v-if="form.channel">
+                <h3 class="list-decimal list-inside text-xl text-dark-eval-4">{{ $t('public.Terms and Conditions') }}</h3>
+                <ol class="list-decimal list-inside text-sm text-dark-eval-4">
+                    <li>
+                        {{ $t("public.Withdrawal Acknowledgement 1", { company: 'QCG'}) }}
+                    </li>
+                    <li>
+                        {{ $t("public.Withdrawal Acknowledgement 2", { company: 'QCG'}) }}
+                    </li>
+                    <li>
+                        {{ $t("public.Withdrawal Acknowledgement 3") }}
+                    </li>
+                    <li>
+                        {{ $t('public.Withdrawal Acknowledgement 4') }}
+                    </li>
+                    <li>
+                        {{ $t('public.Withdrawal Acknowledgement 5') }}
+                    </li>
+                    <li>
+                        {{ $t('public.Withdrawal Acknowledgement 6', { company: 'QCG'}) }}
+                    </li>
+                    <li>
+                        {{ $t('public.Withdrawal Acknowledgement 7', { company: 'QCG'}) }}
+                    </li>
+                    <li>
+                        {{ $t('public.Withdrawal Acknowledgement 8', { company: 'QCG'}) }}
+                    </li>
+                    <li>
+                        {{ $t('public.Withdrawal Acknowledgement 9', { company: 'QCG'}) }}
+                    </li>
+                    <li>
+                        {{ $t('public.Withdrawal Acknowledgement 10') }}
+                    </li>
+                    <li>
+                        {{ $t('public.Withdrawal Acknowledgement 11', { company: 'QCG'}) }}
+                    </li>
+                </ol>
+            </div>
+            <div class="flex items-start my-6" v-if="form.channel">
+                <div class="flex items-center h-5">
+                    <Checkbox v-model="form.terms"/>
+                </div>
+                <div class="ml-3 text-sm">
+                    <Label for="terms" class="font-light dark:text-dark-eval-4" :value="$t('public.Withdrawal Acknowledgement')" />
+                </div>
+            </div>
+            <InputError :message="form.errors.terms"/>
             <div class="mt-6 flex justify-end" v-if="form.channel">
                 <Button variant="secondary" @click="closeModal">
                     Cancel
