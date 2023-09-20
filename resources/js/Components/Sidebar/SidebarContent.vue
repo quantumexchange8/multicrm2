@@ -31,7 +31,7 @@ const { hasRole } = usePermission();
         class="relative flex flex-col flex-1 max-h-full gap-4 px-3"
     >
         <SidebarLink
-            title="Dashboard"
+            :title="$t('public.sidebar.Dashboard')"
             :href="route('dashboard')"
             :active="route().current('dashboard')"
         >
@@ -45,7 +45,7 @@ const { hasRole } = usePermission();
         </SidebarLink>
 
         <SidebarLink
-            title="Account Info"
+            :title="$t('public.sidebar.Account Info')"
             :href="route('account_info.account_info')"
             :active="route().current('account_info.account_info')"
         >
@@ -60,7 +60,7 @@ const { hasRole } = usePermission();
 
         <SidebarCollapsible
             v-if="hasRole('ib')"
-            title="Trading"
+            :title="$t('public.sidebar.Trading')"
             :active="route().current('trading.*')"
         >
             <template #icon>
@@ -73,13 +73,13 @@ const { hasRole } = usePermission();
 
             <SidebarCollapsibleItem
                 :href="route('trading.rebate_summary')"
-                title="Rebate Summary"
+                :title="$t('public.sidebar.Rebate Summary')"
                 :active="route().current('trading.rebate_summary')"
             />
         </SidebarCollapsible>
 
         <SidebarCollapsible
-            title="Group Network"
+            :title="$t('public.sidebar.Group Network')"
             :active="route().current('group_network.*')"
         >
             <template #icon>
@@ -92,19 +92,19 @@ const { hasRole } = usePermission();
 
             <SidebarCollapsibleItem
                 :href="route('group_network.network_tree')"
-                title="Network Tree"
+                :title="$t('public.sidebar.Network Tree')"
                 :active="route().current('group_network.network_tree')"
             />
             <SidebarCollapsibleItem
                 v-if="hasRole('ib')"
                 :href="route('group_network.rebate_allocation')"
-                title="Rebate Allocation"
+                :title="$t('public.sidebar.Rebate Allocation')"
                 :active="route().current('group_network.rebate_allocation')"
             />
         </SidebarCollapsible>
 
         <SidebarLink
-            title="Transaction"
+            :title="$t('public.sidebar.Transaction')"
             :href="route('transaction')"
             :active="route().current('transaction')"
         >
@@ -119,7 +119,7 @@ const { hasRole } = usePermission();
 
         <SidebarLink
             v-if="hasRole('ib')"
-            title="Report"
+            :title="$t('public.sidebar.Report')"
             :href="route('report.listing')"
             :active="route().current('report.listing')"
         >
@@ -133,7 +133,7 @@ const { hasRole } = usePermission();
         </SidebarLink>
 
         <SidebarLink
-            title="User Profile"
+            :title="$t('public.sidebar.User Profile')"
             :href="route('profile.detail')"
             :active="route().current('profile.*')"
         >

@@ -22,7 +22,7 @@ defineProps({
 </script>
 
 <template>
-    <AuthenticatedLayout title="Account Info">
+    <AuthenticatedLayout :title="$t('public.sidebar.Account Info')">
         <template #header>
             <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                 <h2 class="text-xl font-semibold leading-tight">

@@ -140,7 +140,7 @@ async function confirmApplyRebate() {
 
 <template>
     <aside class="w-full md:w-auto space-y-4">
-        <RightbarTitle title="Personal Finances">
+        <RightbarTitle :title="$t('public.rightbar.Personal Finances')">
             <RightbarContent :title="$t('public.Cash Wallet') + ' ($)'" :amount="cashWalletComponent" />
             <RightbarContent v-if="hasRole('ib')" :title="$t('public.Rebate Earn') + ' ($)'" :amount="rebateEarnedComponent.amount" />
 <!--            <RightbarContent title="Reward Point (RP)" amount="999,999" />-->

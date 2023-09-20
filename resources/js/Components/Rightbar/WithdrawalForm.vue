@@ -68,17 +68,17 @@ const closeModal = () => {
 
 <template>
     <Button class="w-full justify-center" variant="danger-opacity" @click="openWithdrawalModal">
-        Withdrawal
+        {{ $t('public.Withdrawal') }}
     </Button>
 
     <Modal :show="submitWithdrawal" @close="closeModal">
 
         <form class="p-6">
             <div v-if="!form.channel">
-                <h2 class="text-lg mb-2 font-medium text-gray-900 dark:text-gray-100">Withdrawal Method</h2>
+                <h2 class="text-lg mb-2 font-medium text-gray-900 dark:text-gray-100">{{ $t('public.Withdrawal Method') }}</h2>
                 <hr>
                 <p class="my-4 text-sm text-gray-600 dark:text-gray-400">
-                    <span class="text-red-500">*</span> Select a withdrawal method
+                    <span class="text-red-500">*</span> {{ $t('public.rightbar.Select a withdrawal method') }}
                 </p>
                 <ul class="my-4 grid w-full gap-6" :class="{'md:grid-cols-3': channels.length >= 3, 'md:grid-cols-2': channels.length === 2}">
                     <li v-for="(channel, index) in channels" :key="index">
