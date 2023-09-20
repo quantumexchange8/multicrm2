@@ -38,7 +38,7 @@ const back = () => {
     <form>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="space-y-2">
-                <Label for="payment_platform_name" value="Bank Name" />
+                <Label for="payment_platform_name" :value="$t('public.Bank Name')" />
 
                 <Input
                     id="payment_platform_name"
@@ -51,7 +51,7 @@ const back = () => {
                 <InputError class="mt-2" :message="form.errors.payment_platform_name" />
             </div>
             <div class="space-y-2">
-                <Label for="bank_branch_address" value="Bank Branch Address" />
+                <Label for="bank_branch_address" :value="$t('public.Bank Branch Address')" />
 
                 <Input
                     id="bank_branch_address"
@@ -64,7 +64,7 @@ const back = () => {
                 <InputError class="mt-2" :message="form.errors.bank_branch_address" />
             </div>
             <div class="space-y-2">
-                <Label for="payment_account_name" value="Bank Account Holder Name" />
+                <Label for="payment_account_name" :value="$t('public.Bank Account Holder Name')" />
 
                 <Input
                     id="payment_account_name"
@@ -77,7 +77,7 @@ const back = () => {
                 <InputError class="mt-2" :message="form.errors.payment_account_name" />
             </div>
             <div class="space-y-2">
-                <Label for="account_no" value="Account No." />
+                <Label for="account_no" :value="$t('public.Account No')" />
 
                 <Input
                     id="account_no"
@@ -90,7 +90,7 @@ const back = () => {
                 <InputError class="mt-2" :message="form.errors.account_no" />
             </div>
             <div class="space-y-2">
-                <Label for="bank_swift_code" value="Bank Swift Code" />
+                <Label for="bank_swift_code" :value="$t('public.Bank Swift Code')" />
 
                 <Input
                     id="bank_swift_code"
@@ -103,7 +103,7 @@ const back = () => {
                 <InputError class="mt-2" :message="form.errors.bank_swift_code" />
             </div>
             <div class="space-y-2">
-                <Label for="bank_code">Bank Code</Label>
+                <Label for="bank_code">{{ $t('public.Bank Code') }}</Label>
 
                 <Input
                     id="bank_code"
@@ -129,7 +129,7 @@ const back = () => {
                 <InputError class="mt-2" :message="form.errors.bank_code_type" />
             </div>
             <div class="space-y-2">
-                <Label for="country" value="Country" />
+                <Label for="country" :value="$t('public.Country')" />
 
                 <InputSelect v-model="form.country" class="block w-full text-sm" placeholder="Select a country">
                     <option v-for="country in props.countries" :value="country.name_en" :key="country.id">{{ country.name_en }}</option>
@@ -138,7 +138,7 @@ const back = () => {
                 <InputError class="mt-2" :message="form.errors.country" />
             </div>
             <div class="space-y-2">
-                <Label for="currency" value="Your Country Currency" />
+                <Label for="currency" :value="$t('public.Your Country Currency')" />
 
                 <InputSelect v-model="form.currency" class="block w-full text-sm" placeholder="Select a currency">
                     <option value="VND">VND</option>
@@ -148,7 +148,7 @@ const back = () => {
                 <InputError class="mt-2" :message="form.errors.currency" />
             </div>
             <div class="space-y-2">
-                <Label for="proof_of_bank" value="Proof of Bank Account" />
+                <Label for="proof_of_bank" :value="$t('public.Proof of Bank Account')" />
 
                 <input
                     type="file"
@@ -164,9 +164,9 @@ const back = () => {
         <div class="flex justify-end gap-4 mt-6">
             <div class="grid grid-cols-2 gap-4 float-right">
                 <Button variant="danger" class="px-6 justify-center" @click.prevent="back">
-                    Cancel
+                    {{ $t('public.Cancel') }}
                 </Button>
-                <Button class="justify-center" @click="submit" :disabled="form.processing">Save</Button>
+                <Button class="justify-center" @click="submit" :disabled="form.processing">{{ $t('public.Save') }}</Button>
             </div>
         </div>
     </form>

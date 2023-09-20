@@ -158,9 +158,9 @@ async function confirmApplyRebate() {
 
         </RightbarTitle>
 
-        <RightbarTitle title="Monthly Performance">
-            <RightbarContent title="Current Month Deposit ($)" :amount="monthlyDeposit" />
-            <RightbarContent title="Current Month Withdrawal ($)" :amount="monthlyWithdrawal" />
+        <RightbarTitle :title="$t('public.rightbar.Monthly Performance')">
+            <RightbarContent :title="$t('public.rightbar.Current Month Deposit') + ' ($)'" :amount="monthlyDeposit" />
+            <RightbarContent :title="$t('public.rightbar.Current Month Withdrawal') + ' ($)'" :amount="monthlyWithdrawal" />
         </RightbarTitle>
     </aside>
 </template>

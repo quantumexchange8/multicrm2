@@ -43,7 +43,7 @@ const paginationActiveClass = [
         <h3
             class="font-semibold text-lg text-gray-800 dark:text-gray-200 leading-tight mb-4"
         >
-            Bank Account
+        {{ $t('public.Bank Account') }}
         </h3>
         <div class="relative overflow-x-auto sm:rounded-lg">
             <div v-if="isLoading" class="w-full flex justify-center mt-8">
@@ -53,26 +53,26 @@ const paginationActiveClass = [
                 <thead class="text-xs font-bold text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-white text-center">
                 <tr>
                     <th scope="col" class="px-4 py-3">
-                        Bank Name
+                        {{ $t('public.Bank Name') }}
                     </th>
                     <th scope="col" class="px-4 py-3">
-                        Bank Swift Code
+                        {{ $t('public.Bank Swift Code') }}
                     </th>
                     <th scope="col" class="px-4 py-3">
-                        Bank Holder Name
+                        {{ $t('public.Bank Holder Name') }}
                     </th>
                     <th scope="col" class="px-4 py-3">
-                        Bank Account No.
+                        {{ $t('public.Bank Account No') }}.
                     </th>
                     <th scope="col" class="px-4 py-3 w-56">
-                        Action
+                        {{ $t('public.Action') }}
                     </th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr v-if="bankAccounts.data.length === 0">
                     <th colspan="8" class="py-4 text-lg text-center">
-                        No Account
+                        {{ $t('public.No Account') }}
                     </th>
                 </tr>
                 <tr v-for="bank in bankAccounts.data" :key="bank.id" class="bg-white even:dark:bg-transparent odd:dark:bg-dark-eval-0 text-xs font-thin text-gray-900 dark:text-white text-center">
