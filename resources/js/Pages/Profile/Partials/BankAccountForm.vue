@@ -131,7 +131,7 @@ const back = () => {
             <div class="space-y-2">
                 <Label for="country" :value="$t('public.Country')" />
 
-                <InputSelect v-model="form.country" class="block w-full text-sm" placeholder="Select a country">
+                <InputSelect v-model="form.country" class="block w-full text-sm" :placeholder="$t('public.Select a country')">
                     <option v-for="country in props.countries" :value="country.name_en" :key="country.id">{{ country.name_en }}</option>
                 </InputSelect>
 
@@ -140,7 +140,7 @@ const back = () => {
             <div class="space-y-2">
                 <Label for="currency" :value="$t('public.Your Country Currency')" />
 
-                <InputSelect v-model="form.currency" class="block w-full text-sm" placeholder="Select a currency">
+                <InputSelect v-model="form.currency" class="block w-full text-sm" :placeholder="$t('public.Select a currency')">
                     <option value="VND">VND</option>
                     <option value="MYR">MYR</option>
                 </InputSelect>
