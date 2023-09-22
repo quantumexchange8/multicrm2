@@ -60,7 +60,7 @@ const closeModal = () => {
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Link
                     :href="route('profile.edit')"
-                    class="inline-flex p-2 px-6 justify-center text-center items-center transition-colors text-sm font-medium rounded-full select-none disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-dark-eval-2 bg-[#007bff33] text-[#007BFF] hover:bg-blue-800 hover:text-white hover:text-white focus:ring-blue-500"
+                    class="inline-flex p-2 px-6 justify-center text-center items-center transition-colors text-sm font-medium rounded-full select-none disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-dark-eval-2 bg-[#007bff33] text-[#007BFF] hover:bg-blue-800 hover:text-white focus:ring-blue-500"
                 >
                 {{ $t('public.Edit Profile') }}
                 </Link>
@@ -73,7 +73,7 @@ const closeModal = () => {
                 </Button>
                 <Link
                     :href="route('profile.payment_account')"
-                    class="inline-flex p-2 px-6 justify-center text-center items-center transition-colors text-sm font-medium rounded-full select-none disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-dark-eval-2 bg-[#007bff33] text-[#007BFF] hover:bg-blue-800 hover:text-white hover:text-white focus:ring-blue-500"
+                    class="inline-flex p-2 px-6 justify-center text-center items-center transition-colors text-sm font-medium rounded-full select-none disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-dark-eval-2 bg-[#007bff33] text-[#007BFF] hover:bg-blue-800 hover:text-white focus:ring-blue-500"
                 >
                 {{ $t('public.Create Payment Account') }}
                 </Link>
@@ -190,7 +190,7 @@ const closeModal = () => {
                                     <span class="sr-only">Close modal</span>
                                 </button>
                                 <div class="px-6 py-6 lg:px-8">
-                                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white"> Proof of Identity (Front)</h3>
+                                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white"> {{ $t('public.Proof of Identity (Front)') }}</h3>
                                     <div class="flex justify-center">
                                         <img class="rounded" :src="frontIdentity" alt="Proof of Identity (Front)">
                                     </div>
@@ -227,7 +227,7 @@ const closeModal = () => {
                                     <span class="sr-only">Close modal</span>
                                 </button>
                                 <div class="px-6 py-6 lg:px-8">
-                                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white"> Proof of Identity (Back)</h3>
+                                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white"> {{ $t('public.Proof of Identity (Back)') }}</h3>
                                     <div class="flex justify-center">
                                         <img class="rounded" :src="backIdentity" alt="Proof of Identity (Back)">
                                     </div>

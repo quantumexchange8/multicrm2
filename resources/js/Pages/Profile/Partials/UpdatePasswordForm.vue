@@ -44,7 +44,7 @@ const closeModal = () => {
 <template>
     <form class="mt-6 space-y-6">
         <div>
-            <Label for="current_password" value="Current Password" />
+            <Label for="current_password" :value="$t('public.Current Password')" />
 
             <Input
                 id="current_password"
@@ -62,7 +62,7 @@ const closeModal = () => {
         </div>
 
         <div>
-            <Label for="password" value="New Password" />
+            <Label for="password" :value="$t('public.New Password')" />
 
             <Input
                 id="password"
@@ -78,21 +78,21 @@ const closeModal = () => {
 
         <ul class="space-y-1 text-xs text-gray-500 list-disc list-inside dark:text-gray-400">
             <li>
-                Password must be at least 6 characters.
+                {{ $t('public.Password must be at least 6 characters.') }}
             </li>
             <li>
-                Contains at least one capital letter.
+                {{ $t('public.Contains at least one capital letter.') }}
             </li>
             <li>
-                Contains at least one number.
+                {{ $t('public.Contains at least one number.') }}
             </li>
             <li>
-                Contains at least one letter.
+                {{ $t('public.Contains at least one letter.') }}
             </li>
         </ul>
 
         <div>
-            <Label for="password_confirmation" value="Confirm Password" />
+            <Label for="password_confirmation" :value="$t('public.Confirm Password')" />
 
             <Input
                 id="password_confirmation"
@@ -111,9 +111,9 @@ const closeModal = () => {
         <div class="flex items-center justify-end gap-2">
             <div class="grid grid-cols-2 gap-2 float-right">
                 <Button variant="danger" class="px-6 justify-center" @click.prevent="closeModal">
-                    Cancel
+                    {{ $t('public.Cancel') }}
                 </Button>
-                <Button class="justify-center" @click.prevent="updatePassword" :disabled="form.processing">Save</Button>
+                <Button class="justify-center" @click.prevent="updatePassword" :disabled="form.processing">{{ $t('public.Save') }}</Button>
             </div>
         </div>
     </form>

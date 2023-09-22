@@ -37,26 +37,26 @@ const submit = () => {
                     <div class="flex justify-center">
                         <img src="/assets/icon/email.png" alt="email_icon"/>
                     </div>
-                    <Input id="email" type="email" class="block w-full placeholder:text-center" placeholder="Email" v-model="form.email" autofocus autocomplete="username" />
+                    <Input id="email" type="email" class="block w-full placeholder:text-center" :placeholder="$t('public.Email')" v-model="form.email" autofocus autocomplete="username" />
                 </div>
 
                 <div class="space-y-4">
                     <div class="flex justify-center">
                         <img src="/assets/icon/password.png" alt="password_icon"/>
                     </div>
-                    <Input id="password" type="password" placeholder="Password" class="block w-full placeholder:text-center" v-model="form.password" autocomplete="new-password" />
+                    <Input id="password" type="password" :placeholder="$t('public.Password')" class="block w-full placeholder:text-center" v-model="form.password" autocomplete="new-password" />
                 </div>
 
                 <div class="space-y-4">
                     <div class="flex justify-center">
                         <img src="/assets/icon/password.png" alt="password_icon"/>
                     </div>
-                    <Input id="password_confirmation" type="password" placeholder="Confirm Password" class="block w-full placeholder:text-center" v-model="form.password_confirmation" autocomplete="new-password" />
+                    <Input id="password_confirmation" type="password" :placeholder="$t('public.Confirm Password')" class="block w-full placeholder:text-center" v-model="form.password_confirmation" autocomplete="new-password" />
                 </div>
 
                 <div class="mt-4">
                     <Button class="w-full justify-center" :disabled="form.processing">
-                        Reset Password
+                        {{ $t('public.Reset Password') }}
                     </Button>
                 </div>
             </div>

@@ -80,11 +80,11 @@ const submit = () => {
     <section>
         <header>
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                Profile Information
+                {{ $t('public.Profile Information') }}
             </h2>
 
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Update your account's profile information and email address.
+                {{ $t("public.Update your account's profile information and email address.") }}
             </p>
         </header>
 
@@ -95,7 +95,7 @@ const submit = () => {
 
             <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="space-y-2">
-                    <Label for="first_name" value="Name" />
+                    <Label for="first_name" :value="$t('public.Name')" />
 
                     <Input
                         id="first_name"
@@ -108,7 +108,7 @@ const submit = () => {
                     <InputError class="mt-2" :message="form.errors.first_name" />
                 </div>
                 <div class="space-y-2">
-                    <Label for="chinese_name" >Chinese Name</Label>
+                    <Label for="chinese_name" >{{ $t('public.Chinese Name') }}</Label>
 
                     <Input
                         id="chinese_name"
@@ -123,14 +123,14 @@ const submit = () => {
 
 
                 <div class="space-y-2">
-                    <Label for="dob" value="Date Of Birth" />
+                    <Label for="dob" :value="$t('public.Date Of Birth')" />
                     <vue-tailwind-datepicker :formatter="formatter" as-single v-model="form.dob" input-classes="py-2 border-gray-400 w-full rounded-full text-sm placeholder:text-sm focus:border-gray-400 focus:ring focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white dark:border-gray-600 dark:bg-[#202020] dark:text-gray-300 dark:focus:ring-offset-dark-eval-1" />
 
                     <InputError class="mt-2" :message="form.errors.dob" />
                 </div>
 
                 <div class="space-y-2">
-                    <Label for="email" value="Email" />
+                    <Label for="email" :value="$t('public.Email')" />
 
                     <Input
                         id="email"
@@ -148,14 +148,14 @@ const submit = () => {
                     v-if="props.mustVerifyEmail && user.email_verified_at === null"
                 >
                     <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
-                        Your email address is unverified.
+                        {{ $t('public.Your email address is unverified.') }}
                         <Link
                             :href="route('verification.send')"
                             method="post"
                             as="button"
                             class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                         >
-                            Click here to re-send the verification email.
+                            {{ $t('public.Click here to re-send the verification email.') }}
                         </Link>
                     </p>
 
@@ -163,14 +163,14 @@ const submit = () => {
                         v-show="props.status === 'verification-link-sent'"
                         class="mt-2 font-medium text-sm text-green-600 dark:text-green-400"
                     >
-                        A new verification link has been sent to your email address.
+                        {{ $t('public.A new verification link has been sent to your email address.') }}
                     </div>
                 </div>
 
                 <div class="space-y-2">
-                    <Label for="country" value="Country" />
+                    <Label for="country" :value="$t('public.Country')" />
 
-                    <InputSelect v-model="selectedCountry" class="block w-full text-sm" placeholder="Choose Country">
+                    <InputSelect v-model="selectedCountry" class="block w-full text-sm" :placeholder="$t('public.Choose Country')">
                         <option v-for="country in props.countries" :value="country.name_en" :key="country.id">{{ country.name_en }}</option>
                     </InputSelect>
 
@@ -179,7 +179,7 @@ const submit = () => {
 
 
                 <div class="space-y-2">
-                    <Label for="phone" value="Mobile Phone" />
+                    <Label for="phone" :value="$t('public.Mobile Phone')" />
 
                     <Input
                         id="phone"
@@ -194,8 +194,8 @@ const submit = () => {
 
                 <div class="space-y-2">
                     <Label for="front_identity">
-                        Proof of Identity (FRONT)
-                        <a v-if="frontIdentity" href="javascript:void(0);" @click.prevent="openFrontIdentityModal" class="text-blue-500 hover:underline ml-2">Click to view</a>
+                        {{ $t('public.Proof of Identity (FRONT)') }}
+                        <a v-if="frontIdentity" href="javascript:void(0);" @click.prevent="openFrontIdentityModal" class="text-blue-500 hover:underline ml-2">{{ $t('public.Click to view') }}</a>
                     </Label>
                     <Modal :show="frontIdentityModal" @close="closeModal">
                         <div class="relative bg-white rounded-lg shadow dark:bg-dark-eval-1">
@@ -206,7 +206,7 @@ const submit = () => {
                                 <span class="sr-only">Close modal</span>
                             </button>
                             <div class="px-6 py-6 lg:px-8">
-                                <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white"> Proof of Identity (Front)</h3>
+                                <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white"> {{ $t('public.Proof of Identity (Front)') }}</h3>
                                 <div class="flex justify-center">
                                     <img class="rounded" :src="frontIdentity" alt="Proof of Identity (Front)">
                                 </div>
@@ -225,8 +225,8 @@ const submit = () => {
 
                 <div class="space-y-2">
                     <Label for="back_identity">
-                        Proof of Identity (BACK)
-                        <a v-if="backIdentity" href="javascript:void(0);" @click.prevent="openBackIdentityModal" class="text-blue-500 hover:underline ml-2">Click to view</a>
+                        {{ $t('public.Proof of Identity (BACK)') }}
+                        <a v-if="backIdentity" href="javascript:void(0);" @click.prevent="openBackIdentityModal" class="text-blue-500 hover:underline ml-2">{{ $t('public.Click to view') }}</a>
                     </Label>
                     <Modal :show="backIdentityModal" @close="closeModal">
                         <div class="relative bg-white rounded-lg shadow dark:bg-dark-eval-1">
@@ -237,7 +237,7 @@ const submit = () => {
                                 <span class="sr-only">Close modal</span>
                             </button>
                             <div class="px-6 py-6 lg:px-8">
-                                <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white"> Proof of Identity (Back)</h3>
+                                <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white"> {{ $t('public.Proof of Identity (Back)') }}</h3>
                                 <div class="flex justify-center">
                                     <img class="rounded" :src="backIdentity" alt="Proof of Identity (Back)">
                                 </div>
@@ -256,7 +256,7 @@ const submit = () => {
             </div>
 
             <div class="flex items-center gap-4 mt-6">
-                <Button @click="submit" :disabled="form.processing">Save</Button>
+                <Button @click="submit" :disabled="form.processing">{{ $t('public.Save') }}</Button>
             </div>
         </form>
     </section>

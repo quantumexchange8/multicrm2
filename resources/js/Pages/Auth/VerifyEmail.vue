@@ -20,17 +20,14 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
 <template>
     <GuestLayout title="Email Verification">
         <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            Thanks for signing up! Before getting started, could you verify your
-            email address by clicking on the link we just emailed to you? If you
-            didn't receive the email, we will gladly send you another.
+            {{ $t('public.Verify Email') }}
         </div>
 
         <div
             class="mb-4 text-sm font-medium text-green-600"
             v-if="verificationLinkSent"
         >
-            A new verification link has been sent to the email address you provided
-            during registration.
+            {{ $t('public.A new verification link has been sent to the email address you provided during registration.') }}
         </div>
 
         <form @submit.prevent="submit">
@@ -39,7 +36,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
-                    Resend Verification Email
+                    {{ $t('public.Resend Verification Email') }}
                 </Button>
 
                 <Link
@@ -48,7 +45,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
                     as="button"
                     class="text-sm text-blue-600 hover:underline dark:text-blue-400"
                 >
-                    Log Out
+                    {{ $t('public.Log Out') }}
                 </Link>
             </div>
         </form>

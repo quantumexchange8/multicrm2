@@ -104,11 +104,11 @@ const paginationActiveClass = [
 </script>
 
 <template>
-    <AuthenticatedLayout title="Rebate Summary">
+    <AuthenticatedLayout :title="$t('public.sidebar.Rebate Summary')">
         <template #header>
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <h2 class="text-xl font-semibold leading-tight">
-                    Rebate Summary
+                    {{ $t('public.sidebar.Rebate Summary') }}
                 </h2>
             </div>
         </template>
@@ -116,7 +116,7 @@ const paginationActiveClass = [
         <form @submit.prevent="submitSearch">
             <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="space-y-2">
-                    <Label>Search By Name / Account No</Label>
+                    <Label>{{ $t('public.Search By Name / Account No') }}</Label>
                     <div class="relative w-full">
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -143,7 +143,7 @@ const paginationActiveClass = [
                 </div>
 
                 <div class="space-y-2">
-                    <Label>Filter By Date</Label>
+                    <Label>{{ $t('public.Filter By Date') }}</Label>
                     <vue-tailwind-datepicker
                         v-model="date"
                         :formatter="formatter"
@@ -157,14 +157,14 @@ const paginationActiveClass = [
                             variant="primary-opacity"
                             class="justify-center py-3"
                         >
-                            Search
+                        {{ $t('public.Search') }}
                         </Button>
                         <Button
                             variant="danger-opacity"
                             class="justify-center py-3"
                             @click.prevent="reset"
                         >
-                            Reset
+                        {{ $t('public.Reset') }}
                         </Button>
                     </div>
                 </div>
@@ -184,10 +184,10 @@ const paginationActiveClass = [
                     </div>
                     <div v-else class="flex flex-col">
                         <div>
-                            <span class="text-xs">Total (USD):</span> $ {{ findTotalBySymbolGroupId(symbolGroup.id).totalRebate }}
+                            <span class="text-xs">{{ $t('public.Total') }} (USD):</span> $ {{ findTotalBySymbolGroupId(symbolGroup.id).totalRebate }}
                         </div>
                         <div>
-                            <span class="text-xs">Total Lots:</span> {{ findTotalBySymbolGroupId(symbolGroup.id).totalVolume }}
+                            <span class="text-xs">{{ $t('public.Total Lots') }}:</span> {{ findTotalBySymbolGroupId(symbolGroup.id).totalVolume }}
                         </div>
                     </div>
 
@@ -204,19 +204,19 @@ const paginationActiveClass = [
                     <thead class="text-xs font-bold text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-white text-center">
                     <tr>
                         <th scope="col" class="px-4 py-3">
-                            Name
+                            {{ $t('public.Name') }}
                         </th>
                         <th scope="col" class="px-4 py-3">
-                            Account Number
+                            {{ $t('public.Account Number') }}
                         </th>
                         <th scope="col" class="px-4 py-3">
-                            Account Type
+                            {{ $t('public.Account Type') }}
                         </th>
                         <th scope="col" class="px-4 py-3">
-                            Date
+                            {{ $t('public.Date') }}
                         </th>
                         <th scope="col" class="px-4 py-3">
-                            Total Rebate (USD)
+                            {{ $t('public.Total Rebate') }} (USD)
                         </th>
                         <th scope="col" class="px-4 py-3" v-for="symbolGroup in symbolGroups">
                             {{ symbolGroup.display}} <br> (USD / Lot)

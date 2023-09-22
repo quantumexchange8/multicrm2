@@ -40,7 +40,7 @@ const closeModal = () => {
         @click="confirmDeletion"
     >
         <TrashIcon aria-hidden="true" class="w-6 h-6 absolute" />
-        <span class="sr-only">Delete</span>
+        <span class="sr-only">{{ $t('public.Delete') }}</span>
     </Button>
 
     <Modal :show="deleteAccountConfirm" @close="closeModal" max-width="2xl">
@@ -53,17 +53,17 @@ const closeModal = () => {
             </div>
             <div class="mt-6 text-center">
                 <h1 class="mb-4 text-2xl font-bold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-4xl dark:text-white" style="font-family: Montserrat,sans-serif">
-                    Delete Payment Account?
+                    {{ $t('public.Delete Payment Account?') }}
                 </h1>
                 <p class="dark:text-dark-eval-3">
-                    Please note that your payment account will be deleted permanently. Are you sure to delete the payment account?
+                    {{ $t('public.Please note that your payment account will be deleted permanently. Are you sure to delete the payment account?') }}
                 </p>
             </div>
             <div class="mt-6 flex gap-4 justify-center">
                 <Button variant="primary" class="px-6" @click="closeModal">
-                    Cancel
+                    {{ $t('public.Cancel') }}
                 </Button>
-                <Button class="px-6" variant="danger" @click.prevent="deleteAccount">Delete</Button>
+                <Button class="px-6" variant="danger" @click.prevent="deleteAccount">{{ $t('public.Delete') }}</Button>
             </div>
         </div>
     </Modal>
