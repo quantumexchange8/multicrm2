@@ -6,7 +6,7 @@
         <p
             class="flex items-center justify-center text-justify gap-1 text-sm text-gray-600  dark:text-gray-400"
         >
-            <span>{{ $t("public.Footer") }}</span>
+            <span>{{ $t("public.Risk Warning") }}</span>
         </p>
         <p class="text-sm text-gray-200">© Powered By Current Tech</p>
     </footer>
