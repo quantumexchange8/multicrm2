@@ -47,11 +47,19 @@ class PaymentAccountRequest extends FormRequest
         $paymentPlatform = $this->input('payment_platform');
 
         return [
+<<<<<<< Updated upstream
             'payment_platform_name' => $paymentPlatform === 'bank' ? trans('public.Bank Name') : trans('public.USDT protocol type'),
             'bank_branch_address' => trans('public.Bank Branch Address'),
             'payment_account_name' => $paymentPlatform === 'bank' ? trans('public.Bank Account Holder Name') : trans('public.USDT e-Wallet Name'),
             'account_no' => $paymentPlatform === 'bank' ? trans('public.Account No') : trans('public.Token Address'),
             'bank_swift_code' => trans('public.Bank Swift Code'),
+=======
+            'payment_platform_name' => $paymentPlatform === 'bank' ? trans('public.Bank Name') : 'USDT protocol type',
+            'bank_branch_address' => 'Bank Branch Address',
+            'payment_account_name' => $paymentPlatform === 'bank' ? 'Bank Account Holder Name' : 'USDT e-Wallet Name',
+            'account_no' => $paymentPlatform === 'bank' ? 'Account No.' : 'Token Address',
+            'bank_swift_code' => 'Bank Swift Code',
+>>>>>>> Stashed changes
             'bank_code_type' => 'ABA / IBAN',
             'bank_code' => trans('public.Bank Code'),
             'country' => trans('public.Country'),
