@@ -11,6 +11,7 @@ import QrcodeVue from 'qrcode.vue';
 import {DuplicateIcon} from "@heroicons/vue/outline";
 import toast from "@/Composables/toast.js";
 import {usePage} from "@inertiajs/vue3";
+import {trans} from "laravel-vue-i18n";
 
 const submitDeposit = ref(false)
 const cryptoWallets = ref([]);
@@ -60,7 +61,7 @@ function copyTestingCode () {
         var successful = document.execCommand('copy');
         if (successful) {
             toast.add({
-                message: "Copy Successfully!",
+                message: trans('public.Copy Successful!'),
             });
         } else {
             alert('Try again later')

@@ -126,7 +126,7 @@ class InternalTransferController extends Controller
 
         $user->cash_wallet -= $amount;
         $user->save();
-        return redirect()->back()->with('toast', 'Successful Transfer Wallet To Account!');
+        return redirect()->back()->with('toast', trans('public.Successful Transfer Wallet To Account!'));
     }
 
     public function account_to_wallet(Request $request)
@@ -181,7 +181,7 @@ class InternalTransferController extends Controller
         ]);
         $user->cash_wallet += $request->amount;
         $user->save();
-        return redirect()->back()->with('toast', 'Successful Transfer Account To Wallet!');
+        return redirect()->back()->with('toast', trans('public.Successful Transfer Account To Wallet!'));
     }
 
     public function account_to_account(Request $request)
@@ -244,6 +244,6 @@ class InternalTransferController extends Controller
             'status' => 'Successful',
 
         ]);
-        return redirect()->back()->with('toast', 'Successfully Transfer Account to Account');
+        return redirect()->back()->with('toast', trans('public.Successfully Transfer Account to Account'));
     }
 }

@@ -401,6 +401,7 @@ return [
     "Proof of Bank Account" => "Proof of Bank Account",
     "Select a USDT protocol type" => "Select a USDT protocol type",
     "USDT e-Wallet Name" => "USDT e-Wallet Name",
+    "USDT protocol type" => "USDT protocol type",
     "example - BINANCE WALLET" => "example - BINANCE WALLET",
     "Token Address" => "Token Address",
     "Update your account's profile information and email address." => "Update your account's profile information and email address.",
@@ -450,4 +451,20 @@ return [
     "Resend Verification Email" => "Resend Verification Email",
     "Select a country" => "Select a country",
     "Select a currency" => "Select a currency",
+    "Successfully Created Trading Account" => "Successfully Created Trading Account",
+    "Successfully Updated Leverage" => "Successfully Updated Leverage",
+    "Successful Transfer Wallet To Account!" => "Successful Transfer Wallet To Account!",
+    "Successful Transfer Account To Wallet!" => "Successful Transfer Account To Wallet!",
+    "Successfully Transfer Account to Account" => "Successfully Transfer Account to Account",
+    "The rebate allocation has been saved!" => "The rebate allocation has been saved!",
+    "Successfully Submitted Withdrawal Request" => "Successfully Submitted Withdrawal Request",
+    "Successfully Updated Profile" => "Successfully Updated Profile",
+    "Your payment account has been created successfully!" => "Your payment account has been created successfully!",
+    "Your payment account has been deleted successfully!" => "Your payment account has been deleted successfully!",
+
+    "Your portal password has been reset successfully!" => "Your portal password has been reset successfully!",
+
+    "Successfully Created Account" => "Successfully Created Account",
+    "Copy Successful!" => "Copy Successful!",
+    
 ];

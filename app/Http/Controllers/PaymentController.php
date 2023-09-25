@@ -244,7 +244,7 @@ class PaymentController extends Controller
             'currency' => $currency->currency,
         ]);
 
-        return back()->with('toast', 'Successfully Submitted Withdrawal Request');
+        return back()->with('toast', trans('public.Successfully Submitted Withdrawal Request'));
     }
 
     public function applyRebate(Request $request)

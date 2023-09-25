@@ -76,7 +76,7 @@ class AccountInfoController extends Controller
         $remarks = $user->remark . ' ' . $request->additionalNotes;
         $ctAccount = (new CTraderService)->createUser($user,  $mainPassword, $investorPassword, $group, $request->leverage, $request->group, null, null, $remarks);
         //Mail::to($user->email)->send(new NewMetaAccount($ctAccount['login'], $mainPassword, $investorPassword));
-        return back()->with('toast', 'Successfully Created Trading Account');
+        return back()->with('toast', trans('public.Successfully Created Trading Account'));
         // return true;
     }
 
@@ -103,7 +103,7 @@ class AccountInfoController extends Controller
                 return response()->json(['success' => false, 'message' => $e->getMessage()]);
             }
             $trading_account = TradingAccount::where('user_id', Auth::id())->get();
-            return back()->with('toast', 'Successfully Updated Leverage');
+            return back()->with('toast', trans('public.Successfully Updated Leverage'));
         }
         return redirect()->back();
     }

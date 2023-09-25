@@ -116,7 +116,7 @@ class ProfileController extends Controller
             ]);
         }
 
-        return Redirect::route('profile.detail')->with('toast', 'Successfully Updated Profile');
+        return Redirect::route('profile.detail')->with('toast', trans('public.Successfully Updated Profile'));
     }
 
     public function create_payment_account(PaymentAccountRequest $request)
@@ -152,7 +152,7 @@ class ProfileController extends Controller
             ]);
         }
 
-        return to_route('profile.detail')->with('toast', 'Your payment account has been created successfully!');
+        return to_route('profile.detail')->with('toast', trans('public.Your payment account has been created successfully!'));
     }
 
     /**
@@ -204,6 +204,6 @@ class ProfileController extends Controller
 
         $paymentAccount->delete();
 
-        return redirect()->back()->with('toast', 'Your payment account has been deleted successfully!');
+        return redirect()->back()->with('toast', trans('public.Your payment account has been deleted successfully!'));
     }
 }

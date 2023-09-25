@@ -177,7 +177,7 @@ class RegisteredUserController extends Controller
         $ctAccount = (new CTraderService)->createUser($user, $mainPassword, $investorPassword, $group, $inputArray['leverage'], $inputArray['group'], $leadCampaign, $leadSource, $remarks);
         $user->update(['remark' => $remarks]);
 
-        return redirect('/login')->with('toast', 'Successfully Created Account');
+        return redirect('/login')->with('toast', trans('public.Successfully Created Account'));
     }
 
     public function sendOtp(Request $request)

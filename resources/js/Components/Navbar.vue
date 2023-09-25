@@ -27,7 +27,7 @@ import DropdownLink from '@/Components/DropdownLink.vue'
 import { LangIconDark, LangIconWhite } from '@/Components/Icons/outline'
 import toast from "@/Composables/toast.js";
 import Modal from "@/Components/Modal.vue";
-import {loadLanguageAsync} from "laravel-vue-i18n";
+import {loadLanguageAsync, trans} from "laravel-vue-i18n";
 
 onMounted(() => {
     document.addEventListener('scroll', handleScroll)
@@ -52,7 +52,7 @@ function copyReferralCode() {
     document.body.removeChild(tempInput);
 
     toast.add({
-        message: "Copy Successful!",
+        message: trans('public.Copy Successful!'),
     });
 }
 
