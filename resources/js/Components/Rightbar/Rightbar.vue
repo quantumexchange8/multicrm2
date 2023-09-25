@@ -8,6 +8,7 @@ import {computed, ref, watch} from "vue";
 import Button from "@/Components/Button.vue";
 import { usePermission } from '@/Composables/permissions.js'
 import Swal from "sweetalert2";
+import {trans} from "laravel-vue-i18n";
 
 const page = usePage()
 const monthlyDeposit = page.props.monthlyDeposit;
@@ -89,7 +90,7 @@ async function applyRebate() {
                 background: '#000000',
                 iconColor: '#ffffff',
                 color: '#ffffff',
-                confirmButtonText: 'OK',
+                confirmButtonText: trans('public.OK'),
                 buttonsStyling: false,
                 customClass: {
                     confirmButton: 'bg-blue-500 py-2 px-6 rounded-full text-white hover:bg-blue-600 focus:ring-blue-500',
@@ -112,12 +113,12 @@ async function confirmApplyRebate() {
     });
 
     const result = await swalWithBootstrapButtons.fire({
-        title: 'Are you sure?',
-        text: "You are applying rebate.",
+        title: trans('public.rightbar.Are you sure?'),
+        text: trans("public.rightbar.You are applying rebate."),
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Confirm',
-        cancelButtonText: 'Cancel',
+        confirmButtonText: trans('public.Confirm'),
+        cancelButtonText: trans('public.Cancel'),
         reverseButtons: true,
     });
 
@@ -125,10 +126,10 @@ async function confirmApplyRebate() {
         await applyRebate();
     } else if (result.dismiss === Swal.DismissReason.cancel) {
         swalWithBootstrapButtons.fire({
-            title: 'Cancelled',
-            text: "You have cancelled the action",
+            title: trans('public.Cancelled'),
+            text: trans("public.rightbar.You have cancelled the action"),
             icon: 'error',
-            confirmButtonText: 'OK',
+            confirmButtonText: trans('public.OK'),
             customClass: {
                 confirmButton: 'bg-blue-500 py-2 px-6 rounded-full text-white hover:bg-blue-600 focus:ring-blue-500',
             },
