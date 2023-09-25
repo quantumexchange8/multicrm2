@@ -31,15 +31,15 @@ class ProfileUpdateRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'first_name' => 'Name',
-            'chinese_name' => 'Chinese Name',
-            'dob' => 'Date Of Birth',
-            'country' => 'Country',
-            'phone' => 'Phone',
-            'email' => 'Email',
-            'avatar' => 'Profile Photo',
-            'front_identity' => 'Proof of Identity (Front) ',
-            'back_identity' => 'Proof of Identity (Back) ',
+            'first_name' => trans('public.Name'),
+            'chinese_name' => trans('public.Chinese Name'),
+            'dob' => trans('public.Date Of Birth'),
+            'country' => trans('public.Country'),
+            'phone' => trans('public.Phone'),
+            'email' => trans('public.Email'),
+            'avatar' => trans('public.Profile Photo'),
+            'front_identity' => trans('public.Proof of Identity (Front)'),
+            'back_identity' => trans('public.Proof of Identity (Back)'),
         ];
     }
 }

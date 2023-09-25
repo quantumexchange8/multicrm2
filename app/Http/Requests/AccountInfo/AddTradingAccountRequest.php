@@ -33,11 +33,11 @@ class AddTradingAccountRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'leverage' => 'Leverage',
-            'currency' => 'Currency',
-            'group' => 'Account Type',
-            'terms' => 'Terms & Conditions',
-            'additionalNotes' => 'Additional Notes',
+            'leverage' => trans('public.Leverage'),
+            'currency' => trans('public.Currency'),
+            'group' => trans('public.Account Type'),
+            'terms' => trans('public.Terms & Conditions'),
+            'additionalNotes' => trans('public.Additional Notes'),
         ];
     }
 }

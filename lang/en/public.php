@@ -461,10 +461,10 @@ return [
     "Successfully Updated Profile" => "Successfully Updated Profile",
     "Your payment account has been created successfully!" => "Your payment account has been created successfully!",
     "Your payment account has been deleted successfully!" => "Your payment account has been deleted successfully!",
-
     "Your portal password has been reset successfully!" => "Your portal password has been reset successfully!",
-
     "Successfully Created Account" => "Successfully Created Account",
     "Copy Successful!" => "Copy Successful!",
-    
+    "Account Platform" => "Account Platform",
+    "Profile Photo" => "Profile Photo",
+    "Additional Notes" => "Additional Notes",
 ];

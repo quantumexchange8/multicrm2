@@ -40,9 +40,9 @@ class DepositRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'amount' => 'Deposit Amount',
-            'account_no' => 'Account No',
-            'currency' => 'Currency',
+            'amount' => trans('public.Deposit Amount'),
+            'account_no' => trans('public.Account No'),
+            'currency' => trans('public.Currency'),
         ];
     }
 }

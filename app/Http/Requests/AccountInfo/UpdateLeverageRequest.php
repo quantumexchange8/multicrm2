@@ -31,9 +31,9 @@ class UpdateLeverageRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'leverage' => 'Leverage',
-            'account_no' => 'Account No',
-            'terms' => 'Terms & Conditions'
+            'leverage' => trans('public.Leverage'),
+            'account_no' => trans('public.Account No'),
+            'terms' => trans('public.Terms & Conditions'),
         ];
     }
 }

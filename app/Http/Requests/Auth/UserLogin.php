@@ -32,8 +32,8 @@ class UserLogin extends FormRequest
     public function attributes()
     {
         return [
-            'username' => 'Email',
-            'password' => 'Password',
+            'username' => trans('public.Email'),
+            'password' => trans('public.Password'),
         ];
     }
 }

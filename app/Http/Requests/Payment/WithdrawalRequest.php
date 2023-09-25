@@ -33,17 +33,17 @@ class WithdrawalRequest extends FormRequest
     public function attributes(): array
     {
         $attributeNames = [
-            'amount' => 'Amount',
-            'channel' => 'Withdrawal Method',
-            'terms' => 'Term and Conditions',
+            'amount' => trans('public.Amount'),
+            'channel' => trans('public.Withdrawal Method'),
+            'terms' => trans('public.Terms and Conditions'),
         ];
 
         if ($this->input('channel') =='bank') {
-            $attributeNames['account_no'] = 'Bank Account';
-            $attributeNames['account_type'] = 'Bank';
+            $attributeNames['account_no'] = trans('public.Bank Account');
+            $attributeNames['account_type'] = trans('public.Bank');
         } else {
-            $attributeNames['account_no'] = 'Cryptocurrency Address';
-            $attributeNames['account_type'] = 'Cryptocurrency';
+            $attributeNames['account_no'] = trans('public.Cryptocurrency Address');
+            $attributeNames['account_type'] = trans('public.Cryptocurrency');
         }
 
         return $attributeNames;

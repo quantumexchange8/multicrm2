@@ -55,28 +55,28 @@ class RegisterUserRequest extends FormRequest
     {
         return [
             //Page 1
-            'email' => 'Email',
-            'phone' => 'Phone',
-            'password' =>'Password',
-            'password_confirmation' =>'Confirm Password',
+            'email' => trans('public.Email'),
+            'phone' => trans('public.Phone'),
+            'password' => trans('public.Password'),
+            'password_confirmation' => trans('public.Confirm Password'),
 
             //Page 2
-            'name' => 'Full Name',
-            'chinese_name' => 'Full Name',
-            'dob' => 'Date of Birth',
-            'country' => 'Country',
+            'name' => trans('public.Full Name'),
+            'chinese_name' => trans('public.Full Name'),
+            'dob' => trans('public.Date of Birth'),
+            'country' => trans('public.Country'),
 
             //Page 3
-            'account_platform' => 'Account Platform',
-            'account_type' => 'Account Type',
-            'leverage' => 'Leverage',
+            'account_platform' => trans('public.Account Platform'),
+            'account_type' => trans('public.Account Type'),
+            'leverage' => trans('public.Leverage'),
 
             //Page 4
-            'front_identity' => 'Proof of Identity (FRONT)',
-            'back_identity' => 'Proof of Identity (BACK)',
-            'verification_via' => 'Verification Via',
-            'verification_code' => 'Verification Code',
-            'terms' => 'Term and Conditions',
+            'front_identity' => trans('public.Proof of Identity (FRONT)'),
+            'back_identity' => trans('public.Proof of Identity (BACK)'),
+            'verification_via' => trans('public.Verification Via'),
+            'verification_code' => trans('public.Verification Code'),
+            'terms' => trans('public.Terms and Conditions'),
         ];
     }
 }
