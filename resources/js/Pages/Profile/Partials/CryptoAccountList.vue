@@ -53,10 +53,10 @@ const paginationActiveClass = [
                 <thead class="text-xs font-bold text-gray-700 uppercase bg-gray-50 dark:bg-transparent dark:text-white text-center">
                 <tr>
                     <th scope="col" class="px-4 py-3">
-                        {{ $t('public.USDT E-Wallet Name') }}
+                        {{ $t('public.USDT e-Wallet Name') }}
                     </th>
                     <th scope="col" class="px-4 py-3">
-                        {{ $t('public.USDT Protocol Type') }}
+                        {{ $t('public.USDT protocol type') }}
                     </th>
                     <th scope="col" class="px-4 py-3">
                         {{ $t('public.Token Address') }}

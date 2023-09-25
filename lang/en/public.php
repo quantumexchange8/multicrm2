@@ -386,8 +386,8 @@ return [
     "Bank Holder Name" => "Bank Holder Name",
     "No Account" => "No Account",
     "Cryptocurrency Wallet" => "Cryptocurrency Wallet",
-    "USDT E-Wallet Name" => "USDT E-Wallet Name",
-    "USDT Protocol Type" => "USDT Protocol Type",
+//    "USDT E-Wallet Name" => "USDT E-Wallet Name",
+//    "USDT Protocol Type" => "USDT Protocol Type",
     "Token Address" => "Token Address",
     "No Wallet" => "No Wallet",
     "Profile Information" => "Profile Information",
@@ -403,7 +403,6 @@ return [
     "USDT e-Wallet Name" => "USDT e-Wallet Name",
     "USDT protocol type" => "USDT protocol type",
     "example - BINANCE WALLET" => "example - BINANCE WALLET",
-    "Token Address" => "Token Address",
     "Update your account's profile information and email address." => "Update your account's profile information and email address.",
     "Your email address is unverified." => "Your email address is unverified.",
     "Click here to re-send the verification email." => "Click here to re-send the verification email.",
@@ -419,7 +418,7 @@ return [
     "Info" => "Info",
     "Search Name/Email." => "Search Name/Email.",
     "Name / Email" => "Name / Email",
-    "Level" => "Level", 
+    "Level" => "Level",
     "Total IB" => "Total IB",
     "Total Client" => "Total Client",
     "IB Name" => "IB Name",
@@ -461,10 +460,7 @@ return [
     "Successfully Updated Profile" => "Successfully Updated Profile",
     "Your payment account has been created successfully!" => "Your payment account has been created successfully!",
     "Your payment account has been deleted successfully!" => "Your payment account has been deleted successfully!",
-
     "Your portal password has been reset successfully!" => "Your portal password has been reset successfully!",
-
     "Successfully Created Account" => "Successfully Created Account",
     "Copy Successful!" => "Copy Successful!",
-    
 ];
