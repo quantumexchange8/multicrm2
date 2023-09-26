@@ -306,7 +306,7 @@ const changeLanguage = async (langVal) => {
                         @click.stop.prevent="copyReferralCode"
                     >
                         <p class="text-xs my-2 text-gray-500 dark:text-dark-eval-4">{{ $t('public.Promote Register Code') }}</p>
-                        <span id="userReferralCode" class="text-white">{{ user.referral_code }}</span>
+                        <span id="userReferralCode" class="text-gray-500 dark:text-white">{{ user.referral_code }}</span>
                         <Button class="w-full justify-center my-2" @click.stop.prevent="copyReferralCode">{{ $t('public.Copy') }}</Button>
                     </DropdownLink>
                 </template>
