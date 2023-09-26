@@ -196,11 +196,11 @@ class RegisteredUserController extends Controller
 
         if ($isSent)
         {
-            return response()->json(['message' => 'OTP sent successfully']);
+            return response()->json(['message' => trans('public.OTP sent successfully')]);
         }
         else
         {
-            return response()->json(['message' => 'OTP failed']);
+            return response()->json(['message' => trans('public.OTP failed')]);
         }
     }
 }

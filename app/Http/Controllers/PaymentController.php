@@ -254,7 +254,7 @@ class PaymentController extends Controller
         if ($accountType->rebate_wallet <= 0) {
             return response()->json([
                 'success' => false,
-                'message' => trans('Insufficient balance to apply the rebate. You have not earned any rebate yet.')
+                'message' => trans('public.Insufficient balance to apply the rebate. You have not earned any rebate yet.')
             ], 422);
         }
 
@@ -274,7 +274,7 @@ class PaymentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Congratulation, we have received your rebate request. The rebate will be transferred to your cash wallet shortly. Once processed, you will be able to withdraw or transfer your funds.',
+            'message' => trans('public.Congratulation, we have received your rebate request. The rebate will be transferred to your cash wallet shortly. Once processed, you will be able to withdraw or transfer your funds.'),
             'cash_wallet' => $user->cash_wallet,
             'rebate_wallet' => $accountType->rebate_wallet
         ]);

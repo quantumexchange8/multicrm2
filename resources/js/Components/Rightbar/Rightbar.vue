@@ -24,7 +24,7 @@ watch(() => page.props.auth.user.cash_wallet, (newCashWallet) => {
 });
 
 const rebateEarnedComponent = ref({
-    title: 'Rebate Earned ($)',
+    title: trans('public.Rebate Earned') + ' ($)',
     amount: IBAccountTypes[0] && IBAccountTypes[0].rebate_wallet
         ? formatAmount(IBAccountTypes[0].rebate_wallet)
         : '0.00',
@@ -43,13 +43,13 @@ async function applyRebate() {
         });
         if (response.data.success) {
             await Swal.fire({
-                title: 'Success',
+                title: trans('public.Success'),
                 text: response.data.message,
                 icon: 'success',
                 background: '#000000',
                 iconColor: '#ffffff',
                 color: '#ffffff',
-                confirmButtonText: 'OK',
+                confirmButtonText: trans('public.OK'),
                 buttonsStyling: false,
                 customClass: {
                     confirmButton: 'bg-blue-500 py-2 px-6 rounded-full text-white hover:bg-blue-600 focus:ring-blue-500',
@@ -60,7 +60,7 @@ async function applyRebate() {
             if (hasRole('ib')) {
                 // Update rebateEarnedComponent with new value
                 rebateEarnedComponent.value = {
-                    title: 'Rebate Earned ($)',
+                    title: trans('public.Rebate Earned') + ' ($)',
                     amount: formatAmount(response.data.rebate_wallet),
                 };
             }
@@ -70,13 +70,13 @@ async function applyRebate() {
     } catch (error) {
         if (error.response && error.response.status === 422) {
             await Swal.fire({
-                title: 'Error',
+                title: trans('public.Error'),
                 text: error.response.data.message,
                 icon: 'error',
                 background: '#000000',
                 iconColor: '#ffffff',
                 color: '#ffffff',
-                confirmButtonText: 'OK',
+                confirmButtonText: trans('public.OK'),
                 buttonsStyling: false,
                 customClass: {
                     confirmButton: 'bg-blue-500 py-2 px-6 rounded-full text-white hover:bg-blue-600 focus:ring-blue-500',
@@ -84,8 +84,8 @@ async function applyRebate() {
             });
         } else {
             await Swal.fire({
-                title: 'Error',
-                text: 'An error occurred while applying the rebate.',
+                title: trans('public.Error'),
+                text: trans('public.An error occurred while applying the rebate.'),
                 icon: 'error',
                 background: '#000000',
                 iconColor: '#ffffff',
