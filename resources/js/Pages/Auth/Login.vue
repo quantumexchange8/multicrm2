@@ -94,7 +94,7 @@ function closeDrawer() {
                 </svg>
                 <span class="sr-only">Close drawer</span>
             </button>
-            <p class="mb-6 text-sm text-gray-400">{{ $t('public.Footer') }}</p>
+            <p class="mb-6 text-sm text-gray-400">{{ $t('public.Risk Warning') }}</p>
             <p class="text-sm text-gray-200">© Powered By Current Tech</p>
         </div>
 
