@@ -12,6 +12,7 @@ import VueTailwindDatepicker from 'vue-tailwind-datepicker'
 import RegisterCaption from "@/Components/Auth/RegisterCaption.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import InputError from "@/Components/InputError.vue";
+import toast from "@/Composables/toast.js";
 
 const dateValue = ref([])
 const formatter = ref({
@@ -126,9 +127,9 @@ function generateOTP() {
 
 function startCountdown() {
     isButtonDisabled.value = true;
-    buttonText.value = '60';
+    buttonText.value = '180';
 
-    let count = 60;
+    let count = 180;
     const countdownInterval = setInterval(() => {
         count--;
         buttonText.value = count.toString();
@@ -140,7 +141,7 @@ function startCountdown() {
         }
 
         // Generate OTP
-        if (count === 59) {
+        if (count === 179) {
             const otp = generateOTP();
             const email = form.email;
             let url = 'register/send-otp';
@@ -150,8 +151,9 @@ function startCountdown() {
             axios
                 .post(url, { otp, email })
                 .then(response => {
-
-                    console.log(response.data);
+                    toast.add({
+                        message: response.data.message,
+                    });
                 })
                 .catch(error => {
                     // Handle the error if needed

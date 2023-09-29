@@ -77,7 +77,7 @@ const alignmentClasses = computed(() => {
                     :class="contentClasses"
                 >
                     <PerfectScrollbar
-                        tagname="nav"
+                        tagname="div"
                         aria-label="main"
                         class="relative flex flex-col flex-1 max-h-64 gap-2 px-3"
                     >
