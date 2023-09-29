@@ -221,7 +221,7 @@ class PaymentController extends Controller
         $user = Auth::user();
         $amount = floatval($request->amount);
         if ($user->cash_wallet < $amount) {
-            throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
+            throw ValidationException::withMessages(['amount' => trans('public.Insufficient balance')]);
         }
         $user->cash_wallet -= $amount;
         $user->save();

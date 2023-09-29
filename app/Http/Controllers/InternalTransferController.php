@@ -98,7 +98,7 @@ class InternalTransferController extends Controller
         $user = User::find($user_id);
         $amount = floatval($request->amount);
         if ($user->cash_wallet < $amount) {
-            throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
+            throw ValidationException::withMessages(['amount' => trans('public.Insufficient balance')]);
         }
 
         $payment_id = RunningNumberService::getID('transaction');
@@ -151,7 +151,7 @@ class InternalTransferController extends Controller
         $tradingUser = TradingUser::firstWhere('meta_login', $request->account_no);
 
         if ($tradingUser->balance < $request->amount) {
-            throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
+            throw ValidationException::withMessages(['amount' => trans('public.Insufficient balance')]);
         }
 
         $payment_id = RunningNumberService::getID('transaction');
@@ -206,7 +206,7 @@ class InternalTransferController extends Controller
         $tradingUser = TradingUser::firstWhere('meta_login', $request->account_no_1);
 
         if ($tradingUser->balance < $request->amount) {
-            throw ValidationException::withMessages(['amount' => trans('Insufficient balance')]);
+            throw ValidationException::withMessages(['amount' => trans('public.Insufficient balance')]);
         }
 
         $payment_id = RunningNumberService::getID('transaction');

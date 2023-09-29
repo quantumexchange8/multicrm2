@@ -184,7 +184,7 @@ class NetworkController extends Controller
 
             if ($parent && $amount >= $parent->amount) {
                 $fieldKey = 'ibGroupRates.' . $key;
-                $errorMessage = $parent->symbolGroup->name . ' amount cannot be higher than ' . $parent->amount;
+                $errorMessage = $parent->symbolGroup->name . ' ' . trans('public.amount cannot be higher than') . ' ' . $parent->amount;
                 $validationErrors->add($fieldKey, $errorMessage);
             }
         }
@@ -199,7 +199,7 @@ class NetworkController extends Controller
 
                 if ($childRate && $amount < $childRate->amount) {
                     $fieldKey = 'ibGroupRates.' . $key;
-                    $errorMessage = $childRate->symbolGroup->name . ' amount cannot be lower than ' . $childRate->amount;
+                    $errorMessage = $childRate->symbolGroup->name . ' ' . trans('public.amount cannot be lower than') . ' ' . $childRate->amount;
                     $validationErrors->add($fieldKey, $errorMessage);
                 }
             }

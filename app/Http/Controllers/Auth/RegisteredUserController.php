@@ -143,7 +143,7 @@ class RegisteredUserController extends Controller
 
         if (Carbon::now()->greaterThan($expirationTime)) {
             throw ValidationException::withMessages([
-                'verification_code' => 'The Verification OTP Code expired.'
+                'verification_code' => trans('public.The Verification OTP Code expired.')
             ]);
         }
 

@@ -473,5 +473,9 @@ return [
     "Error" => "Error",
     "An error occured while applying the rebate." => "An error occured while applying the rebate.",
     "Success" => "Success",
-    "Rebate Earned" => "Rebate Earned" 
+    "Rebate Earned" => "Rebate Earned",
+    "Insufficient balance" => "Insufficient balance",
+    "The Verification OTP Code expired." => "The Verification OTP Code expired.",
+    "amount cannot be higher than" => "amount cannot be higher than",
+    "amount cannot be lower than" => "amount cannot be lower than",
 ];
