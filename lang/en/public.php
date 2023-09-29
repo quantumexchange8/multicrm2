@@ -354,7 +354,6 @@ return [
         "Withdrawal Amount" => "Withdrawal Amount",
         "Are you sure?" => "Are you sure?",
         "You are applying rebate." => "You are applying rebate.",
-        "You have cancelled the action" => "You have cancelled the action",
     ],
     "Bank Account" => "Bank Account",
     "Account To Account" => "Account To Account",
@@ -480,4 +479,5 @@ return [
     "amount cannot be lower than" => "amount cannot be lower than",
     "Account to Transfer" => "Account to Transfer",
     "Account to Receive" => "Account to Receive",
+    "You have cancelled the action" => "You have cancelled the action",
 ];

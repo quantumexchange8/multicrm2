@@ -127,7 +127,7 @@ async function confirmApplyRebate() {
     } else if (result.dismiss === Swal.DismissReason.cancel) {
         swalWithBootstrapButtons.fire({
             title: trans('public.Cancelled'),
-            text: trans("public.rightbar.You have cancelled the action"),
+            text: trans("public.You have cancelled the action"),
             icon: 'error',
             confirmButtonText: trans('public.OK'),
             customClass: {
