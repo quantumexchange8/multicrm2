@@ -478,4 +478,6 @@ return [
     "The Verification OTP Code expired." => "The Verification OTP Code expired.",
     "amount cannot be higher than" => "amount cannot be higher than",
     "amount cannot be lower than" => "amount cannot be lower than",
+    "Account to Transfer" => "Account to Transfer",
+    "Account to Receive" => "Account to Receive",
 ];

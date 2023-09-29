@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\InternalTransferRequest;
 use App\Models\Payment;
 use App\Models\TradingUser;
 use App\Models\User;
@@ -79,7 +80,7 @@ class InternalTransferController extends Controller
         return response()->json($filteredPayments);
     }
 
-    public function wallet_to_account(Request $request)
+    public function wallet_to_account(InternalTransferRequest $request)
     {
         $conn = (new CTraderService)->connectionStatus();
         if ($conn['code'] != 0) {
@@ -89,10 +90,6 @@ class InternalTransferController extends Controller
             return response()->json(['success' => false, 'message' => $conn['message']]);
         }
 
-        $request->validate([
-            'account_no' => 'required|string',
-            'amount' => 'required|numeric|min:0',
-        ]);
         //$user = Auth::user();
         $user_id = Auth::id();
         $user = User::find($user_id);
@@ -129,7 +126,7 @@ class InternalTransferController extends Controller
         return redirect()->back()->with('toast', trans('public.Successful Transfer Wallet To Account!'));
     }
 
-    public function account_to_wallet(Request $request)
+    public function account_to_wallet(InternalTransferRequest $request)
     {
         $conn = (new CTraderService)->connectionStatus();
         if ($conn['code'] != 0) {
@@ -138,11 +135,6 @@ class InternalTransferController extends Controller
             }
             return response()->json(['success' => false, 'message' => $conn['message']]);
         }
-
-        $request->validate([
-            'account_no' => 'required|string',
-            'amount' => 'required|numeric|min:0',
-        ]);
 
         $user = Auth::user();
 
@@ -184,7 +176,7 @@ class InternalTransferController extends Controller
         return redirect()->back()->with('toast', trans('public.Successful Transfer Account To Wallet!'));
     }
 
-    public function account_to_account(Request $request)
+    public function account_to_account(InternalTransferRequest $request)
     {
         $conn = (new CTraderService)->connectionStatus();
         if ($conn['code'] != 0) {
@@ -193,12 +185,6 @@ class InternalTransferController extends Controller
             }
             return response()->json(['success' => false, 'message' => $conn['message']]);
         }
-
-        $request->validate([
-            'account_no_1' => 'required|string',
-            'account_no_2' => 'required|string|different:account_no_1',
-            'amount' => 'required|numeric|min:0',
-        ]);
 
         $user = Auth::user();
         $tradingUser = TradingUser::firstWhere('meta_login', $request->account_no_1);
