@@ -80,7 +80,7 @@ class InternalTransferController extends Controller
         return response()->json($filteredPayments);
     }
 
-    public function wallet_to_account(InternalTransferRequest $request)
+    public function wallet_to_account(Request $request)
     {
         $conn = (new CTraderService)->connectionStatus();
         if ($conn['code'] != 0) {
@@ -126,7 +126,7 @@ class InternalTransferController extends Controller
         return redirect()->back()->with('toast', trans('public.Successful Transfer Wallet To Account!'));
     }
 
-    public function account_to_wallet(InternalTransferRequest $request)
+    public function account_to_wallet(Request $request)
     {
         $conn = (new CTraderService)->connectionStatus();
         if ($conn['code'] != 0) {
@@ -176,7 +176,7 @@ class InternalTransferController extends Controller
         return redirect()->back()->with('toast', trans('public.Successful Transfer Account To Wallet!'));
     }
 
-    public function account_to_account(InternalTransferRequest $request)
+    public function account_to_account(Request $request)
     {
         $conn = (new CTraderService)->connectionStatus();
         if ($conn['code'] != 0) {

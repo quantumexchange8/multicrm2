@@ -6,14 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class InternalTransferRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+
     public function authorize(): bool
     {
         return true;
     }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -32,11 +29,12 @@ class InternalTransferRequest extends FormRequest
 
     public function attributes(): array
     {
-        return [
+        $attributeNames = [
             'account_no' => trans('public.Account No'),
             'account_no_1' => trans('public.Account to Transfer'),
             'account_no_2' => trans('public.Account to Receive'),
             'amount' => trans('public.Amount'),
         ];
+        return $attributeNames;
     }
 }

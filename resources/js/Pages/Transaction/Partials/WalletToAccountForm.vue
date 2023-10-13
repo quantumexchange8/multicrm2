@@ -31,7 +31,7 @@ const submit = () => {
             <div class="space-y-2">
                 <Label for="account_no" :value="$t('public.Account To Receive')" />
                 <InputSelect class="w-full" id="account_no" v-model="form.account_no" :placeholder="$t('public.Select Account No')" >
-                    <option v-for="paymentAccount in tradingUsers" :value="paymentAccount.meta_login" :key="paymentAccount.id">{{ paymentAccount.meta_login }} ( $ {{ paymentAccount.balance }} )</option>
+                    <option v-for="paymentAccount in tradingUsers" :value="paymentAccount.meta_login" :key="paymentAccount.id">{{ paymentAccount.meta_login }} ( $ {{ parseFloat(paymentAccount.balance - paymentAccount.credit).toFixed(2) }} )</option>
                 </InputSelect>
                 <InputError :message="form.errors.account_no"/>
             </div>
