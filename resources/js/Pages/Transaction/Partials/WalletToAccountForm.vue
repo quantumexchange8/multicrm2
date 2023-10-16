@@ -11,6 +11,7 @@ defineProps({
 })
 
 const form = useForm({
+    transfer_type: 'WTA',
     account_no: '',
     amount: '',
 });

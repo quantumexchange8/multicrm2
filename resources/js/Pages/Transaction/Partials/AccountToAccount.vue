@@ -11,6 +11,7 @@ defineProps({
 })
 
 const form = useForm({
+    transfer_type: 'ATA',
     account_no_1: '',
     account_no_2: '',
     amount: '',

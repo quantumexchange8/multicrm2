@@ -80,7 +80,7 @@ class InternalTransferController extends Controller
         return response()->json($filteredPayments);
     }
 
-    public function wallet_to_account(Request $request)
+    public function wallet_to_account(InternalTransferRequest $request)
     {
         $conn = (new CTraderService)->connectionStatus();
         if ($conn['code'] != 0) {
@@ -126,7 +126,7 @@ class InternalTransferController extends Controller
         return redirect()->back()->with('toast', trans('public.Successful Transfer Wallet To Account!'));
     }
 
-    public function account_to_wallet(Request $request)
+    public function account_to_wallet(InternalTransferRequest $request)
     {
         $conn = (new CTraderService)->connectionStatus();
         if ($conn['code'] != 0) {
@@ -142,7 +142,7 @@ class InternalTransferController extends Controller
         (new CTraderService)->getUserInfo([$tradingUser]);
         $tradingUser = TradingUser::firstWhere('meta_login', $request->account_no);
 
-        if ($tradingUser->balance < $request->amount) {
+        if (($tradingUser->balance - $tradingUser->credit) < $request->amount) {
             throw ValidationException::withMessages(['amount' => trans('public.Insufficient balance')]);
         }
 
@@ -176,7 +176,7 @@ class InternalTransferController extends Controller
         return redirect()->back()->with('toast', trans('public.Successful Transfer Account To Wallet!'));
     }
 
-    public function account_to_account(Request $request)
+    public function account_to_account(InternalTransferRequest $request)
     {
         $conn = (new CTraderService)->connectionStatus();
         if ($conn['code'] != 0) {
@@ -191,7 +191,7 @@ class InternalTransferController extends Controller
         (new CTraderService)->getUserInfo([$tradingUser]);
         $tradingUser = TradingUser::firstWhere('meta_login', $request->account_no_1);
 
-        if ($tradingUser->balance < $request->amount) {
+        if (($tradingUser->balance - $tradingUser->credit) < $request->amount) {
             throw ValidationException::withMessages(['amount' => trans('public.Insufficient balance')]);
         }
 

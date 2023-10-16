@@ -12,6 +12,7 @@ defineProps({
 })
 
 const form = useForm({
+    transfer_type: 'ATW',
     account_no: '',
     amount: '',
 });
