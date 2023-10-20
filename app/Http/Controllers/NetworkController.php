@@ -81,13 +81,14 @@ class NetworkController extends Controller
     public function treeData(Request $request)
     {
         $user = Auth::user();
+        $userQuery = User::where('id', $user->id);
 
-        $usersQuery = User::where('id', $user->id)
-            ->orWhereHas('upline', function ($query) use ($user) {
-                $query->where('id', $user->id);
-            });
+        $usersQuery = User::where('id', '<>', $user->id) // Exclude the current user
+        ->orWhereHas('upline', function ($query) use ($user) {
+            $query->where('id', $user->id);
+        });
 
-        $users = $usersQuery->get();
+        $users = $userQuery->union($usersQuery)->get();
 
         if ($request->filled('search')) {
             $search = $request->input('search');

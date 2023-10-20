@@ -221,6 +221,9 @@ const paginationActiveClass = [
                     <th scope="col" class="px-4 py-3">
                         {{ $t('public.Rebate')}}
                     </th>
+                    <th scope="col" class="px-4 py-3">
+                        {{ $t('public.Date')}}
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -251,8 +254,11 @@ const paginationActiveClass = [
                     <th>
                         {{ rebate.ticket }}
                     </th>
-                    <th class="py-2 font-thin rounded-r-full">
+                    <th>
                         $ {{ formatAmount(rebate.revenue) }}
+                    </th>
+                    <th class="py-2 px-4 font-thin rounded-r-full">
+                        $ {{ formatDate(rebate.created_at) }}
                     </th>
                 </tr>
                 </tbody>
