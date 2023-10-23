@@ -104,6 +104,10 @@ class ProfileController extends Controller
             $description = ($description ? $description . ' and ' : '') . 'has uploaded the back identity document';
         }
 
+        if ($request->hasFile('front_identity') || $request->hasFile('back_identity')) {
+            Auth::user()->update(['kyc_approval' => 'pending']);
+        }
+
         if ($description) {
             Activity::create([
                 'log_name' => 'user', // Specify the log name here
