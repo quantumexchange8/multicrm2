@@ -79,6 +79,7 @@ const { hasRole } = usePermission();
         </SidebarCollapsible>
 
         <SidebarCollapsible
+            v-if="hasRole('ib')"
             :title="$t('public.sidebar.Group Network')"
             :active="route().current('group_network.*')"
         >
