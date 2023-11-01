@@ -18,6 +18,7 @@ use App\Services\RunningNumberService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -243,6 +244,21 @@ class PaymentController extends Controller
             'account_type' => $request->account_type,
             'currency' => $currency->currency,
         ]);
+
+        //payment id-transaction id, type,amount,account no
+        $data = [
+            'payment_id' => $payment_id,
+            'type' => 'Withdrawal',
+            'amount' => $amount,
+            'account_no' => $request->account_no,
+            'title' => 'Withdrawal Request - ' . $payment_id,
+
+        ];
+
+        Mail::send('email/withdrawalEmail', ['emailData' => $data], function ($message) use ($data) {
+            $message->to('developer@currenttech.pro')
+                ->subject($data['title']);
+        });
 
         return back()->with('toast', trans('public.Successfully Submitted Withdrawal Request'));
     }

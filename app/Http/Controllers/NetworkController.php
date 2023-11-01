@@ -174,7 +174,7 @@ class NetworkController extends Controller
                 ->where('symbol_group', $key)
                 ->first();
 
-            if ($parent && $amount >= $parent->amount) {
+            if ($parent && $amount > $parent->amount) {
                 $fieldKey = 'ibGroupRates.' . $key;
                 $errorMessage = $parent->symbolGroup->name . ' ' . trans('public.amount cannot be higher than') . ' ' . $parent->amount;
                 $validationErrors->add($fieldKey, $errorMessage);
