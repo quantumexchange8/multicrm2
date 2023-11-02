@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AccountInfo\AddTradingAccountRequest;
 use App\Http\Requests\AccountInfo\UpdateLeverageRequest;
 use App\Models\AccountType;
+use App\Models\Setting;
 use App\Models\SettingLeverage;
 use App\Models\TradingAccount;
 use App\Models\TradingUser;
@@ -59,6 +60,13 @@ class AccountInfoController extends Controller
         }
 
         $user = Auth::user();
+        $currentTradingAccountCounts = TradingAccount::where('user_id', $user->id)->count();
+        $settings = Setting::getKeyValue();
+        $settingCounts = intval($settings['trading_account_numbers_per_member']);
+
+        if ($currentTradingAccountCounts >= $settingCounts) {
+            return redirect()->back()->withErrors('Maximum number of trading accounts can be created are '. $settingCounts);
+        }
 
         /*
         $mainPassword = Str::random(8);

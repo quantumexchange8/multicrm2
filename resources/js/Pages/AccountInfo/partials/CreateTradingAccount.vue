@@ -9,6 +9,7 @@ import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
 import {ref} from "vue";
 import {useForm} from "@inertiajs/vue3";
+import ValidationErrors from "@/Components/ValidationErrors.vue";
 
 const props = defineProps({
     accountTypes: Object,
@@ -80,6 +81,7 @@ const closeModal = () => {
             {{ $t('public.Add Trading Account') }}
             </h2>
             <hr>
+            <ValidationErrors class="my-4" v-if="!form.errors.leverage && !form.errors.currency && !form.errors.group && !form.errors.terms"/>
             <div class="mt-6 space-y-2">
                 <Label for="group" :value="$t('public.Select Account Type')" />
                 <ul class="grid w-full gap-6 md:grid-cols-3">
