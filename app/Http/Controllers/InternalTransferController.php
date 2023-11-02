@@ -100,7 +100,7 @@ class InternalTransferController extends Controller
 
         $payment_id = RunningNumberService::getID('transaction');
         try {
-            $trade = (new CTraderService)->createTrade($request->account_no, $request->amount, "Wallet To Account", ChangeTraderBalanceType::DEPOSIT);
+            $trade = (new CTraderService)->createTrade($request->account_no, $request->amount, "QCG Wallet To Trading Account", ChangeTraderBalanceType::DEPOSIT);
         } catch (\Throwable $e) {
             if ($e->getMessage() == "Not found") {
                 TradingUser::firstWhere('meta_login', $request->account_no)->update(['acc_status' => 'Inactive']);
@@ -123,7 +123,7 @@ class InternalTransferController extends Controller
 
         $user->cash_wallet -= $amount;
         $user->save();
-        return redirect()->back()->with('toast', trans('public.Successful Transfer Wallet To Account!'));
+        return redirect()->back()->with('toast', trans('public.Successful Transfer QCG Wallet To Trading Account!'));
     }
 
     public function account_to_wallet(InternalTransferRequest $request)
@@ -148,7 +148,7 @@ class InternalTransferController extends Controller
 
         $payment_id = RunningNumberService::getID('transaction');
         try {
-            $trade = (new CTraderService)->createTrade($request->account_no, $request->amount, "Account To Wallet", ChangeTraderBalanceType::WITHDRAW);
+            $trade = (new CTraderService)->createTrade($request->account_no, $request->amount, "Trading Account To QCG Wallet", ChangeTraderBalanceType::WITHDRAW);
         } catch (\Throwable $e) {
             if ($e->getMessage() == "Not found") {
                 TradingUser::firstWhere('meta_login', $request->account_no)->update(['acc_status' => 'Inactive']);
@@ -173,7 +173,7 @@ class InternalTransferController extends Controller
         ]);
         $user->cash_wallet += $request->amount;
         $user->save();
-        return redirect()->back()->with('toast', trans('public.Successful Transfer Account To Wallet!'));
+        return redirect()->back()->with('toast', trans('public.Successful Transfer Trading Account To QCG Wallet!'));
     }
 
     public function account_to_account(InternalTransferRequest $request)
@@ -197,7 +197,7 @@ class InternalTransferController extends Controller
 
         $payment_id = RunningNumberService::getID('transaction');
         try {
-            $trade_1 = (new CTraderService)->createTrade($request->account_no_1, $request->amount, "Account To Account", ChangeTraderBalanceType::WITHDRAW);
+            $trade_1 = (new CTraderService)->createTrade($request->account_no_1, $request->amount, "Trading Account To Trading Account", ChangeTraderBalanceType::WITHDRAW);
         } catch (\Throwable $e) {
             if ($e->getMessage() == "Not found") {
                 TradingUser::firstWhere('meta_login', $request->account_no_1)->update(['acc_status' => 'Inactive']);
@@ -207,7 +207,7 @@ class InternalTransferController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
         try {
-            $trade_2 = (new CTraderService)->createTrade($request->account_no_2, $request->amount, "Account To Account", ChangeTraderBalanceType::DEPOSIT);
+            $trade_2 = (new CTraderService)->createTrade($request->account_no_2, $request->amount, "Trading Account To Trading Account", ChangeTraderBalanceType::DEPOSIT);
         } catch (\Throwable $e) {
             if ($e->getMessage() == "Not found") {
                 TradingUser::firstWhere('meta_login', $request->account_no_2)->update(['acc_status' => 'Inactive']);
@@ -230,6 +230,6 @@ class InternalTransferController extends Controller
             'status' => 'Successful',
 
         ]);
-        return redirect()->back()->with('toast', trans('public.Successfully Transfer Account to Account'));
+        return redirect()->back()->with('toast', trans('public.Successfully Transfer Trading Account to Trading Account'));
     }
 }

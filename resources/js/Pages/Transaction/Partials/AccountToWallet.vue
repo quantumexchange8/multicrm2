@@ -31,8 +31,8 @@ const submit = () => {
     <form @submit.prevent="submit">
         <div class="grid gap-6 my-6 md:grid-cols-1">
             <div class="space-y-2">
-                <Label for="account_no" :value="$t('public.Account To Transfer')" />
-                <InputSelect class="w-full" id="account_no" v-model="form.account_no" :placeholder="$t('public.Select Account No')" >
+                <Label for="account_no" :value="$t('public.Trading Account To Transfer')" />
+                <InputSelect class="w-full" id="account_no" v-model="form.account_no" :placeholder="$t('public.Select Trading Account No')" >
                     <option v-for="paymentAccount in tradingUsers" :value="paymentAccount.meta_login" :key="paymentAccount.id">{{ paymentAccount.meta_login }} ( $ {{ parseFloat(paymentAccount.balance - paymentAccount.credit).toFixed(2) }} )</option>
                 </InputSelect>
                 <InputError :message="form.errors.account_no"/>

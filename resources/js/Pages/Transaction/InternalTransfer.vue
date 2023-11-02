@@ -26,17 +26,17 @@ const page = usePage()
 const user = computed(() => page.props.auth.user)
 const { hasRole } = usePermission();
 const transfer_types = [
-    { id: 'account_type_2', src: '/assets/finance/wallet-to-account.png', value: 2, title: 'Wallet To Account' },
-    { id: 'account_type_3', src: '/assets/finance/account-to-wallet.png', value: 3, title: 'Account To Wallet' },
-    { id: 'account_type_4', src: '/assets/finance/account-to-account.png', value: 4, title: 'Account To Account' },
+    { id: 'account_type_2', src: '/assets/finance/wallet-to-account.png', value: 2, title: 'QCG Wallet To Trading Account' },
+    { id: 'account_type_3', src: '/assets/finance/account-to-wallet.png', value: 3, title: 'Trading Account To QCG Wallet' },
+    { id: 'account_type_4', src: '/assets/finance/account-to-account.png', value: 4, title: 'Trading Account To Trading Account' },
 ];
 
 const transactionHistories = [
-    { id: 'transaction_history_1', src: '/assets/finance/cash-in.png', title: 'Deposit To Account' },
-    { id: 'transaction_history_2', src: '/assets/finance/cash-out.png', title: 'Withdrawal From Wallet' },
-    { id: 'transaction_history_3', src: '/assets/finance/wallet-to-account.png', title: 'Wallet To Account' },
-    { id: 'transaction_history_4', src: '/assets/finance/account-to-wallet.png', title: 'Account To Wallet' },
-    { id: 'transaction_history_5', src: '/assets/finance/account-to-account.png', title: 'Account To Account' },
+    { id: 'transaction_history_1', src: '/assets/finance/cash-in.png', title: 'Deposit To Trading Account' },
+    { id: 'transaction_history_2', src: '/assets/finance/cash-out.png', title: 'Withdrawal From QCG Wallet' },
+    { id: 'transaction_history_3', src: '/assets/finance/wallet-to-account.png', title: 'QCG Wallet To Trading Account' },
+    { id: 'transaction_history_4', src: '/assets/finance/account-to-wallet.png', title: 'Trading Account To QCG Wallet' },
+    { id: 'transaction_history_5', src: '/assets/finance/account-to-account.png', title: 'Trading Account To Trading Account' },
 ];
 const transferType = ref(0);
 const transactionHistory = ref(0);
