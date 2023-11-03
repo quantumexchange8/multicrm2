@@ -93,8 +93,8 @@ class NetworkController extends Controller
         if ($request->filled('search')) {
             $search = $request->input('search');
 
-            $users = $users->filter(function ($user) use ($search) {
-                return str_contains($user->first_name, $search) || str_contains($user->email, $search) || $this->searchChildren($user, $search)->count() > 0;
+            $user->downline = $user->downline->filter(function ($child) use ($search) {
+                return str_contains($child->first_name, $search) || str_contains($child->email, $search);
             });
         }
 
