@@ -219,6 +219,9 @@ const closeModal = () => {
                     <li>
                         {{ $t('public.Withdrawal Acknowledgement 11', { company: 'QCG'}) }}
                     </li>
+                    <li>
+                        {{ $t('public.Withdrawal Acknowledgement 12') }}
+                    </li>
                 </ol>
             </div>
             <div class="flex items-start my-6" v-if="form.channel">
