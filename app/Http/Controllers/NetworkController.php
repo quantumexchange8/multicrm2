@@ -129,9 +129,18 @@ class NetworkController extends Controller
     {
         $user = Auth::user();
         $search = \Request::input('search');
+        $account_type = \Request::input('type');
+        $getAccType = IbAccountType::with('accountType')->where('user_id', $user->id)->get()->pluck('accountType.name', 'accountType.id')->toArray();
+        $ibQuery = IbAccountType::where('user_id', $user->id)->with(['ofUser', 'symbolGroups.symbolGroup', 'accountType']);
 
-        $ib = IbAccountType::where('user_id', $user->id)->with(['ofUser', 'symbolGroups.symbolGroup', 'accountType'])->first();
+        if ($account_type) {
+            $ibQuery->where(function ($innerQuery) use ($account_type) {
+                $innerQuery->where('account_type', $account_type);
+            });
+        }
 
+        $ib = $ibQuery->first();
+        
         $childrenIds = $ib->getIbChildrenIds();
 
         $query = IbAccountType::whereIn('id', $childrenIds)
@@ -145,7 +154,7 @@ class NetworkController extends Controller
         }
 
         $children = $query->get();
-
+        
         $children->each(function ($child) {
             $profilePicUrl = $child->ofUser->getFirstMediaUrl('profile_photo');
             $child->profile_pic = $profilePicUrl;
@@ -154,7 +163,10 @@ class NetworkController extends Controller
         return Inertia::render('GroupNetwork/RebateAllocation', [
             'ib' => $ib,
             'children' => $children,
-            'filters' => \Request::only(['search'])
+            'filters' => \Request::only(['search']),
+            'typeFilters' => \Request::only(['type']),
+            'getAccountTypeSel' => $getAccType, 
+            'get_ibs_sel' => User::where('role', 'ib')->pluck('email')->toArray()
         ]);
     }
 

@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/Authenticated.vue'
 import RebateChild from './Partials/RebateChild.vue'
+import IbRebate from './Partials/IbRebate.vue'
 import {computed, ref, watch} from "vue";
 import {usePage} from "@inertiajs/vue3";
 import InputIconWrapper from "@/Components/InputIconWrapper.vue";
@@ -10,6 +11,8 @@ import { router } from '@inertiajs/vue3'
 import debounce from "lodash/debounce.js";
 import Input from "@/Components/Input.vue";
 import Button from "@/Components/Button.vue";
+import InputSelect from "@/Components/InputSelect.vue";
+import Label from "@/Components/Label.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 library.add(faSearch,faX,faRotateRight);
@@ -20,15 +23,19 @@ const props = defineProps({
     children: Object,
     ib: Object,
     filters: Object,
+    typeFilters: Object,
+    getAccountTypeSel: Object,
+    get_ibs_sel: Object,
 });
 
 // const children = props.children;
-const ib = props.ib;
+// const ib = props.ib;
 
 let search = ref(props.filters.search);
+const type = ref(1);
 
-watch(search, debounce(function  (value) {
-    router.get('/group_network/rebate_allocation', { search: value }, {
+watch([search, type], debounce(function  ([value, value2]) {
+    router.get('/group_network/rebate_allocation', { search: value, type: value2 }, {
         preserveState:true,
         preserveScroll:true,
         replace:true,
@@ -41,7 +48,11 @@ function formatDate(date) {
 }
 
 function clearField() {
-    search.value = '';
+    const url = new URL(window.location.href);
+    url.searchParams.delete('search');
+    url.searchParams.delete('type');
+
+    window.location.href = url.href;
 }
 
 function handleKeyDown(event) {
@@ -62,7 +73,18 @@ function handleKeyDown(event) {
             </div>
         </template>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="flex flex-col space-y-2 mb-6">
+            <Label>{{ $t('public.Account Type') }}</Label>
+            <InputSelect
+                class="block w-1/4 text-sm"
+                v-model="type"
+            >
+                <option v-for="(name, accountTypeId) in getAccountTypeSel" :value="accountTypeId">{{ name }}</option>
+            </InputSelect>
+        </div>
+
+        <IbRebate :ib="props.ib" />
+        <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="w-full bg-white rounded-lg shadow dark:bg-dark-eval-1 p-6">
                 <div class="flex flex-col items-center mb-4">
                     <img
@@ -109,7 +131,7 @@ function handleKeyDown(event) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
 
         <div class="w-full my-6 flex justify-end gap-4">
