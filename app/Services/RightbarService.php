@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\IbAccountType;
 use App\Models\Payment;
 use App\Models\PaymentAccount;
 use App\Models\TradingAccount;
@@ -39,6 +40,16 @@ class RightbarService
         return response()->json([
             'bankAccounts' => $bankAccounts,
             'cryptoAccounts' => $cryptoAccounts,
+        ]);
+    }
+
+    public function getRebateWalletAmount(): \Illuminate\Http\JsonResponse
+    {
+        $user = Auth::user();
+        $walletAmount = IbAccountType::where('user_id', $user->id)->sum('rebate_wallet');
+
+        return response()->json([
+            'walletAmount' => $walletAmount,
         ]);
     }
 }

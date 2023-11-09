@@ -13,7 +13,7 @@ import {trans} from "laravel-vue-i18n";
 const page = usePage()
 const monthlyDeposit = page.props.monthlyDeposit;
 const monthlyWithdrawal = page.props.monthlyWithdrawal;
-const IBAccountTypes = page.props.IBAccountTypes;
+const getRebateWalletAmount = page.props.getRebateWalletAmount;
 const user = computed(() => page.props.auth.user)
 const { hasRole } = usePermission();
 const cashWalletComponent = ref(formatAmount(page.props.auth.user.cash_wallet));
@@ -25,22 +25,16 @@ watch(() => page.props.auth.user.cash_wallet, (newCashWallet) => {
 
 const rebateEarnedComponent = ref({
     title: trans('public.Rebate Earned') + ' ($)',
-    amount: IBAccountTypes[0] && IBAccountTypes[0].rebate_wallet
-        ? formatAmount(IBAccountTypes[0].rebate_wallet)
-        : '0.00',
+    amount: formatAmount(getRebateWalletAmount.original.walletAmount),
 });
 
 function formatAmount(amount) {
-    return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return parseFloat(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 async function applyRebate() {
-    const account_type = 1;
-
     try {
-        const response = await axios.post('/applyRebate', {
-            account_type,
-        });
+        const response = await axios.post('/applyRebate');
         if (response.data.success) {
             await Swal.fire({
                 title: trans('public.Success'),

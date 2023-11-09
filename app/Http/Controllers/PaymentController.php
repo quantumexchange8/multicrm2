@@ -263,16 +263,20 @@ class PaymentController extends Controller
         return back()->with('toast', trans('public.Successfully Submitted Withdrawal Request'));
     }
 
-    public function applyRebate(Request $request)
+    public function applyRebate()
     {
-        $accountType = IbAccountType::where('user_id', Auth::id())->where('account_type', $request->account_type)->with('accountType')->first();
         $user = User::find(Auth::id());
-        if ($accountType->rebate_wallet <= 0) {
+        $user_id = $user->id;
+        $accountTypeSum = IbAccountType::where('user_id', $user_id)
+            ->sum('rebate_wallet');
+
+        if ($accountTypeSum <= 0) {
             return response()->json([
                 'success' => false,
                 'message' => trans('public.Insufficient balance to apply the rebate. You have not earned any rebate yet.')
             ], 422);
         }
+
 
         $payment_id = RunningNumberService::getID('transaction');
 
@@ -281,18 +285,20 @@ class PaymentController extends Controller
             'payment_id' => $payment_id,
             'category' => 'rebate_payout',
             'type' => 'RebateToWallet',
-            'amount' => $accountType->rebate_wallet,
+            'amount' => $accountTypeSum,
             'status' => 'Successful',
         ]);
-        $user->cash_wallet = number_format($user->cash_wallet + $accountType->rebate_wallet, 2, '.', '');
+        $user->cash_wallet = number_format($user->cash_wallet + $accountTypeSum, 2, '.', '');
         $user->save();
-        $accountType->update(['rebate_wallet' => 0, 'trade_lot' => 0]);
+
+        IbAccountType::where('user_id', $user_id)
+            ->update(['rebate_wallet' => 0, 'trade_lot' => 0]);
 
         return response()->json([
             'success' => true,
             'message' => trans('public.Congratulation, we have received your rebate request. The rebate will be transferred to your cash wallet shortly. Once processed, you will be able to withdraw or transfer your funds.'),
             'cash_wallet' => $user->cash_wallet,
-            'rebate_wallet' => $accountType->rebate_wallet
+            'rebate_wallet' => 0
         ]);
     }
 }
