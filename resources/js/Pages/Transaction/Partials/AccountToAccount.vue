@@ -5,10 +5,14 @@ import Label from "@/Components/Label.vue";
 import Input from "@/Components/Input.vue";
 import {useForm} from "@inertiajs/vue3";
 import Button from "@/Components/Button.vue";
+import {ref} from "vue";
+import Modal from "@/Components/Modal.vue";
 
 defineProps({
     tradingUsers: Object
 })
+
+const confirmationModal = ref(false);
 
 const form = useForm({
     transfer_type: 'ATA',
@@ -20,10 +24,19 @@ const form = useForm({
 const submit = () => {
     form.post(route('account_to_account'), {
         onSuccess: () => {
+            closeModal();
             form.reset();
         },
     });
 };
+
+const openConfirmation = () => {
+    confirmationModal.value = true
+}
+
+const closeModal = () => {
+    confirmationModal.value = false
+}
 
 </script>
 
@@ -51,9 +64,41 @@ const submit = () => {
             </div>
         </div>
         <div class="flex justify-end mt-6">
-            <Button :disabled="form.processing">
+            <Button
+                type="button"
+                @click="openConfirmation"
+            >
                 {{ $t('public.Submit') }}
             </Button>
         </div>
     </form>
+
+    <Modal :show="confirmationModal" @close="closeModal" max-width="lg">
+        <div class="p-6">
+            <h2
+                class="text-lg font-medium mb-2 text-gray-900 dark:text-gray-100"
+            >
+                {{ $t('public.Warning') }}
+            </h2>
+            <hr>
+            <div class="text-gray-400 dark:text-white my-5">
+                {{ $t('public.account_transfer_fund_confirmation') }}
+            </div>
+            <div class="mt-6 flex justify-end">
+                <Button variant="secondary" @click="closeModal">
+                    {{ $t('public.Cancel') }}
+                </Button>
+
+                <Button
+                    variant="primary"
+                    class="ml-3"
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing"
+                    @click.prevent="submit"
+                >
+                    {{ $t('public.Confirm') }}
+                </Button>
+            </div>
+        </div>
+    </Modal>
 </template>

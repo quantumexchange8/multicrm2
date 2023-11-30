@@ -489,4 +489,6 @@ return [
     "From Trading Account No" => "From Trading Account No",
     "To Trading Account No" => "To Trading Account No",
     "Withdrawal Acknowledgement 12" => "We aim to process your deposits and withdrawals within 24 hours. However, please note that these processing times and limits are estimates and may vary due to reasons outside our control. We make every effort to provide you with a speedy and seamless experience.",
+    "account_transfer_fund_confirmation" => "Your bonus will be remove from the current trading account number once you CONFIRM to transfer the amount.",
+    "KYC not approve" => "KYC not approve"
 ];

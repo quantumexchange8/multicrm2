@@ -37,9 +37,9 @@ class RegisterUserRequest extends FormRequest
             'country' => 'required',
 
             //Page 3
-            'account_platform' => 'required',
-            'account_type' => 'required',
-            'leverage' => 'required',
+//            'account_platform' => 'required',
+//            'account_type' => 'required',
+//            'leverage' => 'required',
 
             //Page 4
             'front_identity' => 'nullable|image|max:5120',
@@ -67,9 +67,9 @@ class RegisterUserRequest extends FormRequest
             'country' => trans('public.Country'),
 
             //Page 3
-            'account_platform' => trans('public.Account Platform'),
-            'account_type' => trans('public.Account Type'),
-            'leverage' => trans('public.Leverage'),
+//            'account_platform' => trans('public.Account Platform'),
+//            'account_type' => trans('public.Account Type'),
+//            'leverage' => trans('public.Leverage'),
 
             //Page 4
             'front_identity' => trans('public.Proof of Identity (FRONT)'),

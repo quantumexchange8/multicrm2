@@ -85,25 +85,26 @@ class RegisteredUserController extends Controller
             $validator = Validator::make($request->all(), $rules);
             $validator->setAttributeNames($attributes);
             $validator->validate();
-        } elseif ($request->form_step == 3) {
-            $additionalRules = [
-                'account_platform' => 'required',
-                'account_type' => 'required',
-                'leverage' => 'required',
-            ];
-            $rules = array_merge($rules, $additionalRules);
-
-            $additionalAttributes = [
-                'account_platform' => 'Account Platform',
-                'account_type' => 'Account Type',
-                'leverage' => 'Leverage',
-            ];
-            $attributes = array_merge($attributes, $additionalAttributes);
-
-            $validator = Validator::make($request->all(), $rules);
-            $validator->setAttributeNames($attributes);
-            $validator->validate();
         }
+//        elseif ($request->form_step == 3) {
+//            $additionalRules = [
+//                'account_platform' => 'required',
+//                'account_type' => 'required',
+//                'leverage' => 'required',
+//            ];
+//            $rules = array_merge($rules, $additionalRules);
+//
+//            $additionalAttributes = [
+//                'account_platform' => 'Account Platform',
+//                'account_type' => 'Account Type',
+//                'leverage' => 'Leverage',
+//            ];
+//            $attributes = array_merge($attributes, $additionalAttributes);
+//
+//            $validator = Validator::make($request->all(), $rules);
+//            $validator->setAttributeNames($attributes);
+//            $validator->validate();
+//        }
 
         return to_route('register');
     }
@@ -127,8 +128,8 @@ class RegisteredUserController extends Controller
         $inputArray = $request->validated();
         $inputArray += [
             'register_ip' => $request->ip(),
-            'group' => $inputArray['account_type'],
-            'leverage' => $inputArray['leverage']
+//            'group' => $inputArray['account_type'],
+//            'leverage' => $inputArray['leverage']
         ];
 
         if($inputArray['verification_via'] == 'email'){
@@ -167,14 +168,14 @@ class RegisteredUserController extends Controller
         $mainPassword = Str::random(8);
         $investorPassword = Str::random(8);
 
-        $group = AccountType::with('metaGroup')->where('id', $inputArray['group'])->get()->value('metaGroup.meta_group_name');
-        $leadCampaign = null;
-        $leadSource = null;
+//        $group = AccountType::with('metaGroup')->where('id', $inputArray['group'])->get()->value('metaGroup.meta_group_name');
+//        $leadCampaign = null;
+//        $leadSource = null;
         $remarks = 'vietnam plan';
-        $ctUser = (new CTraderService)->CreateCTID($user->email);
-        $user->update(['ct_user_id' => $ctUser['userId']]);
+//        $ctUser = (new CTraderService)->CreateCTID($user->email);
+//        $user->update(['ct_user_id' => $ctUser['userId']]);
         $user = User::find($user->id);
-        $ctAccount = (new CTraderService)->createUser($user, $mainPassword, $investorPassword, $group, $inputArray['leverage'], $inputArray['group'], $leadCampaign, $leadSource, $remarks);
+//        $ctAccount = (new CTraderService)->createUser($user, $mainPassword, $investorPassword, $group, $inputArray['leverage'], $inputArray['group'], $leadCampaign, $leadSource, $remarks);
         $user->update(['remark' => $remarks]);
 
         return redirect('/login')->with('toast', trans('public.Successfully Created Account'));

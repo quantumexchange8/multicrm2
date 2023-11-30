@@ -174,7 +174,7 @@ function startCountdown() {
                 <!-- Progress Bar -->
                 <div class="w-full py-6">
                     <div class="flex">
-                        <div class="w-1/4">
+                        <div class="w-1/3">
                             <div class="relative mb-2">
                                 <div class="w-10 h-10 mx-auto rounded-full text-lg text-white flex items-center" :class="{'bg-[#FF9E23]': formStep === 1, 'bg-[#202020]': formStep !== 1}">
                                     <span class="text-center text-white w-full font-montserrat font-semibold">1</span>
@@ -182,7 +182,7 @@ function startCountdown() {
                             </div>
                         </div>
 
-                        <div class="w-1/4">
+                        <div class="w-1/3">
                             <div class="relative mb-2">
                                 <div class="absolute flex align-center items-center align-middle content-center" style="width: calc(100% - 2.5rem - 1rem); top: 50%; transform: translate(-50%, -50%)">
                                     <div class="w-full rounded items-center align-middle align-center flex-1">
@@ -196,11 +196,11 @@ function startCountdown() {
                             </div>
                         </div>
 
-                        <div class="w-1/4">
+                        <div class="w-1/3">
                             <div class="relative mb-2">
                                 <div class="absolute flex align-center items-center align-middle content-center" style="width: calc(100% - 2.5rem - 1rem); top: 50%; transform: translate(-50%, -50%)">
                                     <div class="w-full rounded items-center align-middle align-center flex-1">
-                                        <div class="w-0 pt-1 rounded" :class="{'bg-[#FF9E23]': formStep >= 3, 'bg-gray-200': formStep < 3}" style="width: 100%"></div>
+                                        <div class="w-0 pt-1 rounded" :class="{'bg-[#FF9E23]': formStep === 3, 'bg-gray-200': formStep !== 3}" style="width: 100%"></div>
                                     </div>
                                 </div>
 
@@ -210,19 +210,19 @@ function startCountdown() {
                             </div>
                         </div>
 
-                        <div class="w-1/4">
-                            <div class="relative mb-2">
-                                <div class="absolute flex align-center items-center align-middle content-center" style="width: calc(100% - 2.5rem - 1rem); top: 50%; transform: translate(-50%, -50%)">
-                                    <div class="w-full rounded items-center align-middle align-center flex-1">
-                                        <div class="w-0 pt-1 rounded" :class="{'bg-[#FF9E23]': formStep === 4, 'bg-gray-200': formStep !== 4}" style="width: 100%"></div>
-                                    </div>
-                                </div>
+<!--                        <div class="w-1/4">-->
+<!--                            <div class="relative mb-2">-->
+<!--                                <div class="absolute flex align-center items-center align-middle content-center" style="width: calc(100% - 2.5rem - 1rem); top: 50%; transform: translate(-50%, -50%)">-->
+<!--                                    <div class="w-full rounded items-center align-middle align-center flex-1">-->
+<!--                                        <div class="w-0 pt-1 rounded" :class="{'bg-[#FF9E23]': formStep === 4, 'bg-gray-200': formStep !== 4}" style="width: 100%"></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
 
-                                <div class="w-10 h-10 mx-auto rounded-full text-lg text-white flex items-center" :class="{'bg-[#FF9E23]': formStep === 4, 'bg-[#202020]': formStep !== 4}">
-                                    <span class="text-center text-white w-full font-montserrat font-semibold">4</span>
-                                </div>
-                            </div>
-                        </div>
+<!--                                <div class="w-10 h-10 mx-auto rounded-full text-lg text-white flex items-center" :class="{'bg-[#FF9E23]': formStep === 4, 'bg-[#202020]': formStep !== 4}">-->
+<!--                                    <span class="text-center text-white w-full font-montserrat font-semibold">4</span>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </div>
                 </div>
 
@@ -299,49 +299,46 @@ function startCountdown() {
 
                 <!-- Page 3 -->
                 <div class="space-y-5" v-if="formStep === 3">
-                    <Input id="form_step" type="hidden" :modelValue="form.form_step.toString()"/>
+<!--                    <Input id="form_step" type="hidden" :modelValue="form.form_step.toString()"/>-->
 
-                    <div class="text-center">
-                        <RegisterCaption :title="$t('public.Create a trading account to join us!')" :caption="$t('public.You can always add another trading account later.')" />
-                    </div>
+<!--                    <div class="text-center">-->
+<!--                        <RegisterCaption :title="$t('public.Create a trading account to join us!')" :caption="$t('public.You can always add another trading account later.')" />-->
+<!--                    </div>-->
 
-                    <Label for="account_platform" class="text-white" :value="$t('public.Select Account Platform')" />
-                    <ul class="grid w-full gap-6 md:grid-cols-3">
-                        <li v-for="(platform, index) in platforms" :key="index">
-                            <input type="radio" :id="platform.id" name="account_platform" :value="platform.value" class="hidden peer" v-model="form.account_platform" :required="platform.required">
-                            <label :for="platform.id" class="inline-flex items-center justify-between w-full p-5 border rounded-lg cursor-pointer hover:text-gray-300 border-[#007BFF] peer-checked:bg-[#007BFF] peer-checked:border-blue-600 peer-checked:text-blue-600 text-gray-400 bg-transparent shadow-lg hover:shadow-blue-600">
-                                <div class="block">
-                                    <img class="object-cover" :src="platform.src" alt="account_platform">
-                                </div>
-                            </label>
-                        </li>
-                    </ul>
-                    <InputError :message="form.errors.account_platform"/>
-
-<!--                    <Label for="account_type" value="Select Account Type" />-->
+<!--                    <Label for="account_platform" class="text-white" :value="$t('public.Select Account Platform')" />-->
 <!--                    <ul class="grid w-full gap-6 md:grid-cols-3">-->
-<!--                        <li v-for="(type, index) in acc_types" :key="index">-->
-<!--                            <input type="radio" :id="type.id" name="account_type" :value="type.value" class="hidden peer" v-model="form.account_type" :required="type.required">-->
-<!--                            <label :for="type.id" class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-[#007BFF] dark:peer-checked:bg-[#007BFF] peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-transparent dark:shadow-lg dark:hover:shadow-blue-600">-->
+<!--                        <li v-for="(platform, index) in platforms" :key="index">-->
+<!--                            <input type="radio" :id="platform.id" name="account_platform" :value="platform.value" class="hidden peer" v-model="form.account_platform" :required="platform.required">-->
+<!--                            <label :for="platform.id" class="inline-flex items-center justify-between w-full p-5 border rounded-lg cursor-pointer hover:text-gray-300 border-[#007BFF] peer-checked:bg-[#007BFF] peer-checked:border-blue-600 peer-checked:text-blue-600 text-gray-400 bg-transparent shadow-lg hover:shadow-blue-600">-->
 <!--                                <div class="block">-->
-<!--                                    <img class="object-cover" :src="type.src" alt="account_type">-->
+<!--                                    <img class="object-cover" :src="platform.src" alt="account_platform">-->
 <!--                                </div>-->
 <!--                            </label>-->
 <!--                        </li>-->
 <!--                    </ul>-->
-<!--                    <InputError :message="form.errors.account_type"/>-->
-                    <Input type="hidden" v-model="form.account_type"/>
+<!--                    <InputError :message="form.errors.account_platform"/>-->
 
-                    <Label for="leverage" class="text-white" :value="$t('public.Trading Account Leverage')" />
-                    <InputSelect v-model="form.leverage" class="block w-full px-4 bg-dark-eval-2 border-transparent text-gray-300 focus:ring-offset-dark-eval-1 text-sm" :placeholder="$t('public.Choose Leverage')">
-                        <option v-for="leverage in leverages" :value="leverage.value" :key="leverage.id">{{ leverage.leverage }}</option>
-                    </InputSelect>
-                    <InputError :message="form.errors.leverage"/>
+<!--&lt;!&ndash;                    <Label for="account_type" value="Select Account Type" />&ndash;&gt;-->
+<!--&lt;!&ndash;                    <ul class="grid w-full gap-6 md:grid-cols-3">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <li v-for="(type, index) in acc_types" :key="index">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <input type="radio" :id="type.id" name="account_type" :value="type.value" class="hidden peer" v-model="form.account_type" :required="type.required">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <label :for="type.id" class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-[#007BFF] dark:peer-checked:bg-[#007BFF] peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-transparent dark:shadow-lg dark:hover:shadow-blue-600">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <div class="block">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <img class="object-cover" :src="type.src" alt="account_type">&ndash;&gt;-->
+<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </label>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </li>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </ul>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <InputError :message="form.errors.account_type"/>&ndash;&gt;-->
+<!--                    <Input type="hidden" v-model="form.account_type"/>-->
 
-                </div>
+<!--                    <Label for="leverage" class="text-white" :value="$t('public.Trading Account Leverage')" />-->
+<!--                    <InputSelect v-model="form.leverage" class="block w-full px-4 bg-dark-eval-2 border-transparent text-gray-300 focus:ring-offset-dark-eval-1 text-sm" :placeholder="$t('public.Choose Leverage')">-->
+<!--                        <option v-for="leverage in leverages" :value="leverage.value" :key="leverage.id">{{ leverage.leverage }}</option>-->
+<!--                    </InputSelect>-->
+<!--                    <InputError :message="form.errors.leverage"/>-->
 
-                <!-- Page 4 -->
-                <div class="space-y-5" v-if="formStep === 4">
+
                     <div class="text-center">
                         <RegisterCaption :title="$t('public.One last step to verify your identity')" :caption="$t('public.You’re about to start using the QCG.')" />
                     </div>
@@ -365,10 +362,10 @@ function startCountdown() {
                                     <label for="hs-radio-group-1" class="text-sm text-gray-300 ml-2">{{ $t('public.Email') }}</label>
                                 </div>
 
-<!--                                <div class="flex">-->
-<!--                                    <input type="radio" name="verification_via" v-model="form.verification_via" class="shrink-0 mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-radio-group-2" value="phone">-->
-<!--                                    <label for="hs-radio-group-2" class="text-sm text-gray-500 ml-2 dark:text-gray-400">Phone</label>-->
-<!--                                </div>-->
+                                <!--                                <div class="flex">-->
+                                <!--                                    <input type="radio" name="verification_via" v-model="form.verification_via" class="shrink-0 mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-radio-group-2" value="phone">-->
+                                <!--                                    <label for="hs-radio-group-2" class="text-sm text-gray-500 ml-2 dark:text-gray-400">Phone</label>-->
+                                <!--                                </div>-->
                             </div>
                             <InputError :message="form.errors.verification_via"/>
                         </div>
@@ -406,15 +403,83 @@ function startCountdown() {
                         </div>
                     </div>
                     <InputError :message="form.errors.terms"/>
-
                 </div>
+
+                <!-- Page 4 -->
+<!--                <div class="space-y-5" v-if="formStep === 4">-->
+<!--                    <div class="text-center">-->
+<!--                        <RegisterCaption :title="$t('public.One last step to verify your identity')" :caption="$t('public.You’re about to start using the QCG.')" />-->
+<!--                    </div>-->
+
+<!--                    <div class="grid w-full gap-6 md:grid-cols-2">-->
+<!--                        <div class="space-y-5">-->
+<!--                            <Label for="front_identity" class="text-white">{{ $t('public.Proof of Identity (FRONT)') }}</Label>-->
+<!--                            <input type="file" id="front_identity" @change="handleFrontIdentity" class="block border border-transparent bg-dark-eval-2 w-full rounded-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:border-transparent file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:ring-offset-dark-eval-1"/>-->
+<!--                            <InputError :message="form.errors.front_identity"/>-->
+<!--                        </div>-->
+<!--                        <div class="space-y-5">-->
+<!--                            <Label for="back_identity" class="text-white">{{ $t('public.Proof of Identity (BACK)') }}</Label>-->
+<!--                            <input type="file" id="back_identity" @change="handleBackIdentity" class="block border border-transparent bg-dark-eval-2 w-full rounded-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:border-transparent file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 focus:ring-offset-dark-eval-1"/>-->
+<!--                            <InputError :message="form.errors.back_identity"/>-->
+<!--                        </div>-->
+<!--                        <div class="space-y-5">-->
+<!--                            <Label for="full_name" class="text-white" :value="$t('Verification Via')" />-->
+<!--                            <div class="flex gap-x-12">-->
+<!--                                <div class="flex">-->
+<!--                                    <input type="radio" name="verification_via" v-model="form.verification_via" class="shrink-0 mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-radio-group-1" value="email" checked>-->
+<!--                                    <label for="hs-radio-group-1" class="text-sm text-gray-300 ml-2">{{ $t('public.Email') }}</label>-->
+<!--                                </div>-->
+
+<!--&lt;!&ndash;                                <div class="flex">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <input type="radio" name="verification_via" v-model="form.verification_via" class="shrink-0 mt-0.5 border-gray-200 rounded-full text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800" id="hs-radio-group-2" value="phone">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <label for="hs-radio-group-2" class="text-sm text-gray-500 ml-2 dark:text-gray-400">Phone</label>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
+<!--                            </div>-->
+<!--                            <InputError :message="form.errors.verification_via"/>-->
+<!--                        </div>-->
+<!--                        <div class="space-y-5">-->
+<!--                            <Label for="full_name" class="text-white" :value="$t('public.Verification Code')" />-->
+<!--                            <div class="flex rounded-md shadow-sm">-->
+<!--                                <button type="button" class="py-2 px-4 inline-flex flex-shrink-0 justify-center items-center gap-2 rounded-l-full border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"-->
+<!--                                        :disabled="isButtonDisabled"-->
+<!--                                        @click="startCountdown">-->
+<!--                                    {{ buttonText }}-->
+<!--                                </button>-->
+<!--                                <input type="text" id="hs-leading-button-add-on" name="hs-leading-button-add-on" class="py-2 px-4 block w-full border-transparent shadow-sm rounded-r-full text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 bg-[#202020] text-gray-300 focus:ring-offset-dark-eval-1" v-model="form.verification_code">-->
+<!--                            </div>-->
+<!--                            <InputError :message="form.errors.verification_code"/>-->
+<!--                        </div>-->
+
+<!--                        <Input id="referral" type="hidden" v-model="form.referral_code" />-->
+<!--                    </div>-->
+
+<!--                    <h3 class="list-decimal list-inside text-xl text-dark-eval-4">{{ $t('public.Terms and Conditions') }}</h3>-->
+<!--                    <ol class="list-decimal list-inside text-sm text-dark-eval-4">-->
+<!--                        <li>{{ $t("public.I confirm that I've read the") }} <a class="text-blue-500" target="_blank" href="/assets/register-tnc/Client Agreement 2023.pdf">{{ $t('public.Terms and Conditions') }}</a></li>-->
+<!--                        <li>{{ $t("public.I confirm that I've read the") }} <a class="text-blue-500" target="_blank" href="/assets/register-tnc/Privacy Policy 2023.pdf">{{ $t('public.Privacy Policy') }}</a></li>-->
+<!--                        <li>{{ $t("public.I confirm that I've read the") }} <a class="text-blue-500" target="_blank" href="/assets/register-tnc/Risk Disclosure Notice 2023.pdf">{{ $t('public.Risk Disclosure Document') }}</a></li>-->
+<!--                        <li>{{ $t('public.I hereby acknowledge and consent that company shall provide me with the information only through a durable medium, (i.e., any instrument which enables a client to store information for future reference and adequate period, and allows the unchanged reproduction of the information stored.') }}</li>-->
+<!--                        <li>{{ $t('public.You agree that company may collect, use and disclose your personal data which you have provided in this form,for providing marketing material that you have agreed to receive, in accordance with Privacy Policy.') }}</li>-->
+<!--                    </ol>-->
+
+<!--                    <div class="flex items-start">-->
+<!--                        <div class="flex items-center h-5">-->
+<!--                            <Checkbox v-model="form.terms"/>-->
+<!--                        </div>-->
+<!--                        <div class="ml-3 text-sm">-->
+<!--                            <label for="terms" class="font-light text-dark-eval-4">{{ $t('public.I acknowledge that I have read, and do hereby accept the terms and conditions stated as above.') }}</label>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <InputError :message="form.errors.terms"/>-->
+
+<!--                </div>-->
 
                 <div class="flex items-center justify-center gap-8 mt-4">
                     <Button type="button" :disabled="formStep === 1" @click="prevStep" class="px-12">
                         <span>{{ $t('pagination.Back') }}</span>
                     </Button>
 
-                    <Button type="button" v-if="formStep !== 4" @click="nextStep" class="px-12">
+                    <Button type="button" v-if="formStep !== 3" @click="nextStep" class="px-12">
                         <span>{{ $t('pagination.Next') }}</span>
                     </Button>
 

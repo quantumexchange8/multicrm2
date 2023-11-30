@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class AccountInfoController extends Controller
@@ -60,6 +61,10 @@ class AccountInfoController extends Controller
         }
 
         $user = Auth::user();
+        if ($user->kyc_approval != 'approve') {
+            throw ValidationException::withMessages(['group' => trans('public.KYC not approve')]);
+        }
+
         $currentTradingAccountCounts = TradingAccount::where('user_id', $user->id)->count();
         $settings = Setting::getKeyValue();
         $settingCounts = intval($settings['trading_account_numbers_per_member']);

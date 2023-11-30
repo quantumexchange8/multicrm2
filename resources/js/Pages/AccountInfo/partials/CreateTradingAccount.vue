@@ -7,8 +7,8 @@ import Modal from "@/Components/Modal.vue";
 import Label from "@/Components/Label.vue";
 import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
-import {ref} from "vue";
-import {useForm} from "@inertiajs/vue3";
+import {computed, ref} from "vue";
+import {useForm, usePage} from "@inertiajs/vue3";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
 
 const props = defineProps({
@@ -30,7 +30,8 @@ const acc_types = [
 
 const addingTradingAccount = ref(false)
 const passwordInput = ref(null)
-
+const page = usePage()
+const user = computed(() => page.props.auth.user)
 const form = useForm({
     group: '',
     // account_platform: '',
@@ -62,9 +63,9 @@ const closeModal = () => {
 
 <template>
     <Button
-        external
+        v-if="user.kyc_approval === 'approve'"
+        type="button"
         variant="primary-opacity"
-        target="_blank"
         class="items-center gap-2 max-w-xs"
         v-slot="{ iconSizeClasses }"
         @click="addTradingAccount"

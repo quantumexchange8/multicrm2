@@ -481,4 +481,6 @@ return [
     "Withdrawal From QCG Wallet" => "从QCG錢包提款",
     "From Trading Account No" => "从交易帳號",
     "To Trading Account No" => "到交易帳號",
+    "account_transfer_fund_confirmation" => "一旦您確認轉帳金額，您的贈金將從目前交易帳號中刪除",
+    "KYC not approve" => "KYC 未批准"
 ];

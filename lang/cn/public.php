@@ -305,4 +305,6 @@ return [
         "Rebate Allocation" => "回扣分配",
         "Rebate Allocation History" => "回扣分配历史",
     ],
+    "account_transfer_fund_confirmation" => "一旦您确认转账金额，您的赠金将从当前交易账号中删除。",
+    "KYC not approve" => "KYC 未批准"
 ];
