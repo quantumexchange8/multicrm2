@@ -86,6 +86,11 @@ class AccountInfoController extends Controller
         // $group = Group::where('value', $group)->first()->value('meta_group_name');
         $group = AccountType::with('metaGroup')->where('id', $group)->get()->value('metaGroup.meta_group_name');
 
+        if (empty($user->ct_user_id)) {
+            $ctUser = (new CTraderService)->CreateCTID($user->email);
+            $user->update(['ct_user_id' => $ctUser['userId']]);
+        }
+
         $remarks = $user->remark . ' ' . $request->additionalNotes;
         $ctAccount = (new CTraderService)->createUser($user,  $mainPassword, $investorPassword, $group, $request->leverage, $request->group, null, null, $remarks);
         //Mail::to($user->email)->send(new NewMetaAccount($ctAccount['login'], $mainPassword, $investorPassword));
