@@ -152,9 +152,9 @@ class InternalTransferController extends Controller
 
         $payment_id = RunningNumberService::getID('transaction');
         try {
-            $trade = (new CTraderService)->createTrade($accountNo, $amount, "Trading Account To QCG Wallet", ChangeTraderBalanceType::WITHDRAW);
             $bonus = (new CTraderService)->changeTraderBonus($accountNo, $tradingUser->bonus, $comment, ChangeTraderBalanceType::WITHDRAW);
             $credit = (new CTraderService)->createTrade($accountNo, $tradingUser->credit, $comment, ChangeTraderBalanceType::WITHDRAW_NONWITHDRAWABLE_BONUS);
+            $trade = (new CTraderService)->createTrade($accountNo, $amount, "Trading Account To QCG Wallet", ChangeTraderBalanceType::WITHDRAW);
         } catch (\Throwable $e) {
             if ($e->getMessage() == "Not found") {
                 TradingUser::firstWhere('meta_login', $request->account_no)->update(['acc_status' => 'Inactive']);
