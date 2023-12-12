@@ -141,6 +141,7 @@ class InternalTransferController extends Controller
         $accountNo = $request->account_no;
         $amount = $request->amount;
         $comment = $user->first_name . ' transfer fund to QCG Wallet';
+        $bonus = 0;
 
         $tradingUser = TradingUser::firstWhere('meta_login', $request->account_no);
         (new CTraderService)->getUserInfo([$tradingUser]);
@@ -152,7 +153,9 @@ class InternalTransferController extends Controller
 
         $payment_id = RunningNumberService::getID('transaction');
         try {
-            $bonus = (new CTraderService)->changeTraderBonus($accountNo, $tradingUser->bonus, $comment, ChangeTraderBalanceType::WITHDRAW);
+            if ($tradingUser->bonus > 0) {
+                $bonus = (new CTraderService)->changeTraderBonus($accountNo, $tradingUser->bonus, $comment, ChangeTraderBalanceType::WITHDRAW);
+            }
             $credit = (new CTraderService)->createTrade($accountNo, $tradingUser->credit, $comment, ChangeTraderBalanceType::WITHDRAW_NONWITHDRAWABLE_BONUS);
             $trade = (new CTraderService)->createTrade($accountNo, $amount, "Trading Account To QCG Wallet", ChangeTraderBalanceType::WITHDRAW);
         } catch (\Throwable $e) {
@@ -191,7 +194,11 @@ class InternalTransferController extends Controller
         ];
 
         // Create FundAdjustment records for bonus and credit
-        FundAdjustment::create(array_merge($commonAdjustmentData, ['type' => 'bonus_out', 'amount' => $tradingUser->bonus, 'ticket' => $bonus->getTicket()]));
+
+        if ($tradingUser->bonus > 0) {
+            FundAdjustment::create(array_merge($commonAdjustmentData, ['type' => 'bonus_out', 'amount' => $tradingUser->bonus, 'ticket' => $bonus->getTicket()]));
+        }
+
         FundAdjustment::create(array_merge($commonAdjustmentData, ['type' => 'credit_out', 'amount' => $tradingUser->credit, 'ticket' => $credit->getTicket()]));
 
         $user->cash_wallet += $request->amount;
